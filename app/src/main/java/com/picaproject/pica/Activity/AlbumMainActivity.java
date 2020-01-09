@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
@@ -163,4 +164,15 @@ public class AlbumMainActivity extends AppCompatActivity {
         return result;
     }
 
+    /* TODO : 임시로 볼륨 업 키가 누르면 사진 추가 액티비티로 갈수있음
+    *   이후 의논하여 사진 추가 액티비티로 갈수있는 구조 추가하기*/
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode==KeyEvent.KEYCODE_VOLUME_UP){
+            // 사진 추가 액티비티 이동
+
+            return true;
+        }
+        return super.onKeyUp(keyCode, event);
+    }
 }
