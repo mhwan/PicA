@@ -30,7 +30,7 @@
                 android:gravity="center"
                 android:id="@+id/back_btn"
                 android:background="00ffffff"
-                android:textSize="30dp"/s
+                android:textSize="30dp"/>
 
         </LinearLayout>
 
