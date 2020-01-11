@@ -23,6 +23,10 @@
         <activity
             android:name=".Activity.AlbumMainActivity"
             android:theme="@style/AppTheme.NoStatusBar"></activity>
+
+
+
+
     </application>
 
 </manifest>

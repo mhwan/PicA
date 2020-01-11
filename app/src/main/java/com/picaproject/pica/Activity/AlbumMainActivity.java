@@ -1,5 +1,6 @@
 package com.picaproject.pica.Activity;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -170,7 +171,7 @@ public class AlbumMainActivity extends AppCompatActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode==KeyEvent.KEYCODE_VOLUME_UP){
             // 사진 추가 액티비티 이동
-
+            startActivity(new Intent(this, UploadPicActivity.class));
             return true;
         }
         return super.onKeyUp(keyCode, event);
