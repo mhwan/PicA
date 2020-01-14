@@ -12,7 +12,7 @@ import com.picaproject.pica.R;
 
 import java.util.ArrayList;
 
-public class UploadPicActivity extends AppCompatActivity {
+public class UploadAlbumActivity extends AppCompatActivity {
 
     private RecyclerView updaloadPicListView;
     private ArrayList<UploadPicData> dataList;
@@ -29,7 +29,7 @@ public class UploadPicActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_upload_pic);
+        setContentView(R.layout.activity_upload_album);
         // 최근 이미지 목록은 이 액티비티 시작시 바로 얻어옴
 
         updaloadPicListView = (RecyclerView) findViewById(R.id.updaloadPicListView);

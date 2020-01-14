@@ -1,8 +1,6 @@
 package com.picaproject.pica.Activity;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
@@ -11,17 +9,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
-import com.picaproject.pica.CustomView.ImageRecyclerAdapter;
 import com.picaproject.pica.Fragment.AlbumMainFragment;
 import com.picaproject.pica.Fragment.UserInfoFragment;
 import com.picaproject.pica.R;
@@ -171,7 +166,7 @@ public class AlbumMainActivity extends AppCompatActivity {
     public boolean onKeyUp(int keyCode, KeyEvent event) {
         if (keyCode==KeyEvent.KEYCODE_VOLUME_UP){
             // 사진 추가 액티비티 이동
-            startActivity(new Intent(this, UploadPicActivity.class));
+            startActivity(new Intent(this, UploadAlbumActivity.class));
             return true;
         }
         return super.onKeyUp(keyCode, event);

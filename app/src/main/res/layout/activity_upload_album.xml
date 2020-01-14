@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:weightSum="1"
     android:orientation="vertical"
-    tools:context=".Activity.UploadPicActivity">
+    tools:context=".Activity.UploadAlbumActivity">
 
     <!-- ← /전체공개 / 올리기 -->
     <LinearLayout
