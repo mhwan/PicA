@@ -1,9 +1,11 @@
-package com.picaproject.pica;
+package com.picaproject.pica.CustomView;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class UploadPic extends AppCompatActivity {
+import com.picaproject.pica.R;
+
+public class UploadPicActivity extends AppCompatActivity {
 
 
     @Override

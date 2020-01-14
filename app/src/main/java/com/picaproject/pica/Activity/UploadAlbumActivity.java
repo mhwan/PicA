@@ -37,7 +37,7 @@ public class UploadAlbumActivity extends AppCompatActivity {
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         updaloadPicListView.setLayoutManager(mLinearLayoutManager);
         dataList = new ArrayList<UploadPicData>();
-        picAdapter = new AlbumUploadPicAdapter(dataList);
+        picAdapter = new AlbumUploadPicAdapter(this,dataList);
         updaloadPicListView.setAdapter(picAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(updaloadPicListView.getContext(),
                 mLinearLayoutManager.getOrientation());
