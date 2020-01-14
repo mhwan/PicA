@@ -127,15 +127,47 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:weightSum="1"
+            android:orientation="vertical"
             android:layout_weight="0.7">
 
-            <EditText
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="top"
-                android:hint="내용 입력"
-                android:id="@+id/context_edit"
-                />
+                android:layout_height="0dp"
+                android:layout_weight="0.7"
+                >
+                <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="top"
+                    android:hint="내용 입력"
+                    android:id="@+id/context_edit"
+                    />
+
+
+
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="0.3"
+                >
+
+
+                <android.support.v7.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:scrollbars="horizontal"
+                    android:id="@+id/updaloadPicListView"
+                    />
+
+
+            </LinearLayout>
+
+
+
 
         </LinearLayout>
 
