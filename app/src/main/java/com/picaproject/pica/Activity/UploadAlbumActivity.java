@@ -45,8 +45,6 @@ public class UploadAlbumActivity extends AppCompatActivity {
 
         picAdapter.addEOFPicData();
         picAdapter.notifyDataSetChanged();
-        Log.i("test_hs","1"+dataList.toString());
-
 
     }
 

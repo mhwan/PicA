@@ -12,7 +12,7 @@ import android.widget.ImageView;
 
 
 import com.picaproject.pica.Item.UploadPicData;
-import com.picaproject.pica.Listener.AddPicImageButtonClickListener;
+import com.picaproject.pica.Listener.PicImageButtonClickListener;
 import com.picaproject.pica.R;
 
 import java.util.ArrayList;
@@ -64,14 +64,15 @@ public class AlbumUploadPicAdapter extends RecyclerView.Adapter<UploadPicHolder>
 
     @Override
     public void onBindViewHolder(@NonNull UploadPicHolder uploadPicHolder, int i) {
-        Log.i("test_hs","2"+dataList.toString());
-        String contents = dataList.get(i).getContents();
+        Log.i("test_hs","AlbumUploadPicAdapter : "+dataList.toString());
+        UploadPicData data = dataList.get(i);
+        String contents = data.getContents();
         ImageView imgView = uploadPicHolder.getImageView();
-        Log.i("test_hs","3"+contents);
+
         // list의 끝을 가르키는 EOF 데이터일 경우
         if(contents.equals("EOF")){
             imgView.setImageResource(R.drawable.plus_icon);
-            imgView.setOnClickListener(new AddPicImageButtonClickListener(context));
+
         }
         // EOF가 아닌 다른 데이터만 보여주기 가능
         else {
@@ -87,11 +88,13 @@ public class AlbumUploadPicAdapter extends RecyclerView.Adapter<UploadPicHolder>
                 Log.e(this.getClass().getName(),err);
                 uploadPicHolder.getImageView().setImageResource(R.drawable.error_icon);
             }
-            imgView.setOnClickListener(null);
+
             if(contents!=null)
                 uploadPicHolder.getMetaTextView().setMetaText(contents);
 
         }
+
+        imgView.setOnClickListener(new PicImageButtonClickListener(context,data));
 
 
     }

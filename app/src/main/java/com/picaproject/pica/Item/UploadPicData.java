@@ -2,6 +2,7 @@ package com.picaproject.pica.Item;
 
 import android.net.Uri;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
@@ -11,7 +12,9 @@ import java.util.ArrayList;
 * tags : 태그 목록
 * contents,tags는 null일수있음
 * */
-public class UploadPicData {
+public class UploadPicData implements Serializable {
+    // 직렬화 버전 표시 : https://lktprogrammer.tistory.com/150
+    private static final long serialVersionUID = 1L;
     public static final String STATE_EOF = "EOF";
     private Uri src;
     private String contents;
