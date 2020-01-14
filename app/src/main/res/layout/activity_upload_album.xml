@@ -161,6 +161,7 @@
                     android:layout_height="match_parent"
                     android:scrollbars="horizontal"
                     android:id="@+id/updaloadPicListView"
+                    android:layout_margin="10dp"
                     />
 
 
