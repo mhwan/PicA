@@ -12,6 +12,7 @@ import java.util.ArrayList;
 * contents,tags는 null일수있음
 * */
 public class UploadPicData {
+    public static final String STATE_EOF = "EOF";
     private Uri src;
     private String contents;
     private ArrayList<String> tags;

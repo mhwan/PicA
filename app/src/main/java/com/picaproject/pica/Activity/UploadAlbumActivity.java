@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.picaproject.pica.CustomView.AlbumUploadPicAdapter;
 import com.picaproject.pica.Item.UploadPicData;
@@ -30,17 +31,23 @@ public class UploadAlbumActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_album);
-        // 최근 이미지 목록은 이 액티비티 시작시 바로 얻어옴
+
 
         updaloadPicListView = (RecyclerView) findViewById(R.id.updaloadPicListView);
         LinearLayoutManager mLinearLayoutManager = new LinearLayoutManager(this);
         updaloadPicListView.setLayoutManager(mLinearLayoutManager);
         dataList = new ArrayList<UploadPicData>();
         picAdapter = new AlbumUploadPicAdapter(dataList);
-
+        updaloadPicListView.setAdapter(picAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(updaloadPicListView.getContext(),
                 mLinearLayoutManager.getOrientation());
         updaloadPicListView.addItemDecoration(dividerItemDecoration);
+
+        picAdapter.addEOFPicData();
+        picAdapter.notifyDataSetChanged();
+        Log.i("test_hs","1"+dataList.toString());
+
+
     }
 
 

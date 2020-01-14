@@ -1,7 +1,7 @@
 package com.picaproject.pica.CustomView;
 
 import android.content.Context;
-
+import android.util.AttributeSet;
 
 
 public class PicMetaTextView extends android.support.v7.widget.AppCompatTextView {
@@ -13,6 +13,16 @@ public class PicMetaTextView extends android.support.v7.widget.AppCompatTextView
     * */
     public PicMetaTextView(Context context) {
         super(context);
+        setVisibility(GONE);
+    }
+
+    public PicMetaTextView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        setVisibility(GONE);
+    }
+
+    public PicMetaTextView(Context context, AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
         setVisibility(GONE);
     }
 
