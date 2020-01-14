@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:weightSum="1"
+    android:orientation="vertical"
+    tools:context=".UploadPic">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.1"
+        android:weightSum="1"
+        android:orientation="horizontal"
+        android:gravity="right"
+        >
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="등록"
+            />
+        
+        
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.4"
+        android:orientation="horizontal"
+        android:layout_margin="50dp"
+        >
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/img_sample"
+            android:id="@+id/imageView"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"
+        android:weightSum="1"
+        android:orientation="vertical"
+        android:layout_margin="20dp"
+        >
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:hint="#태그 #태그 #태그"
+            android:layout_weight="0.5"
+            android:id="@+id/pic_tag"
+            />
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:hint="사진 설명 입력하기"
+            android:id="@+id/pic_contents"
+            android:layout_weight="0.5"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.2"
+        android:weightSum="1"
+        android:orientation="horizontal"
+        ></LinearLayout>
+
+
+
+
+</LinearLayout>
