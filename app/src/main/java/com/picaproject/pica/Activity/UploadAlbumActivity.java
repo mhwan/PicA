@@ -66,21 +66,24 @@ public class UploadAlbumActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if(data == null){
+            Log.w("test_hs","UploadAlbumActivity onActivityResult : Intent data is Null");
             super.onActivityResult(requestCode, resultCode, data);
             return;
         }
+        UploadPicData picData = (UploadPicData)data.getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
         // 사진 추가 모드일경우
         if(requestCode == IntentProtocol.ADD_PIC_MODE){
-            UploadPicData picData = (UploadPicData)data.getSerializableExtra("UploadPicData");
-            Log.i("test_hs","UploadAlbumActivity onActivityResult : "+picData.toString());
-            addPicData(picData);
             Log.i("test_hs","UploadAlbumActivity onActivityResult2 : "+dataList.toString());
+            addPicData(picData);
+
         }
         // 사진 수정 모드일경우
-        if(requestCode == IntentProtocol.UPDATE_PIC_MODE && resultCode == RESULT_OK && data != null && data.getData() != null){
-            UploadPicData picData = (UploadPicData)data.getSerializableExtra("UploadPicData");
-            Log.i("test_hs","UploadAlbumActivity onActivityResult : "+picData.toString());
+        if(requestCode == IntentProtocol.UPDATE_PIC_MODE){
             Log.i("test_hs","UploadAlbumActivity onActivityResult3 : "+dataList.toString());
+            int index = data.getIntExtra(IntentProtocol.INTENT_FLAG_DATA_INDEX,-1);
+            if(index!=-1){
+                updatePicData(picData,index);
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
@@ -116,6 +119,12 @@ public class UploadAlbumActivity extends AppCompatActivity {
         picAdapter.notifyDataSetChanged();
 
         Log.i("test_hs","UploadAlbumActivity addPicData : "+dataList.toString());
+    }
+
+    private void updatePicData(UploadPicData data,int index){
+        dataList.set(index,data);
+        // 리사이클 뷰 새로고침
+        picAdapter.notifyDataSetChanged();
     }
 
     public void checkPermission(){

@@ -13,4 +13,10 @@ public class IntentProtocol {
     // 기존에 업로드된 사진을 클릭해서 수정해야할때
     // + 동일한 사진을 같은 앨범에서 2개 이상 중복으로 입력하는건 불가능하게 막아야함
     public static final int UPDATE_PIC_MODE = 9002;
+
+    public static final String INTENT_FLAG_MODE = "mode";
+    public static final String INTENT_FLAG_DATA_INDEX = "DataIndex";
+    public static final String PIC_DATA_CLASS_NAME = "UploadPicData";
+
+
 }

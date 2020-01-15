@@ -16,24 +16,31 @@ import com.picaproject.pica.Item.UploadPicData;
 public class PicImageButtonClickListener implements View.OnClickListener {
     private AppCompatActivity context;
     private UploadPicData data;
-
-    public PicImageButtonClickListener(AppCompatActivity context, UploadPicData data) {
+    // PicData가 Array에 들어있던 위치
+    private int dataIndex;
+    public PicImageButtonClickListener(AppCompatActivity context, UploadPicData data,int dataIndex) {
         this.context = context;
         this.data = data;
+        this.dataIndex = dataIndex;
     }
 
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(context,UploadPicActivity.class);
-        intent.putExtra("UploadPicData",data);
+        intent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME,data);
 
         int mode = -1;
 
-        if(data.getContents().equals(UploadPicData.STATE_EOF))
+        if(data.getContents().equals(UploadPicData.STATE_EOF)){
             mode = IntentProtocol.ADD_PIC_MODE;
-        else
+        }
+
+        else{
             mode = IntentProtocol.UPDATE_PIC_MODE;
-        intent.putExtra("mode",mode);
+            intent.putExtra(IntentProtocol.INTENT_FLAG_DATA_INDEX,dataIndex);
+        }
+
+        intent.putExtra(IntentProtocol.INTENT_FLAG_MODE,mode);
         context.startActivityForResult(intent,mode);
     }
     /*

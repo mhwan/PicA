@@ -28,7 +28,9 @@ public class UploadPicActivity extends AppCompatActivity {
     private EditText picContentsEdit;
     private Uri selectedImageUri;
     private int mode;
-
+    // 수정모드에서만 사용
+    // 수정 대상인 PicData가 들어있던 위치
+    private int updateIndex;
 
 
     @Override
@@ -37,10 +39,21 @@ public class UploadPicActivity extends AppCompatActivity {
         setContentView(R.layout.activity_upload_pic);
         Intent intent = getIntent();
         // 앨범추가 화면에서 넘어온 데이터가 "기존 사진 수정" 인지 "새 사진 추가인지" MODE 구분 / 만약 값이 없다면 기본값은 새 사진 추가
-        mode = intent.getIntExtra("mode",IntentProtocol.ADD_PIC_MODE);
-        UploadPicData picData = (UploadPicData)intent.getSerializableExtra("UploadPicData");
+        mode = intent.getIntExtra(IntentProtocol.INTENT_FLAG_MODE,IntentProtocol.ADD_PIC_MODE);
+        UploadPicData picData = (UploadPicData)intent.getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
         this.picData=picData;
+
         imageView = (ImageView) findViewById(R.id.imageView);
+        // 수정모드이면 수정대상인 사진 띄워줌
+        if(mode==IntentProtocol.UPDATE_PIC_MODE){
+            selectedImageUri = Uri.parse(picData.getSrc());
+            imageView.setImageURI(selectedImageUri);
+            updateIndex = intent.getIntExtra(IntentProtocol.INTENT_FLAG_DATA_INDEX,-1);
+        }
+        else{
+            updateIndex=-1;
+        }
+
         submit = (Button) findViewById(R.id.submit_btn);
         picTagEdit = (EditText) findViewById(R.id.pic_tag);
         picContentsEdit = (EditText) findViewById(R.id.pic_contents);
@@ -88,7 +101,11 @@ public class UploadPicActivity extends AppCompatActivity {
         }
 
         Intent resultIntent = new Intent();
-        resultIntent.putExtra("UploadPicData",picData);
+        resultIntent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME,picData);
+        // 수정모드였을경우 갖고있던 인덱스 반환
+        if(mode==IntentProtocol.UPDATE_PIC_MODE)
+            resultIntent.putExtra(IntentProtocol.INTENT_FLAG_DATA_INDEX,updateIndex);
+
         setResult(mode, resultIntent);
         finish();
         // 화면에서 수정한 Pic 데이터 전달하고 종료

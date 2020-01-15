@@ -76,7 +76,7 @@ public class AlbumUploadPicAdapter extends RecyclerView.Adapter<UploadPicHolder>
 
         }
 
-        imgView.setOnClickListener(new PicImageButtonClickListener(context,data));
+        imgView.setOnClickListener(new PicImageButtonClickListener(context,data,i));
 
 
     }
