@@ -1,7 +1,5 @@
 package com.picaproject.pica.Item;
 
-import android.net.Uri;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -15,13 +13,14 @@ import java.util.ArrayList;
 public class UploadPicData implements Serializable {
     // 직렬화 버전 표시 : https://lktprogrammer.tistory.com/150
     private static final long serialVersionUID = 1L;
-    public static final String STATE_EOF = "EOF";
-    private Uri src;
+    // EOF를 가르키는 메시지 EOF만 쓰면 유저가 EOF라는 말만 쓴다면 에러나니까 유저들이 쓰지않을 고유한 코드가 필요함
+    public static final String STATE_EOF = "CODE_EOF_ALBUM_PIC_LIST";
+    private String src;
     private String contents;
     private ArrayList<String> tags;
 
 
-    public UploadPicData(Uri src){
+    public UploadPicData(String src){
         this.src=src;
     }
 
@@ -29,11 +28,15 @@ public class UploadPicData implements Serializable {
         return contents;
     }
 
+    public void setSrc(String src) {
+        this.src = src;
+    }
+
     public void setContents(String contents) {
         this.contents = contents;
     }
 
-    public Uri getSrc() {
+    public String getSrc() {
         return src;
     }
 
@@ -43,5 +46,14 @@ public class UploadPicData implements Serializable {
 
     public void setTags(ArrayList<String> tags) {
         this.tags = tags;
+    }
+
+    @Override
+    public String toString() {
+        return "UploadPicData{" +
+                "src=" + src +
+                ", contents='" + contents + '\'' +
+                ", tags=" + tags +
+                '}';
     }
 }

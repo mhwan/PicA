@@ -1,10 +1,11 @@
 package com.picaproject.pica.Listener;
 
-import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
 import com.picaproject.pica.Activity.UploadPicActivity;
+import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.UploadPicData;
 
 /*
@@ -13,10 +14,10 @@ import com.picaproject.pica.Item.UploadPicData;
 *
 * */
 public class PicImageButtonClickListener implements View.OnClickListener {
-    private Context context;
+    private AppCompatActivity context;
     private UploadPicData data;
 
-    public PicImageButtonClickListener(Context context, UploadPicData data) {
+    public PicImageButtonClickListener(AppCompatActivity context, UploadPicData data) {
         this.context = context;
         this.data = data;
     }
@@ -25,7 +26,15 @@ public class PicImageButtonClickListener implements View.OnClickListener {
     public void onClick(View view) {
         Intent intent = new Intent(context,UploadPicActivity.class);
         intent.putExtra("UploadPicData",data);
-        context.startActivity(intent);
+
+        int mode = -1;
+
+        if(data.getContents().equals(UploadPicData.STATE_EOF))
+            mode = IntentProtocol.ADD_PIC_MODE;
+        else
+            mode = IntentProtocol.UPDATE_PIC_MODE;
+        intent.putExtra("mode",mode);
+        context.startActivityForResult(intent,mode);
     }
     /*
     * 사진 추가/수정 액티비티에서

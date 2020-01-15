@@ -1,8 +1,8 @@
 package com.picaproject.pica.CustomView;
 
-import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,8 +22,8 @@ public class AlbumUploadPicAdapter extends RecyclerView.Adapter<UploadPicHolder>
 
     private ArrayList<UploadPicData> dataList;
     // context : 액티비티 화면 전환용 context
-    private Context context;
-    public AlbumUploadPicAdapter(Context context,ArrayList<UploadPicData> list) {
+    private AppCompatActivity context;
+    public AlbumUploadPicAdapter(AppCompatActivity context, ArrayList<UploadPicData> list) {
         this.dataList = list;
         this.context = context;
     }
@@ -70,18 +70,19 @@ public class AlbumUploadPicAdapter extends RecyclerView.Adapter<UploadPicHolder>
         ImageView imgView = uploadPicHolder.getImageView();
 
         // list의 끝을 가르키는 EOF 데이터일 경우
-        if(contents.equals("EOF")){
+        if(contents.equals(UploadPicData.STATE_EOF)){
             imgView.setImageResource(R.drawable.plus_icon);
 
         }
         // EOF가 아닌 다른 데이터만 보여주기 가능
         else {
 
-            Uri imageSrc = dataList.get(i).getSrc();
+            String imageSrc = dataList.get(i).getSrc();
 
             try {
                 // 태그까진 View홀더에서 필요없음
-                uploadPicHolder.getImageView().setImageURI(imageSrc);
+                Uri imageUri = Uri.parse(imageSrc);
+                uploadPicHolder.getImageView().setImageURI(imageUri);
 
             }catch (Exception e){
                 String err = "이미지 로딩 에러 발생 " + e.toString();
