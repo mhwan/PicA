@@ -37,26 +37,45 @@ public class UploadPicActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_pic);
+
+
+        submit = (Button) findViewById(R.id.submit_btn);
+        picTagEdit = (EditText) findViewById(R.id.pic_tag);
+        picContentsEdit = (EditText) findViewById(R.id.pic_contents);
+        imageView = (ImageView) findViewById(R.id.imageView);
+
         Intent intent = getIntent();
         // 앨범추가 화면에서 넘어온 데이터가 "기존 사진 수정" 인지 "새 사진 추가인지" MODE 구분 / 만약 값이 없다면 기본값은 새 사진 추가
         mode = intent.getIntExtra(IntentProtocol.INTENT_FLAG_MODE,IntentProtocol.ADD_PIC_MODE);
         UploadPicData picData = (UploadPicData)intent.getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
         this.picData=picData;
 
-        imageView = (ImageView) findViewById(R.id.imageView);
+
         // 수정모드이면 수정대상인 사진 띄워줌
         if(mode==IntentProtocol.UPDATE_PIC_MODE){
             selectedImageUri = Uri.parse(picData.getSrc());
+
             imageView.setImageURI(selectedImageUri);
+
+            picContentsEdit.setText(picData.getContents());
+
+            ArrayList<String> tags = picData.getTags();
+            if(tags!=null&&tags.size()>0){
+                String tagText= "";
+                for (int i=0;i<tags.size()-2;i++){
+                    tagText+=tags.get(i)+" ";
+                }
+                tagText+=tags.get(tags.size()-1);
+                picTagEdit.setText(tagText);
+            }
+
+
             updateIndex = intent.getIntExtra(IntentProtocol.INTENT_FLAG_DATA_INDEX,-1);
         }
         else{
             updateIndex=-1;
         }
 
-        submit = (Button) findViewById(R.id.submit_btn);
-        picTagEdit = (EditText) findViewById(R.id.pic_tag);
-        picContentsEdit = (EditText) findViewById(R.id.pic_contents);
         imageView.setOnClickListener(new PicImageViewClickListener(this));
         submit.setOnClickListener(new UploadPicSubmitButtonClickListener(this));
         Log.i("test_hs","UploadPicActivity : "+picData.getContents());
