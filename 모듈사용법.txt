@@ -1,0 +1,47 @@
+1. PermissionChecker
+
+    0. 주의사항
+    액티비티 클래스가 AppCompatActivity 클래스를 상속받거나 AppCompatActivity의 자손 클래스를 상속받아야 사용 가능합니다.
+    (상세한 사용 예제는 UploadAlbumActivity.java 파일 참조)
+
+    1. 권한을 요구하고 싶은 퍼미션들의 목록 작성
+
+    String[] permission_list = {
+                Manifest.permission.WRITE_CONTACTS,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.READ_CONTACTS
+     };
+
+
+
+     2. OnCreate에서의 준비작업
+
+     // 전역변수
+     private PermissionChecker pc;
+     // 전역변수
+     String[] permission_list = {
+                 Manifest.permission.WRITE_CONTACTS,
+                 Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                 Manifest.permission.READ_EXTERNAL_STORAGE,
+                 Manifest.permission.READ_CONTACTS
+     };
+
+
+
+
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+        pc = new PermissionChecker(permission_list,this);
+        pc.checkPermission();
+     }
+
+
+     3. 액티비티 클래스에서 onRequestPermissionsResult 메소드 재정의
+
+       @Override
+       public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+            pc.requestPermissionsResult(requestCode,grantResults);
+    }
+
