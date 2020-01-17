@@ -4,6 +4,12 @@
     액티비티 클래스가 AppCompatActivity 클래스를 상속받거나 AppCompatActivity의 자손 클래스를 상속받아야 사용 가능합니다.
     (상세한 사용 예제는 UploadAlbumActivity.java 파일 참조)
 
+
+    1번에서 작성하게 될 퍼미션들은 매니페스트에도 반드시 등록되어있어야 합니다.
+    Manifest.permission.WRITE_CONTACTS ->  <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+
+
+
     1. 권한을 요구하고 싶은 퍼미션들의 목록 작성
 
     String[] permission_list = {
