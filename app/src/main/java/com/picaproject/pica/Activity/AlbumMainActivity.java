@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -37,13 +38,20 @@ public class AlbumMainActivity extends AppCompatActivity {
     private void initView(){
         final RelativeLayout guideView = findViewById(R.id.tab_album_guide);
         final Toolbar toolbar = findViewById(R.id.tab_toolbar);
-
+        final FloatingActionButton fab = findViewById(R.id.tab_fab);
         Log.d("statusbar", getStatusBarHeight()+"");
         setSupportActionBar(toolbar);
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("");
         }
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(AlbumMainActivity.this, UploadAlbumActivity.class));
+            }
+        });
 
         final ViewPager viewPager = findViewById(R.id.tab_viewpager);
         setupViewPager(viewPager);
@@ -61,12 +69,14 @@ public class AlbumMainActivity extends AppCompatActivity {
                     getSupportActionBar().setTitle("앨범 샘플 1");
                     guideView.animate().alpha(0.0f);
                     guideView.setVisibility(View.GONE);
+                    fab.hide();
                     //getSupportActionBar().show();
                 }
                 else {
                     getSupportActionBar().setTitle("");
                     guideView.animate().alpha(1.0f);
                     guideView.setVisibility(View.VISIBLE);
+                    fab.show();
                     //getSupportActionBar().hide();
                 }
             }
@@ -158,17 +168,5 @@ public class AlbumMainActivity extends AppCompatActivity {
             result = getResources().getDimensionPixelSize(resourceId);
 
         return result;
-    }
-
-    /* TODO : 임시로 볼륨 업 키가 누르면 사진 추가 액티비티로 갈수있음
-    *   이후 의논하여 사진 추가 액티비티로 갈수있는 구조 추가하기*/
-    @Override
-    public boolean onKeyUp(int keyCode, KeyEvent event) {
-        if (keyCode==KeyEvent.KEYCODE_VOLUME_UP){
-            // 사진 추가 액티비티 이동
-            startActivity(new Intent(this, UploadAlbumActivity.class));
-            return true;
-        }
-        return super.onKeyUp(keyCode, event);
     }
 }
