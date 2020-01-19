@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -43,6 +44,14 @@ public class UploadPicActivity extends AppCompatActivity {
         picTagEdit = (EditText) findViewById(R.id.pic_tag);
         picContentsEdit = (EditText) findViewById(R.id.pic_contents);
         imageView = (ImageView) findViewById(R.id.imageView);
+
+        //임시 삽입 지도액티비티로의 진입
+        (findViewById(R.id.map_contents)).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(UploadPicActivity.this, LocationListActivity.class));
+            }
+        });
 
         Intent intent = getIntent();
         // 앨범추가 화면에서 넘어온 데이터가 "기존 사진 수정" 인지 "새 사진 추가인지" MODE 구분 / 만약 값이 없다면 기본값은 새 사진 추가
