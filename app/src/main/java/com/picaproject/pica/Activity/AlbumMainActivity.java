@@ -49,7 +49,8 @@ public class AlbumMainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(AlbumMainActivity.this, UploadAlbumActivity.class));
+                // TODO : 외부 갤러리 앱 바로 연동
+                //startActivity(new Intent(AlbumMainActivity.this, UploadAlbumActivity.class));
             }
         });
 
