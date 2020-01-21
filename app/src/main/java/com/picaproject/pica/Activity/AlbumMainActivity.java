@@ -51,6 +51,7 @@ public class AlbumMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // TODO : 외부 갤러리 앱 바로 연동
                 //startActivity(new Intent(AlbumMainActivity.this, UploadAlbumActivity.class));
+
             }
         });
 
