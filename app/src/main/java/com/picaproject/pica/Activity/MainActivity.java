@@ -1,5 +1,6 @@
 package com.picaproject.pica.Activity;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.picaproject.pica.Fragment.MyAlbumFragment;
@@ -43,6 +45,12 @@ public class MainActivity extends AppCompatActivity {
         toolbarTitle = (TextView)toolbar.findViewById(R.id.toolbarTextView);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
+        findViewById(R.id.create_album).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(getApplicationContext(), CreateAlbumActivity.class));
+            }
+        });
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottom_navigation);
 

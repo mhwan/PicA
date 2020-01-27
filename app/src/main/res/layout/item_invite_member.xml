@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="42dp"
+    android:layout_height="56dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.picaproject.pica.CustomView.ProfileIconView
+        android:id="@+id/profile_icon"
+        android:layout_width="38dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="2dp"
+        app:icon_padding="12dp"
+        app:bg_color="@color/colorPrimary"
+        android:layout_height="38dp"></com.picaproject.pica.CustomView.ProfileIconView>
+    <TextView
+        android:layout_below="@id/profile_icon"
+        android:id="@+id/profile_name"
+        android:layout_width="42dp"
+        android:maxLines="1"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="배명환"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="3dp"
+        android:textSize="8sp"
+        android:textColor="@color/colorPrimaryBlack"/>
+    <RelativeLayout
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="18dp"
+        android:id="@+id/profile_remove"
+        android:layout_height="18dp">
+        <com.picaproject.pica.CustomView.CircleView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:circle_background_color="@android:color/darker_gray"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_close_black_24dp"
+            android:tint="@android:color/white"
+            android:layout_centerInParent="true"></ImageView>
+    </RelativeLayout>
+</RelativeLayout>

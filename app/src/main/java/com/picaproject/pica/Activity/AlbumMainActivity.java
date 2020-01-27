@@ -18,8 +18,10 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 
+import com.picaproject.pica.CustomView.InvitedFriendsRecyclerAdapter;
 import com.picaproject.pica.Fragment.AlbumMainFragment;
 import com.picaproject.pica.Fragment.UserInfoFragment;
+import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.R;
 
 import java.util.ArrayList;
@@ -100,6 +102,14 @@ public class AlbumMainActivity extends AppCompatActivity {
             }
         });
 
+        findViewById(R.id.manage_album).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(AlbumMainActivity.this, CreateAlbumActivity.class);
+                intent.putExtra(IntentProtocol.INTENT_ALBUM_MODE, true);
+                startActivity(intent);
+            }
+        });
         /*
         try {
             Bitmap bitmap = BitmapFactory.decodeResource(getResources(), R.drawable.img_sample);
