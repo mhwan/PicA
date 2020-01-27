@@ -15,7 +15,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
@@ -188,23 +187,28 @@ public class AlbumMainActivity extends AppCompatActivity {
         Log.i("test_hs","AlbumMainActivity  : ");
         if(requestCode == IntentProtocol.GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null){
             ClipData datas = data.getClipData();
+            ArrayList<UploadPicData> prasePicDatas;
             // 사진 여러장 선택시
             if(datas!=null){
-                ArrayList<UploadPicData> prasePicDatas = PicDataParser.parseDataFromClipData(datas);
+                prasePicDatas = PicDataParser.parseDataFromClipData(datas);
                 // 갤러리에서 가져온 n장의 사진 처리
                 Log.i("test_hs","AlbumMainActivity onActivityResult : "+prasePicDatas.toString());
 
             }
             // 사진 1장 선택시
             else if(data.getData()!=null){
-                ArrayList<UploadPicData> prasePicDatas = new ArrayList<>();
+                prasePicDatas = new ArrayList<>();
                 prasePicDatas.add(new UploadPicData(data.getData().toString()));
                 Log.i("test_hs","AlbumMainActivity onActivityResult 2 : "+prasePicDatas.toString());
             }
             // 사진 선택 안했을시
             else{
                 Toast.makeText(this,"사진을 선택해주세요.",Toast.LENGTH_LONG).show();
+                return;
             }
+            Intent intent = new Intent(this, NewAlbumUploadActivity.class);
+            intent.putExtra(IntentProtocol.PIC_DATA_LIST_NAME,prasePicDatas);
+            startActivityForResult(intent, IntentProtocol.ADD_PIC_MULTI_MODE);
 
 
 
