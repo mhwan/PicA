@@ -1,5 +1,6 @@
 package com.picaproject.pica.Activity;
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -17,10 +18,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.picaproject.pica.Fragment.AlbumMainFragment;
 import com.picaproject.pica.Fragment.UserInfoFragment;
+import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.PicDataParser;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +54,14 @@ public class AlbumMainActivity extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // TODO : 외부 갤러리 앱 바로 연동
-                //startActivity(new Intent(AlbumMainActivity.this, UploadAlbumActivity.class));
+                Log.i("test_hs","initView  : ");
+                // 외부 갤러리 앱 열기
+                Intent intent = new Intent();
+                intent.setType("image/*");
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                //startActivityForResult(intent, IntentProtocol.GET_GALLERY_IMAGE);
+                startActivityForResult(Intent.createChooser(intent,"Select Picture"), IntentProtocol.GET_GALLERY_IMAGE);
 
             }
         });
@@ -170,5 +181,34 @@ public class AlbumMainActivity extends AppCompatActivity {
             result = getResources().getDimensionPixelSize(resourceId);
 
         return result;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.i("test_hs","AlbumMainActivity  : ");
+        if(requestCode == IntentProtocol.GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null){
+            ClipData datas = data.getClipData();
+            // 사진 여러장 선택시
+            if(datas!=null){
+                ArrayList<UploadPicData> prasePicDatas = PicDataParser.parseDataFromClipData(datas);
+                // 갤러리에서 가져온 n장의 사진 처리
+                Log.i("test_hs","AlbumMainActivity onActivityResult : "+prasePicDatas.toString());
+
+            }
+            // 사진 1장 선택시
+            else if(data.getData()!=null){
+                ArrayList<UploadPicData> prasePicDatas = new ArrayList<>();
+                prasePicDatas.add(new UploadPicData(data.getData().toString()));
+                Log.i("test_hs","AlbumMainActivity onActivityResult 2 : "+prasePicDatas.toString());
+            }
+            // 사진 선택 안했을시
+            else{
+                Toast.makeText(this,"사진을 선택해주세요.",Toast.LENGTH_LONG).show();
+            }
+
+
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }
