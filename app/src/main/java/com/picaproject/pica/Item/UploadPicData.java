@@ -15,6 +15,8 @@ public class UploadPicData implements Serializable {
     private static final long serialVersionUID = 1L;
     // EOF를 가르키는 메시지 EOF만 쓰면 유저가 EOF라는 말만 쓴다면 에러나니까 유저들이 쓰지않을 고유한 코드가 필요함
     public static final String STATE_EOF = "CODE_EOF_ALBUM_PIC_LIST";
+    // 추가 버튼을 나타내는 변수
+    public static final String ADD_BTN = "CODE_ADD_BTN";
     private String src;
     private String contents;
     private ArrayList<String> tags;
