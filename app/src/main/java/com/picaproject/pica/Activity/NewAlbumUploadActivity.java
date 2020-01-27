@@ -32,6 +32,11 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
     private NewAlbumUploadAdapter adapter;
     private PermissionChecker pc;
     private NewAlbumUploadPicAdapter recyclerAdapter;
+    private ArrayList<UploadPicData> dataList;
+    // 리사이클러용 데이터 리스트랑 Fragment용 데이터리스트는 따로 둠
+    // recyclerDataList에는 항상 첫번째에 ADD_BTN 데이터가 들어가고
+    // Fragment에는 이런 ADD_BTN 데이터가 영향을 미치지 않기 위함.
+    private ArrayList<UploadPicData> recyclerDataList;
     String[] permission_list = {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
@@ -47,9 +52,9 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         uploadPicListView = (RecyclerView) findViewById(R.id.upload_pic_list_view);
         adapter = new NewAlbumUploadAdapter(getSupportFragmentManager());
-
+        recyclerDataList = new ArrayList<>();
         Intent intent = getIntent();
-        ArrayList<UploadPicData> dataList = (ArrayList<UploadPicData>)intent.getSerializableExtra(IntentProtocol.PIC_DATA_LIST_NAME);
+        dataList = (ArrayList<UploadPicData>)intent.getSerializableExtra(IntentProtocol.PIC_DATA_LIST_NAME);
         viewPager.setOffscreenPageLimit(dataList.size());
         // 데이터를 가져와서 플래그먼트로 변환해 추가하기
         addFragment(dataList);
@@ -62,10 +67,12 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
         uploadPicListView.setLayoutManager(mLinearLayoutManager);
         // 추가 버튼 역할을 해줄 데이터
         UploadPicData addBtnData = new UploadPicData("NULL");
-
         addBtnData.setContents(UploadPicData.ADD_BTN);
-        dataList.add(0,addBtnData);
-        recyclerAdapter = new NewAlbumUploadPicAdapter(dataList);
+
+        recyclerDataList.addAll(dataList);
+        recyclerDataList.add(0,addBtnData);
+
+        recyclerAdapter = new NewAlbumUploadPicAdapter(recyclerDataList);
         uploadPicListView.setAdapter(recyclerAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(uploadPicListView.getContext(),
                 mLinearLayoutManager.getOrientation());
