@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.picaproject.pica.Item.UploadPicData;
 
+import com.picaproject.pica.Listener.NewUploadRecyclerAddImageBtnClickListener;
 import com.picaproject.pica.Listener.NewUploadRecyclerImageViewClickListener;
 import com.picaproject.pica.R;
 
@@ -25,13 +27,13 @@ public class NewAlbumUploadPicAdapter extends RecyclerView.Adapter<NewUploadPicH
 
     private  static RequestManager glide;
     private ArrayList<UploadPicData> dataList;
-    private Activity activity;
+    private AppCompatActivity activity;
     private UploadPicController controller;
     /*
      * 주의 : dataList의 첫번째에는 무조건 추가버튼이 들어가야함.
      *
      * */
-    public NewAlbumUploadPicAdapter(ArrayList<UploadPicData> list,Activity activity,UploadPicController controller) {
+    public NewAlbumUploadPicAdapter(ArrayList<UploadPicData> list,AppCompatActivity activity,UploadPicController controller) {
         this.dataList = list;
         this.activity = activity;
         this.controller = controller;
@@ -64,7 +66,8 @@ public class NewAlbumUploadPicAdapter extends RecyclerView.Adapter<NewUploadPicH
 
         if(contents!=null&&contents.equals(UploadPicData.ADD_BTN)){
             imgView.setImageResource(R.drawable.plus_icon);
-            // TODO : 사진 추가하기
+            // 사진 추가버튼 클릭
+            imgView.setOnClickListener(new NewUploadRecyclerAddImageBtnClickListener(activity));
         }
         // EOF가 아닌 다른 데이터만 보여주기 가능
         else {

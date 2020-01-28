@@ -1,10 +1,12 @@
 package com.picaproject.pica.Activity;
 
 import android.Manifest;
+import android.content.ClipData;
 import android.content.Intent;
 
 import android.support.annotation.NonNull;
 
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +14,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import android.util.Log;
 import android.widget.Button;
 
 import com.picaproject.pica.CustomView.NewAlbumUploadAdapter;
@@ -22,6 +25,7 @@ import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.PermissionChecker;
+import com.picaproject.pica.Util.PicDataParser;
 
 import java.util.ArrayList;
 
@@ -33,11 +37,12 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
     private NewAlbumUploadAdapter adapter;
     private PermissionChecker pc;
     private NewAlbumUploadPicAdapter recyclerAdapter;
-    private ArrayList<UploadPicData> dataList;
+
     // 리사이클러용 데이터 리스트랑 Fragment용 데이터리스트는 따로 둠
     // recyclerDataList에는 항상 첫번째에 ADD_BTN 데이터가 들어가고
     // Fragment에는 이런 ADD_BTN 데이터가 영향을 미치지 않기 위함.
     private ArrayList<UploadPicData> recyclerDataList;
+    private ArrayList<UploadPicData> dataList;
     String[] permission_list = {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
@@ -102,6 +107,50 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         //필수
         pc.requestPermissionsResult(requestCode,grantResults);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        Log.i("test_hs","AlbumMainActivity  : ");
+        if(requestCode == IntentProtocol.GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null){
+            ClipData datas = data.getClipData();
+            ArrayList<UploadPicData> prasePicDatas;
+            // 사진 여러장 선택시
+            if(datas!=null){
+                prasePicDatas = PicDataParser.parseDataFromClipData(datas);
+                // 갤러리에서 가져온 n장의 사진 처리
+                Log.i("test_hs","AlbumMainActivity onActivityResult : "+prasePicDatas.toString());
+
+            }
+            // 사진 1장 선택시
+            else if(data.getData()!=null){
+                prasePicDatas = new ArrayList<>();
+                prasePicDatas.add(new UploadPicData(data.getData().toString()));
+                Log.i("test_hs","AlbumMainActivity onActivityResult 2 : "+prasePicDatas.toString());
+            }
+            // 사진 선택 안했을시 아무 동작 안함.
+            else{
+                return;
+            }
+            // 가져온 이미지를 UploadPicData 데이터로 만드는건 했고
+            // 이제 만든 UploadPicData의 처리를 밑에서 하면 됨.
+            // --밑 --
+            recyclerDataList.addAll(prasePicDatas);
+            dataList.addAll(prasePicDatas);
+
+            addFragment(prasePicDatas);
+            adapter.notifyDataSetChanged();
+            recyclerAdapter.notifyDataSetChanged();
+
+            /*
+            Intent intent = new Intent(this, NewAlbumUploadActivity.class);
+            intent.putExtra(IntentProtocol.PIC_DATA_LIST_NAME,prasePicDatas);
+            startActivityForResult(intent, IntentProtocol.ADD_PIC_MULTI_MODE);
+            */
+
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
 }
