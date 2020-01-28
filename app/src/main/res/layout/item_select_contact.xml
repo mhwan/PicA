@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp">
+
+    <com.picaproject.pica.CustomView.ProfileIconView
+        android:layout_width="42dp"
+        android:id="@+id/select_icon"
+        android:layout_height="42dp"
+        android:layout_marginRight="12dp"
+        app:icon_padding="12dp"
+        app:bg_color="@color/colorPrimary"></com.picaproject.pica.CustomView.ProfileIconView>
+
+    <CheckBox
+        android:id="@+id/select_checkbox"
+        android:focusable="false"
+        android:clickable="false"
+        android:focusableInTouchMode="false"
+        android:layout_alignParentRight="true"
+        android:buttonTint="@color/colorPrimary"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:layout_marginTop="2dp"
+        android:id="@+id/select_name"
+        android:layout_toRightOf="@id/select_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="배명"
+        android:textColor="@color/colorPrimary"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/select_phNumber"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@id/select_name"
+        android:layout_below="@id/select_name"
+        android:layout_marginTop="3dp"
+        android:text="01050574876"
+        android:textColor="@color/colorPrimaryBlack"
+        android:textSize="13dp" />
+
+</RelativeLayout>

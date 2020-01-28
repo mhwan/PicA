@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:paddingTop="6dp"
+    android:paddingBottom="6dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <com.picaproject.pica.CustomView.ProfileIconView
+        android:id="@+id/friends_profile"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        app:icon_padding="10dp"
+        app:bg_color="@color/colorPrimary"></com.picaproject.pica.CustomView.ProfileIconView>
+    <TextView
+        android:layout_marginLeft="12dp"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/friends_profile"
+        android:id="@+id/friends_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="배명환"
+        android:textSize="13sp"
+        android:textColor="@color/colorPrimaryBlack"/>
+</RelativeLayout>

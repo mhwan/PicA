@@ -21,9 +21,16 @@ public class IntentProtocol {
 
 
 
+    public static int RESULT_LOAD_IMAGE = 8001;
+    public static int REQUEST_INVITE_MEMBER = 7001;
+
     public static final String INTENT_FLAG_MODE = "mode";
+    public static final String INTENT_ALBUM_MODE = "album_mode";
     public static final String INTENT_FLAG_DATA_INDEX = "DataIndex";
     public static final String PIC_DATA_CLASS_NAME = "UploadPicData";
     public static final String PIC_DATA_LIST_NAME = "ArrayList_UploadPicData";
+    public static final String INTENT_CONTACT_LIST = "select_contactlist";
+    public static final String INTENT_RESULT_SELECTED_ID = "selected_id_list";
+
 
 }
