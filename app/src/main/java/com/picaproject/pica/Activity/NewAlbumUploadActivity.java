@@ -15,6 +15,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 
 import com.picaproject.pica.CustomView.NewAlbumUploadAdapter;
@@ -23,13 +24,14 @@ import com.picaproject.pica.CustomView.UploadPicController;
 import com.picaproject.pica.Fragment.NewAlbumUploadFragment;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Listener.NewUploadRecyclerAddImageBtnClickListener;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.PermissionChecker;
 import com.picaproject.pica.Util.PicDataParser;
 
 import java.util.ArrayList;
 
-public class NewAlbumUploadActivity extends AppCompatActivity {
+public class NewAlbumUploadActivity extends BaseToolbarActivity {
     private Button backBtn;
     private Button submitBtn;
     private ViewPager viewPager;
@@ -53,8 +55,7 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_album_upload);
-        backBtn = (Button) findViewById(R.id.back_btn);
-        submitBtn = (Button) findViewById(R.id.submit_btn);
+        findViewById(R.id.image_upload).setOnClickListener(new NewUploadRecyclerAddImageBtnClickListener(this));
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         uploadPicListView = (RecyclerView) findViewById(R.id.upload_pic_list_view);
         adapter = new NewAlbumUploadAdapter(getSupportFragmentManager());
@@ -76,7 +77,7 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
         addBtnData.setContents(UploadPicData.ADD_BTN);
 
         recyclerDataList.addAll(dataList);
-        recyclerDataList.add(0,addBtnData);
+        //recyclerDataList.add(0,addBtnData);
 
         UploadPicController controller = new UploadPicController(uploadPicListView,viewPager);
 
@@ -90,6 +91,19 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
         //필수 2줄
         pc = new PermissionChecker(permission_list,this);
         pc.checkPermission();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        setToolbarTitle("사진");
+        setToolbarButton("업로드", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //사진이 등록될때의 행동
+            }
+        });
     }
 
     // 데이터를 가져와서 플래그먼트로 변환해 추가하기

@@ -1,20 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="80dp"
-    android:layout_height="80dp">
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="72dp"
+    android:layout_height="72dp"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <Button
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_gravity="right"
-        android:id="@+id/remove_btn"
-        android:background="@drawable/x_icon2"/>
+
 
     <ImageView
         android:id="@+id/picView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/plus_icon"
+        android:src="@drawable/img_sample"
+        android:scaleType="centerCrop"
         />
 
+    <!--
+    이 아래의 view를 선택됬을때 visible하면됨, 이미 viewholder에는 연결시켜놓음!
+    -->
+    <View
+        android:id="@+id/pic_select_border"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/border_pic_upload"/>
+
+    <RelativeLayout
+        android:layout_gravity="right"
+        android:layout_width="22dp"
+        android:id="@+id/remove_btn"
+        android:layout_height="22dp">
+        <com.picaproject.pica.CustomView.CircleView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.8"
+            app:circle_background_color="@android:color/darker_gray"/>
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:src="@drawable/ic_close_black_24dp"
+            android:tint="@android:color/white"
+            android:layout_centerInParent="true"></ImageView>
+    </RelativeLayout>
 </FrameLayout>

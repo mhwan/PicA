@@ -1,41 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
-    android:orientation="vertical"
-    >
+    android:padding="16dp">
+
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:weightSum="1"
-        android:layout_weight="0.1"
+        android:layout_marginTop="16dp"
+        android:id="@+id/frame_contents"
         android:orientation="vertical"
-        >
+        android:layout_alignParentBottom="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:layout_marginBottom="14dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                android:layout_marginBottom="8dp"
+                android:text="사진위치"/>
 
+            <TextView
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:id="@+id/location_edit"
+                android:text="위치 정보"
+                android:textColor="@color/colorPrimaryBlack"
+                android:layout_height="wrap_content">
+            </TextView>
+        </LinearLayout>
 
+        <LinearLayout
+            android:layout_marginBottom="10dp"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                android:text="사진설명"/>
+
+            <EditText
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:hint="설명을 입력하세요."
+                android:id="@+id/content_edit"
+                android:textColor="@color/colorPrimaryBlack"
+                android:layout_height="wrap_content">
+            </EditText>
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimary"
+                android:textSize="13sp"
+                android:layout_marginBottom="6dp"
+                android:text="태그추가"/>
+
+            <EditText
+                android:textSize="15sp"
+                android:layout_width="match_parent"
+                android:hint="태그를 입력해주세요."
+                android:id="@+id/tag_edit"
+                android:textColor="@color/colorPrimaryBlack"
+                android:layout_height="wrap_content">
+            </EditText>
+        </LinearLayout>
     </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:weightSum="1"
-        android:layout_weight="0.3"
-        android:orientation="vertical"
-        >
 
     <ImageView
-        android:layout_width="200dp"
-        android:layout_height="200dp"
+        android:layout_above="@id/frame_contents"
+        android:layout_alignParentTop="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center"
-        android:src="@drawable/plus_icon"
+        android:src="@drawable/img_sample"
         android:id="@+id/image"
-        android:scaleType="fitCenter"
-        />
+        android:adjustViewBounds="true"
+    />
 
-    </LinearLayout>
+    <!--
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -168,5 +227,5 @@
         </LinearLayout>
 
     </LinearLayout>
-
-</LinearLayout>
+-->
+</RelativeLayout>
