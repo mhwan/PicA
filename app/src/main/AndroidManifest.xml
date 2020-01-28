@@ -24,6 +24,7 @@
             android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity android:name=".Activity.UploadPicActivity" />
         <activity android:name=".Activity.UploadAlbumActivity" />
+        <activity android:name=".Activity.NewAlbumUploadActivity" />
         <activity
             android:name=".Activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
