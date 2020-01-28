@@ -20,6 +20,7 @@ import android.widget.Button;
 
 import com.picaproject.pica.CustomView.NewAlbumUploadAdapter;
 import com.picaproject.pica.CustomView.NewAlbumUploadPicAdapter;
+import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.CustomView.UploadPicController;
 import com.picaproject.pica.Fragment.NewAlbumUploadFragment;
 import com.picaproject.pica.IntentProtocol;
@@ -83,9 +84,10 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
 
         recyclerAdapter = new NewAlbumUploadPicAdapter(recyclerDataList,this,controller);
         uploadPicListView.setAdapter(recyclerAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(uploadPicListView.getContext(),
-                mLinearLayoutManager.getOrientation());
-        uploadPicListView.addItemDecoration(dividerItemDecoration);
+
+        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(10);
+
+        uploadPicListView.addItemDecoration(spacesItemDecoration);
         //picAdapter.notifyDataSetChanged();
 
         //필수 2줄

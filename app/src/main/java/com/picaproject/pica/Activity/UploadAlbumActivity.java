@@ -11,6 +11,7 @@ package com.picaproject.pica.Activity;
         import android.support.v7.widget.RecyclerView;
         import android.util.Log;
         import com.picaproject.pica.CustomView.AlbumUploadPicAdapter;
+        import com.picaproject.pica.CustomView.SpacesItemDecoration;
         import com.picaproject.pica.IntentProtocol;
         import com.picaproject.pica.Item.UploadPicData;
         import com.picaproject.pica.R;
@@ -53,9 +54,8 @@ public class UploadAlbumActivity extends AppCompatActivity {
         dataList = new ArrayList<UploadPicData>();
         picAdapter = new AlbumUploadPicAdapter(this,dataList);
         updaloadPicListView.setAdapter(picAdapter);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(updaloadPicListView.getContext(),
-                mLinearLayoutManager.getOrientation());
-        updaloadPicListView.addItemDecoration(dividerItemDecoration);
+        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(10);
+        updaloadPicListView.addItemDecoration(spacesItemDecoration);
 
         addEOFPicData();
         picAdapter.notifyDataSetChanged();
