@@ -72,7 +72,7 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
         recyclerDataList.addAll(dataList);
         recyclerDataList.add(0,addBtnData);
 
-        recyclerAdapter = new NewAlbumUploadPicAdapter(recyclerDataList);
+        recyclerAdapter = new NewAlbumUploadPicAdapter(recyclerDataList,this);
         uploadPicListView.setAdapter(recyclerAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(uploadPicListView.getContext(),
                 mLinearLayoutManager.getOrientation());
@@ -89,6 +89,7 @@ public class NewAlbumUploadActivity extends AppCompatActivity {
         for(UploadPicData d : dataList){
             NewAlbumUploadFragment f = new NewAlbumUploadFragment();
             f.setUploadPicData(d);
+            f.setActivity(this);
             adapter.addFragment(f);
         }
     }
