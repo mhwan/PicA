@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ProfileIconView">
+        <attr name="icon_src" format="reference"/>
+        <attr name="bg_color" format="color"/>
+        <attr name="icon_padding" format="dimension" />
+        <attr name="border_width" format="dimension" />
+        <attr name="border_color" format="color" />
+    </declare-styleable>
+    <declare-styleable name="CircleView">
+        <attr name="circle_background_color" format="color" />
+        <attr name="circle_border_color" format="color" />
+        <attr name="circle_border_width" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="CustomBottomButton">
+        <attr name="button_text" format="string" />
+        <attr name="text_size" format="dimension" />
+        <attr name="button_icon" format="reference" />
+        <attr name="button_color" format="color" />
+        <attr name="ripple_visible" format="boolean" />
+        <attr name="button_ripple" format="reference" />
+    </declare-styleable>
+</resources>
