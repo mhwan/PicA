@@ -36,16 +36,13 @@ public class NewAlbumUploadFragment extends Fragment {
 
     public void setActivity(Activity activity) {
         this.activity = activity;
+        glide = Glide.with(this.activity);
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.item_album_upload_view_pager, container, false);
-
-        if(glide==null){
-            glide = Glide.with(this.activity);
-        }
 
         imageView = rootView.findViewById(R.id.image);
         locationEdit = rootView.findViewById(R.id.location_edit);

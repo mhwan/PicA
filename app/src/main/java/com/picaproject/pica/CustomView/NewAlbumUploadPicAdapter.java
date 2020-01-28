@@ -15,6 +15,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.picaproject.pica.Item.UploadPicData;
 
+import com.picaproject.pica.Listener.NewUploadRecyclerImageViewClickListener;
 import com.picaproject.pica.R;
 
 
@@ -25,16 +26,16 @@ public class NewAlbumUploadPicAdapter extends RecyclerView.Adapter<NewUploadPicH
     private  static RequestManager glide;
     private ArrayList<UploadPicData> dataList;
     private Activity activity;
+    private UploadPicController controller;
     /*
      * 주의 : dataList의 첫번째에는 무조건 추가버튼이 들어가야함.
      *
      * */
-    public NewAlbumUploadPicAdapter(ArrayList<UploadPicData> list,Activity activity) {
+    public NewAlbumUploadPicAdapter(ArrayList<UploadPicData> list,Activity activity,UploadPicController controller) {
         this.dataList = list;
         this.activity = activity;
-        if(glide==null){
-            glide = Glide.with(this.activity);
-        }
+        this.controller = controller;
+        glide = Glide.with(this.activity);
     }
 
 
@@ -67,9 +68,16 @@ public class NewAlbumUploadPicAdapter extends RecyclerView.Adapter<NewUploadPicH
         }
         // EOF가 아닌 다른 데이터만 보여주기 가능
         else {
-
             glide.load(dataList.get(i).getSrc()).into(uploadPicHolder.getImageView()); //Glide을 이용해서 이미지뷰에 url에 있는 이미지를 세팅해줌
-            /*
+            imgView.setOnClickListener(new NewUploadRecyclerImageViewClickListener(controller,i));
+        }
+
+
+
+
+    }
+
+    /*
             ImageViewAsyncTask task = new ImageViewAsyncTask(uploadPicHolder.getImageView(),dataList.get(i).getSrc());
             task.execute();
             */
@@ -90,13 +98,6 @@ public class NewAlbumUploadPicAdapter extends RecyclerView.Adapter<NewUploadPicH
                 uploadPicHolder.getImageView().setImageResource(R.drawable.error_icon);
             }
             */
-
-        }
-
-
-
-
-    }
 
 
     @Override
