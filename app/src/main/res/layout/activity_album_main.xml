@@ -103,6 +103,7 @@
             android:id="@+id/tab_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/white"
             android:fitsSystemWindows="true"
             app:tabBackground="@drawable/selector_image_tabbar"
             app:tabIndicatorColor="@color/colorPrimary"

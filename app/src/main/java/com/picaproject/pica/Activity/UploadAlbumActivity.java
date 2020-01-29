@@ -54,7 +54,7 @@ public class UploadAlbumActivity extends AppCompatActivity {
         dataList = new ArrayList<UploadPicData>();
         picAdapter = new AlbumUploadPicAdapter(this,dataList);
         updaloadPicListView.setAdapter(picAdapter);
-        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(10);
+        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.LINEAR_HORIZONTAL, 10);
         updaloadPicListView.addItemDecoration(spacesItemDecoration);
 
         addEOFPicData();

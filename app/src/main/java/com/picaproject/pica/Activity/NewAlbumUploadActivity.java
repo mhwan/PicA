@@ -85,7 +85,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         recyclerAdapter = new NewAlbumUploadPicAdapter(recyclerDataList,this,controller);
         uploadPicListView.setAdapter(recyclerAdapter);
 
-        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(10);
+        SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.LINEAR_HORIZONTAL, 10);
 
         uploadPicListView.addItemDecoration(spacesItemDecoration);
         //picAdapter.notifyDataSetChanged();
