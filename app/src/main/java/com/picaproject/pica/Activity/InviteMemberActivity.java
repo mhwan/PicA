@@ -23,6 +23,7 @@ import android.widget.ListView;
 
 import com.picaproject.pica.CustomView.SelectContactsAdapter;
 import com.picaproject.pica.CustomView.SelectedProfileRecyclerAdapter;
+import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.ContactItem;
 import com.picaproject.pica.Listener.SelectContactsRemoveListener;
@@ -98,6 +99,7 @@ public class InviteMemberActivity extends BaseToolbarActivity implements SelectC
         recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false));
         recyclerAdapter = new SelectedProfileRecyclerAdapter(this, this);
         recyclerView.setAdapter(recyclerAdapter);
+        recyclerView.addItemDecoration(new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.LINEAR_HORIZONTAL, 10));
         listView = (ListView) findViewById(R.id.select_listview);
         listviewAdapter = new SelectContactsAdapter(contactItems, getApplicationContext());
         setSearchView();

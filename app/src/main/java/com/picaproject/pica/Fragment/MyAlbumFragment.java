@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.picaproject.pica.CustomView.AlbumRecyclerAdapter;
+import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.Item.AlbumItem;
 import com.picaproject.pica.R;
 
@@ -45,11 +46,12 @@ public class MyAlbumFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new AlbumRecyclerAdapter(getContext(), albumList));
+        recyclerView.addItemDecoration(new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.LINEAR_VERTICAL, 6));
     }
 
     private void setupDefaultItem(){
         albumList = new ArrayList<>();
-        for (int i = 0; i<4; i++)
+        for (int i = 0; i<7; i++)
             albumList.add(new AlbumItem("앨범 샘플"+(i+1), "mhwan", R.drawable.img_sample));
 
     }

@@ -8,6 +8,7 @@ import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridLayout;
 
 import com.picaproject.pica.CustomView.ImageRecyclerAdapter;
 import com.picaproject.pica.CustomView.SpacesItemDecoration;
@@ -42,13 +43,13 @@ public class AlbumMainFragment extends Fragment {
 
         ImageRecyclerAdapter adapter = new ImageRecyclerAdapter(getContext(), makeImageSampleList());
         mRecyclerView.setAdapter(adapter);
-        SpacesItemDecoration decoration = new SpacesItemDecoration(10);
+        SpacesItemDecoration decoration = new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.GRID, 10, 3);
         mRecyclerView.addItemDecoration(decoration);
     }
 
     private ArrayList<ImageItem> makeImageSampleList(){
         ArrayList<ImageItem> imageItems = new ArrayList<>();
-        for (int i=0; i< 12; i++)
+        for (int i=0; i< 35; i++)
             imageItems.add(new ImageItem(R.drawable.img_sample));
 
         return imageItems;
