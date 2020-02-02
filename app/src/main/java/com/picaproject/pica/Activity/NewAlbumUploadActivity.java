@@ -8,9 +8,9 @@ import android.support.annotation.NonNull;
 
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
+
 import android.os.Bundle;
-import android.support.v7.widget.DividerItemDecoration;
+
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
@@ -73,14 +73,11 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         mLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
         uploadPicListView.setLayoutManager(mLinearLayoutManager);
-        // 추가 버튼 역할을 해줄 데이터
-        UploadPicData addBtnData = new UploadPicData("NULL");
-        addBtnData.setContents(UploadPicData.ADD_BTN);
 
         recyclerDataList.addAll(dataList);
-        //recyclerDataList.add(0,addBtnData);
 
-        UploadPicController controller = new UploadPicController(uploadPicListView,viewPager);
+
+        UploadPicController controller = new UploadPicController(uploadPicListView,viewPager,this);
 
         recyclerAdapter = new NewAlbumUploadPicAdapter(recyclerDataList,this,controller);
         uploadPicListView.setAdapter(recyclerAdapter);
@@ -116,6 +113,10 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             f.setActivity(this);
             adapter.addFragment(f);
         }
+    }
+    //  플래그먼트 제거하기
+    private void removeFragment(int i){
+        adapter.deletePage(i);
     }
 
     @Override
@@ -167,6 +168,14 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
 
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    public void removeItem(int itemIdx){
+        recyclerDataList.remove(itemIdx);
+        dataList.remove(itemIdx);
+        removeFragment(itemIdx);
+        adapter.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged();
     }
 
 }

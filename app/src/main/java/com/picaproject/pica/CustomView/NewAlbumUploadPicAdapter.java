@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
@@ -18,6 +19,7 @@ import com.picaproject.pica.Item.UploadPicData;
 
 import com.picaproject.pica.Listener.NewUploadRecyclerAddImageBtnClickListener;
 import com.picaproject.pica.Listener.NewUploadRecyclerImageViewClickListener;
+import com.picaproject.pica.Listener.NewUploadRecyclerRemoveBtnClickListener;
 import com.picaproject.pica.R;
 
 
@@ -63,25 +65,11 @@ public class NewAlbumUploadPicAdapter extends RecyclerView.Adapter<NewUploadPicH
         UploadPicData data = dataList.get(i);
         String contents = data.getContents();
         ImageView imgView = uploadPicHolder.getImageView();
-
-        /*if(contents!=null&&contents.equals(UploadPicData.ADD_BTN)){
-            imgView.setImageResource(R.drawable.plus_icon);
-            // 사진 추가버튼 클릭
-            imgView.setOnClickListener(new NewUploadRecyclerAddImageBtnClickListener(activity));
-        }
-        // EOF가 아닌 다른 데이터만 보여주기 가능
-        else {
-
-            glide.load(dataList.get(i).getSrc()).into(uploadPicHolder.getImageView()); //Glide을 이용해서 이미지뷰에 url에 있는 이미지를 세팅해줌
-            imgView.setOnClickListener(new NewUploadRecyclerImageViewClickListener(controller,i));
-        }*/
-
+        RelativeLayout removeBtn = uploadPicHolder.getRemoveBtn();
 
         glide.load(dataList.get(i).getSrc()).into(uploadPicHolder.getImageView()); //Glide을 이용해서 이미지뷰에 url에 있는 이미지를 세팅해줌
         imgView.setOnClickListener(new NewUploadRecyclerImageViewClickListener(controller,i));
-
-
-
+        removeBtn.setOnClickListener(new NewUploadRecyclerRemoveBtnClickListener(controller,i));
 
     }
 

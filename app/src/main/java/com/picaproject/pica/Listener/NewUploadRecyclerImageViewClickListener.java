@@ -18,6 +18,7 @@ public class NewUploadRecyclerImageViewClickListener implements View.OnClickList
     public void onClick(View view) {
         // 주의 : 리사이클러는 "사진추가" 아이템이 맨 앞에 추가되어 플래그먼트의 아이템과 인덱스가 다름
         // 리사이클러에서 플래그먼트랑 동작을 맞추려면 -1을 해주자.
+        // 추가 : "사진추가" 버튼이 리사이클러에서 빠지면서 이 규칙은 무효가됨.
         controller.moveViewPagerPage(idx);
     }
 }
