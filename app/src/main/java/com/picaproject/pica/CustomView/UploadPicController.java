@@ -34,6 +34,26 @@ public class UploadPicController {
             return null;
         return h.getBorderView();
     }
+    // currentPage : 현재 뷰페이저가 보이고있는 페이지
+    // itemCnt : 뷰페이저/리사이클뷰에서 보여주고있는 데이터 총 갯수
+    public void setBoder(int currentPage,int itemCnt){
+        for(int i=0;i<itemCnt;i++){
+            NewUploadPicHolder h = (NewUploadPicHolder)recyclerView.findViewHolderForAdapterPosition(i);
+            if(h==null){
+                continue;
+            }
+            //현재 보이고있는 페이지일경우
+            if(i==currentPage){
+                h.getBorderView().setVisibility(View.VISIBLE);
+            }
+            // 현재 보이는 페이지가 아닐경우
+            else{
+                h.getBorderView().setVisibility(View.GONE);
+            }
+        }
+    }
+
+
 
     /*
     * 리사이클러 뷰의 아이템에서 X 버튼이 눌렸을때 해당 아이템(사진) 목록에서 제거하기

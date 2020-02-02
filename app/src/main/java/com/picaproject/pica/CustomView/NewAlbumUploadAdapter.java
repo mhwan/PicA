@@ -20,7 +20,6 @@ public class NewAlbumUploadAdapter extends FragmentStatePagerAdapter {
     }
 
     public void addFragment(NewAlbumUploadFragment fragment){
-        fragment.setIdx(items.size());
         items.add(fragment);
     }
     // addFragment로 추가된 Fragment를 여기서 리턴해줌.

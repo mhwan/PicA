@@ -4,6 +4,8 @@ import android.Manifest;
 import android.content.ClipData;
 import android.content.Intent;
 
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.NonNull;
 
 import android.support.annotation.Nullable;
@@ -49,8 +51,11 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
     String[] permission_list = {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
+    private Handler handler;
 
-
+    // 마지막 위치 저장하면서 사용하기
+    // 위치가 바뀌었을때만 visible 명령을 사용하여 오버헤딩을 방지하기위함.
+    private int lastPage=-99;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +92,23 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         uploadPicListView.addItemDecoration(spacesItemDecoration);
         //picAdapter.notifyDataSetChanged();
 
+        // 일일히 리스너에 이벤트를 붙여가며 왔다갔다하지않아도 아이템을 실시간으로 조정해보는 신세계
+        handler = new Handler(){
+            @Override
+            public void handleMessage(Message msg) {
+                int currentPage = viewPager.getCurrentItem();
+                // 위치가 바뀌었을때만 visible 명령을 사용하여 오버헤딩을 방지하기위함.
+                if(currentPage!=lastPage){
+
+                }
+                controller.setBoder(currentPage,dataList.size());
+                lastPage = currentPage;
+                // 100 밀리초마다 반복수행
+                handler.sendEmptyMessageDelayed(0,100);
+            }
+        };
+
+        handler.sendEmptyMessage(0);
         //필수 2줄
         pc = new PermissionChecker(permission_list,this);
         pc.checkPermission();
@@ -112,8 +134,6 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             NewAlbumUploadFragment f = new NewAlbumUploadFragment();
             f.setUploadPicData(d);
             f.setActivity(this);
-            f.setController(controller);
-            //f.setIdx(i);
             adapter.addFragment(f);
         }
     }
