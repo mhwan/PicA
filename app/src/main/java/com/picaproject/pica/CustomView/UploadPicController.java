@@ -2,6 +2,7 @@ package com.picaproject.pica.CustomView;
 
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import com.picaproject.pica.Activity.NewAlbumUploadActivity;
 
@@ -24,6 +25,14 @@ public class UploadPicController {
     public int moveViewPagerPage(int page){
         viewPager.setCurrentItem(page);
         return page;
+    }
+
+
+    public View getRecyclerBorder(int pos){
+        NewUploadPicHolder h = (NewUploadPicHolder)recyclerView.findViewHolderForAdapterPosition(pos);
+        if(h==null)
+            return null;
+        return h.getBorderView();
     }
 
     /*

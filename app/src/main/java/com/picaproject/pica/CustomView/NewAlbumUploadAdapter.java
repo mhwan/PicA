@@ -7,6 +7,8 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 
+import com.picaproject.pica.Fragment.NewAlbumUploadFragment;
+
 import java.util.ArrayList;
 
 public class NewAlbumUploadAdapter extends FragmentStatePagerAdapter {
@@ -17,7 +19,8 @@ public class NewAlbumUploadAdapter extends FragmentStatePagerAdapter {
         super(fm);
     }
 
-    public void addFragment(Fragment fragment){
+    public void addFragment(NewAlbumUploadFragment fragment){
+        fragment.setIdx(items.size());
         items.add(fragment);
     }
     // addFragment로 추가된 Fragment를 여기서 리턴해줌.

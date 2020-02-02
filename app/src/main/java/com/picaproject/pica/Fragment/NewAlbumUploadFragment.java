@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.picaproject.pica.CustomView.UploadPicController;
 import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.R;
 
@@ -27,6 +28,10 @@ public class NewAlbumUploadFragment extends Fragment {
     private UploadPicData uploadPicData;
     private  static RequestManager glide;
     private Activity activity;
+    private UploadPicController controller;
+
+    // 현재 플래그먼트의 인덱스
+    private int idx;
     public NewAlbumUploadFragment() {
 
     }
@@ -38,6 +43,14 @@ public class NewAlbumUploadFragment extends Fragment {
     public void setActivity(Activity activity) {
         this.activity = activity;
         glide = Glide.with(this.activity);
+    }
+
+    public void setController(UploadPicController controller) {
+        this.controller = controller;
+    }
+
+    public void setIdx(int idx) {
+        this.idx = idx;
     }
 
     @Nullable
@@ -70,5 +83,22 @@ public class NewAlbumUploadFragment extends Fragment {
 
 
         return rootView;
+    }
+
+    @Override
+    public void setMenuVisibility(boolean menuVisible) {
+        super.setMenuVisibility(menuVisible);
+        View boder = controller.getRecyclerBorder(idx);
+        if(boder==null){
+            return;
+        }
+        if (menuVisible) {
+            boder.setVisibility(View.VISIBLE);
+        }
+        else{
+            boder.setVisibility(View.GONE);
+        }
+
+
     }
 }

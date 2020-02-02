@@ -40,7 +40,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
     private NewAlbumUploadAdapter adapter;
     private PermissionChecker pc;
     private NewAlbumUploadPicAdapter recyclerAdapter;
-
+    private UploadPicController controller;
     // 리사이클러용 데이터 리스트랑 Fragment용 데이터리스트는 따로 둠
     // recyclerDataList에는 항상 첫번째에 ADD_BTN 데이터가 들어가고
     // Fragment에는 이런 ADD_BTN 데이터가 영향을 미치지 않기 위함.
@@ -65,6 +65,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         dataList = (ArrayList<UploadPicData>)intent.getSerializableExtra(IntentProtocol.PIC_DATA_LIST_NAME);
         viewPager.setOffscreenPageLimit(dataList.size());
         // 데이터를 가져와서 플래그먼트로 변환해 추가하기
+        controller = new UploadPicController(uploadPicListView,viewPager,this);
         addFragment(dataList);
         viewPager.setAdapter(adapter);
 
@@ -77,7 +78,6 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         recyclerDataList.addAll(dataList);
 
 
-        UploadPicController controller = new UploadPicController(uploadPicListView,viewPager,this);
 
         recyclerAdapter = new NewAlbumUploadPicAdapter(recyclerDataList,this,controller);
         uploadPicListView.setAdapter(recyclerAdapter);
@@ -107,10 +107,13 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
 
     // 데이터를 가져와서 플래그먼트로 변환해 추가하기
     private void addFragment(ArrayList<UploadPicData> dataList){
-        for(UploadPicData d : dataList){
+        for(int i=0; i<dataList.size();i++){
+            UploadPicData d = dataList.get(i);
             NewAlbumUploadFragment f = new NewAlbumUploadFragment();
             f.setUploadPicData(d);
             f.setActivity(this);
+            f.setController(controller);
+            //f.setIdx(i);
             adapter.addFragment(f);
         }
     }
