@@ -18,7 +18,8 @@ public class IntentProtocol {
     // 사진 선택 후 사진 편집 모드로 이동
 
     public static final int ADD_PIC_MULTI_MODE = 9003;
-
+    // 사진 추가화면 -> 사진에 위치정보 추가/수정
+    public static final int SET_PIC_LOCATION = 9004;
 
 
     public static int RESULT_LOAD_IMAGE = 8001;

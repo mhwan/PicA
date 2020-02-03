@@ -134,6 +134,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             NewAlbumUploadFragment f = new NewAlbumUploadFragment();
             f.setUploadPicData(d);
             f.setActivity(this);
+            f.setController(controller);
             adapter.addFragment(f);
         }
     }

@@ -1,10 +1,14 @@
 package com.picaproject.pica.CustomView;
 
+import android.content.Intent;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.picaproject.pica.Activity.LocationListActivity;
 import com.picaproject.pica.Activity.NewAlbumUploadActivity;
+import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Item.UploadPicData;
 
 /*
  * UploadPic 화면 Ui에서 리사이클러 <-> 플래그먼트 <-> 액티비티가 서로 이벤트를 주고받기위한 컨트롤러
@@ -51,6 +55,14 @@ public class UploadPicController {
                 h.getBorderView().setVisibility(View.GONE);
             }
         }
+    }
+
+    // 위치 선택 액티비티 열기
+    // 사진 추가 플래그먼트에서 위치 TextView 선택시 이동
+    public void openLoactionView(long dataId){
+        Intent intent = new Intent(activity, LocationListActivity.class);
+        intent.putExtra(IntentProtocol.INTENT_ALBUM_MODE, true);
+        activity.startActivity(intent);
     }
 
 

@@ -18,6 +18,7 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.picaproject.pica.CustomView.UploadPicController;
 import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Listener.NewAlbumSetLocationClickListener;
 import com.picaproject.pica.R;
 
 public class NewAlbumUploadFragment extends Fragment {
@@ -28,7 +29,8 @@ public class NewAlbumUploadFragment extends Fragment {
     private UploadPicData uploadPicData;
     private  static RequestManager glide;
     private Activity activity;
-
+    private UploadPicController controller;
+    private int idx;
     public NewAlbumUploadFragment() {
 
     }
@@ -40,6 +42,10 @@ public class NewAlbumUploadFragment extends Fragment {
     public void setActivity(Activity activity) {
         this.activity = activity;
         glide = Glide.with(this.activity);
+    }
+
+    public void setController(UploadPicController controller) {
+        this.controller = controller;
     }
 
     @Nullable
@@ -68,6 +74,8 @@ public class NewAlbumUploadFragment extends Fragment {
         else{
             Log.e("test_hs","NewAlbumUploadFragment : uploadPicData is NULL");
         }
+
+        locationEdit.setOnClickListener(new NewAlbumSetLocationClickListener(controller,uploadPicData.getClassId()));
 
 
 

@@ -13,6 +13,9 @@ import java.util.ArrayList;
 public class UploadPicData implements Serializable {
     // 직렬화 버전 표시 : https://lktprogrammer.tistory.com/150
     private static final long serialVersionUID = 1L;
+    // UploadPicData 클래스 ID
+    // 사진 추가 화면에서 아이템의 구분을 위해 고유한 ID가 필요함.
+    private static long CLASS_ID=0;
     // EOF를 가르키는 메시지 EOF만 쓰면 유저가 EOF라는 말만 쓴다면 에러나니까 유저들이 쓰지않을 고유한 코드가 필요함
     public static final String STATE_EOF = "CODE_EOF_ALBUM_PIC_LIST";
     // 추가 버튼을 나타내는 변수
@@ -20,9 +23,11 @@ public class UploadPicData implements Serializable {
     private String src;
     private String contents;
     private ArrayList<String> tags;
-
-
+    private String location;
+    private long classId;
     public UploadPicData(String src){
+        classId = CLASS_ID;
+        CLASS_ID++;
         this.src=src;
     }
 
@@ -48,6 +53,18 @@ public class UploadPicData implements Serializable {
 
     public void setTags(ArrayList<String> tags) {
         this.tags = tags;
+    }
+
+    public long getClassId() {
+        return classId;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
     }
 
     @Override
