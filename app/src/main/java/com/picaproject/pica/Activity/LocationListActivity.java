@@ -19,7 +19,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
+
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
@@ -34,7 +34,7 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
+
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -43,7 +43,7 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.picaproject.pica.CustomView.BottomSheetListView;
 import com.picaproject.pica.R;
-import com.picaproject.pica.Util.PermissionChecker;
+
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ import java.util.Locale;
 
 import noman.googleplaces.NRPlaces;
 import noman.googleplaces.Place;
-import noman.googleplaces.PlaceType;
+
 import noman.googleplaces.PlacesException;
 import noman.googleplaces.PlacesListener;
 
@@ -66,7 +66,8 @@ public class LocationListActivity extends AppCompatActivity
     private BottomSheetListView bottomSheetListView;
 
 
-
+    // 가져온 주변장소 마커를 보관하는 리스트
+    List<Marker> previous_marker = null;
 
     private GoogleMap mMap;
     private Marker currentMarker = null;
@@ -164,8 +165,6 @@ public class LocationListActivity extends AppCompatActivity
 
             // 2. 이미 퍼미션을 가지고 있다면
             // ( 안드로이드 6.0 이하 버전은 런타임 퍼미션이 필요없기 때문에 이미 허용된 걸로 인식합니다.)
-
-
             startLocationUpdates(); // 3. 위치 업데이트 시작
 
 
@@ -355,7 +354,9 @@ public class LocationListActivity extends AppCompatActivity
 
     }
 
-
+    /*
+    * 사용자가 GPS 기능을 켰는지 확인하기 값이 TRue면 킨것
+    * */
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -553,7 +554,6 @@ public class LocationListActivity extends AppCompatActivity
     }
 
 
-    List<Marker> previous_marker = null;
 
     // PlacesListener 오버라이딩
     @Override
@@ -609,8 +609,8 @@ public class LocationListActivity extends AppCompatActivity
         mMap.clear();//지도 클리어
 
         if (previous_marker != null)
-            previous_marker.clear();//지역정보 마커 클리어
-
+            previous_marker.clear();//이전에 가져온 주변 지역정보 초기화
+        /*
         new NRPlaces.Builder()
                 .listener(LocationListActivity.this)
                 .key("AIzaSyCGtSKl81RRcPu9xNFYXU3N4zBkwAFXSN8")
@@ -619,6 +619,16 @@ public class LocationListActivity extends AppCompatActivity
                 .type(PlaceType.RESTAURANT) //음식점
                 .build()
                 .execute();
+
+         */
+        new NRPlaces.Builder()
+                .listener(LocationListActivity.this)
+                .key("AIzaSyCGtSKl81RRcPu9xNFYXU3N4zBkwAFXSN8")
+                .latlng(location.latitude, location.longitude)//현재 위치
+                .radius(500) //500 미터 내에서 검색
+                .build()
+                .execute();
+
     }
 
 }

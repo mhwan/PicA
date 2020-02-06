@@ -9,15 +9,9 @@
 
     <include layout="@layout/map_search_toolbar" />
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:id="@+id/map_view"
-        android:background="@color/colorLightGray"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-
     <fragment
+        android:orientation="vertical"
+        android:background="@color/colorLightGray"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:id="@+id/map"
