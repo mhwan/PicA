@@ -23,7 +23,11 @@ public class UploadPicData implements Serializable {
     private String src;
     private String contents;
     private ArrayList<String> tags;
-    private String location;
+
+
+    private PicPlaceData location;
+
+
     private long classId;
     public UploadPicData(String src){
         classId = CLASS_ID;
@@ -59,11 +63,11 @@ public class UploadPicData implements Serializable {
         return classId;
     }
 
-    public String getLocation() {
+    public PicPlaceData getLocation() {
         return location;
     }
 
-    public void setLocation(String location) {
+    public void setLocation(PicPlaceData location) {
         this.location = location;
     }
 

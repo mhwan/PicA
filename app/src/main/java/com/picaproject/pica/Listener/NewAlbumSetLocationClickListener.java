@@ -3,18 +3,19 @@ package com.picaproject.pica.Listener;
 import android.view.View;
 
 import com.picaproject.pica.CustomView.UploadPicController;
+import com.picaproject.pica.Item.UploadPicData;
 
 public class NewAlbumSetLocationClickListener implements View.OnClickListener {
     private UploadPicController controller;
-    private long dataId;
+    private UploadPicData data;
 
-    public NewAlbumSetLocationClickListener(UploadPicController controller, long dataId) {
+    public NewAlbumSetLocationClickListener(UploadPicController controller, UploadPicData data) {
         this.controller = controller;
-        this.dataId = dataId;
+        this.data = data;
     }
 
     @Override
     public void onClick(View view) {
-        controller.openLoactionView(dataId);
+        controller.openLoactionView(data);
     }
 }

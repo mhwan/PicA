@@ -160,14 +160,14 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             if(datas!=null){
                 prasePicDatas = PicDataParser.parseDataFromClipData(datas);
                 // 갤러리에서 가져온 n장의 사진 처리
-                Log.i("test_hs","AlbumMainActivity onActivityResult : "+prasePicDatas.toString());
+                Log.i("test_hs","NewAlbumUploadActivity onActivityResult : "+prasePicDatas.toString());
 
             }
             // 사진 1장 선택시
             else if(data.getData()!=null){
                 prasePicDatas = new ArrayList<>();
                 prasePicDatas.add(new UploadPicData(data.getData().toString()));
-                Log.i("test_hs","AlbumMainActivity onActivityResult 2 : "+prasePicDatas.toString());
+                Log.i("test_hs","NewAlbumUploadActivity onActivityResult 2 : "+prasePicDatas.toString());
             }
             // 사진 선택 안했을시 아무 동작 안함.
             else{
@@ -188,9 +188,15 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             intent.putExtra(IntentProtocol.PIC_DATA_LIST_NAME,prasePicDatas);
             startActivityForResult(intent, IntentProtocol.ADD_PIC_MULTI_MODE);
             */
-
-
         }
+        //if(requestCode == IntentProtocol.UPDATE_PIC_MODE){
+        if(requestCode == IntentProtocol.SET_PIC_LOCATION && data != null){
+            //TODO
+            UploadPicData picData = (UploadPicData)data.getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+            Log.i("test_hs","NewAlbumUploadActivity SET_PIC_LOCATION : "+picData.getLocation().toString());
+        }
+
+
         super.onActivityResult(requestCode, resultCode, data);
     }
 

@@ -9,12 +9,13 @@ public class BottomSheetListView extends ListView {
     public BottomSheetListView(Context context, AttributeSet p_attrs) {
         super(context, p_attrs);
     }
-
+    // 이거 터치 왜 막은것일까
+    /*
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return true;
     }
-
+*/
     @Override
     public boolean onTouchEvent(MotionEvent ev) {
         if (canScrollVertically(this)) {

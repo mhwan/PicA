@@ -75,7 +75,7 @@ public class NewAlbumUploadFragment extends Fragment {
             Log.e("test_hs","NewAlbumUploadFragment : uploadPicData is NULL");
         }
 
-        locationEdit.setOnClickListener(new NewAlbumSetLocationClickListener(controller,uploadPicData.getClassId()));
+        locationEdit.setOnClickListener(new NewAlbumSetLocationClickListener(controller,uploadPicData));
 
 
 

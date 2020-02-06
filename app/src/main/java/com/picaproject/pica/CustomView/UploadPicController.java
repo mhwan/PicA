@@ -59,10 +59,11 @@ public class UploadPicController {
 
     // 위치 선택 액티비티 열기
     // 사진 추가 플래그먼트에서 위치 TextView 선택시 이동
-    public void openLoactionView(long dataId){
+    public void openLoactionView(UploadPicData data){
         Intent intent = new Intent(activity, LocationListActivity.class);
         intent.putExtra(IntentProtocol.INTENT_ALBUM_MODE, true);
-        activity.startActivity(intent);
+        intent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME,data);
+        activity.startActivityForResult(intent,IntentProtocol.SET_PIC_LOCATION);
     }
 
 

@@ -49,7 +49,7 @@ public class UploadPicActivity extends AppCompatActivity {
         (findViewById(R.id.map_contents)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(UploadPicActivity.this, LocationListActivity.class));
+
             }
         });
 
