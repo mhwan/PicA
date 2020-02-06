@@ -23,6 +23,7 @@ import android.util.Log;
 
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -43,6 +44,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.picaproject.pica.CustomView.BottomSheetListView;
+import com.picaproject.pica.CustomView.PicLocationListAdapter;
 import com.picaproject.pica.R;
 
 
@@ -69,7 +71,10 @@ public class LocationListActivity extends AppCompatActivity
 
     // 가져온 주변장소 마커를 보관하는 리스트
     List<Marker> previous_marker = null;
-
+    // 어댑터와 연결될 주변 장소 객체 보관 리스트
+    List<Place> placeList = null;
+    //
+    PicLocationListAdapter adapter;
     private GoogleMap mMap;
     private Marker currentMarker = null;
 
@@ -96,6 +101,7 @@ public class LocationListActivity extends AppCompatActivity
     private LocationRequest locationRequest;
     private Location location;
 
+
     private Handler handler;
 
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
@@ -111,10 +117,8 @@ public class LocationListActivity extends AppCompatActivity
         setContentView(R.layout.activity_location_list);
         handler = new Handler();
         previous_marker = new ArrayList<Marker>();
-        FrameLayout bottomsheet = findViewById(R.id.bottom_sheet);
-        bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
+        placeList = new ArrayList<>();
 
-        bottomSheetListView = (BottomSheetListView) findViewById(R.id.map_listview);
 
         mLayout = findViewById(R.id.layout_location_main);
 
@@ -133,10 +137,18 @@ public class LocationListActivity extends AppCompatActivity
         mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
 
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+
+        FrameLayout bottomsheet = findViewById(R.id.bottom_sheet);
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
+
+        bottomSheetListView = (BottomSheetListView) findViewById(R.id.map_listview);
+        adapter = new PicLocationListAdapter(placeList);
+        bottomSheetListView.setAdapter(adapter);
 
 
     }
@@ -571,7 +583,7 @@ public class LocationListActivity extends AppCompatActivity
     public void onPlacesStart() {
 
     }
-
+    // 주변 정보를 전부 가져오는데 성공했을때 할 행동
     @Override
     public void onPlacesSuccess(final List<Place> places) {
         handler.post(new Runnable() {
@@ -592,6 +604,7 @@ public class LocationListActivity extends AppCompatActivity
                     markerOptions.snippet(markerSnippet);
                     Marker item = mMap.addMarker(markerOptions);
                     previous_marker.add(item);
+                    placeList.add(place);
                 }
 
                 //중복 마커 제거
@@ -601,7 +614,7 @@ public class LocationListActivity extends AppCompatActivity
                 previous_marker.addAll(hashSet);
 
                 //TODO 지역정보 갱신 완료 후 동작
-
+                adapter.notifyDataSetChanged();
             }
         });
 
