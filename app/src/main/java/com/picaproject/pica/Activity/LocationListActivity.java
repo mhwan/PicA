@@ -208,8 +208,7 @@ public class LocationListActivity extends AppCompatActivity
             public void onMapClick(LatLng latLng) {
 
                 Log.d( TAG, "onMapClick :");
-                //TODO
-                showPlaceInformation(currentPosition);
+
             }
         });
 
@@ -242,6 +241,11 @@ public class LocationListActivity extends AppCompatActivity
                 setCurrentLocation(location, markerTitle, markerSnippet);
 
                 mCurrentLocatiion = location;
+
+                // 주변 위치 정보는 1번만 가져와야함으로 이전 주변위치 정보가 없을때만 가져옴.
+                if(previous_marker.size()==0){
+                    showPlaceInformation(currentPosition);
+                }
             }
 
 
@@ -595,6 +599,9 @@ public class LocationListActivity extends AppCompatActivity
                 hashSet.addAll(previous_marker);
                 previous_marker.clear();
                 previous_marker.addAll(hashSet);
+
+                //TODO 지역정보 갱신 완료 후 동작
+
             }
         });
 
