@@ -1,7 +1,7 @@
 package com.picaproject.pica.Activity;
 
 import android.Manifest;
-import android.app.FragmentManager;
+
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,6 +9,7 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
@@ -84,17 +85,18 @@ public class LocationListActivity extends AppCompatActivity
 
 
     // 앱을 실행하기 위해 필요한 퍼미션을 정의합니다.
-    String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
+    private String[] REQUIRED_PERMISSIONS  = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};  // 외부 저장소
 
 
-    Location mCurrentLocatiion;
-    LatLng currentPosition;
+    private Location mCurrentLocatiion;
+    private LatLng currentPosition;
 
 
     private FusedLocationProviderClient mFusedLocationClient;
     private LocationRequest locationRequest;
     private Location location;
 
+    private Handler handler;
 
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
     // (참고로 Toast에서는 Context가 필요했습니다.)
@@ -107,7 +109,7 @@ public class LocationListActivity extends AppCompatActivity
                 WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         setContentView(R.layout.activity_location_list);
-
+        handler = new Handler();
         previous_marker = new ArrayList<Marker>();
         FrameLayout bottomsheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
@@ -568,9 +570,10 @@ public class LocationListActivity extends AppCompatActivity
 
     @Override
     public void onPlacesSuccess(final List<Place> places) {
-        runOnUiThread(new Runnable() {
+        handler.post(new Runnable() {
             @Override
             public void run() {
+                //https://github.com/nomanr/Android-Google-Places-API/blob/master/placesAPI/src/main/java/noman/googleplaces/Place.java
                 for (noman.googleplaces.Place place : places) {
 
                     LatLng latLng
@@ -585,7 +588,6 @@ public class LocationListActivity extends AppCompatActivity
                     markerOptions.snippet(markerSnippet);
                     Marker item = mMap.addMarker(markerOptions);
                     previous_marker.add(item);
-
                 }
 
                 //중복 마커 제거
@@ -593,7 +595,6 @@ public class LocationListActivity extends AppCompatActivity
                 hashSet.addAll(previous_marker);
                 previous_marker.clear();
                 previous_marker.addAll(hashSet);
-
             }
         });
 
