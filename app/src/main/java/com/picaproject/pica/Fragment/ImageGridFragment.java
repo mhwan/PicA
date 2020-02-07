@@ -20,13 +20,36 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class AlbumMainFragment extends Fragment {
+public class ImageGridFragment extends Fragment {
     private View view;
     private RecyclerView mRecyclerView;
-    public AlbumMainFragment() {
+    private ImageRecyclerAdapter adapter;
+    private boolean recyclerviewScroll = true;
+
+    public ImageGridFragment(){
         // Required empty public constructor
     }
 
+    public static Fragment newInstance(boolean param) {
+        ImageGridFragment fragment = new ImageGridFragment();
+        Bundle args = new Bundle();
+        args.putBoolean("param1", param);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Fragment newInstance(){
+        ImageGridFragment fragment = new ImageGridFragment();
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            recyclerviewScroll = getArguments().getBoolean("param1");
+        }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -40,13 +63,18 @@ public class AlbumMainFragment extends Fragment {
     private void initView(){
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
-
-        ImageRecyclerAdapter adapter = new ImageRecyclerAdapter(getContext(), makeImageSampleList());
+        if (!recyclerviewScroll)
+            mRecyclerView.setNestedScrollingEnabled(false);
+        adapter = new ImageRecyclerAdapter(getContext(), makeImageSampleList());
         mRecyclerView.setAdapter(adapter);
-        SpacesItemDecoration decoration = new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.GRID, 10, 3);
+        SpacesItemDecoration decoration = new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.GRID, 4, 3);
         mRecyclerView.addItemDecoration(decoration);
     }
 
+
+    public void changeImageList(){
+        adapter.resetImageList(makeImageSampleList());
+    }
     private ArrayList<ImageItem> makeImageSampleList(){
         ArrayList<ImageItem> imageItems = new ArrayList<>();
         for (int i=0; i< 35; i++)

@@ -30,6 +30,13 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         return viewholder;
     }
 
+
+    public void resetImageList(ArrayList<ImageItem> imageItems){
+        imgList.clear();
+        imgList.addAll(imageItems);
+        notifyAll();
+    }
+
     @Override
     public void onBindViewHolder(Viewholder holder, int position) {
         holder.imageView.setImageResource(imgList.get(position).getImage_id());

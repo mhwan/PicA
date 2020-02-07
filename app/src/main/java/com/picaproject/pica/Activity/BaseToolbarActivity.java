@@ -29,7 +29,7 @@ public class BaseToolbarActivity extends AppCompatActivity {
     protected int navigationId;
     protected View.OnClickListener buttonListener;
     protected TextView toolbarTitle;
-
+    protected TextView toolbarSubtitle;
     @Override
     protected void onStart() {
         super.onStart();
@@ -45,6 +45,12 @@ public class BaseToolbarActivity extends AppCompatActivity {
     protected void setToolbarTitle(String title){
         toolbarTitle.setVisibility(View.VISIBLE);
         toolbarTitle.setText(title);
+    }
+
+    protected void setToolbarSubTitle(String title){
+        if (toolbarSubtitle == null)
+            toolbarSubtitle = (TextView) toolbar.findViewById(R.id.toolbar_subtitle);
+        toolbarSubtitle.setText(title);
     }
 
     protected void setToolbarNavigationIcon(int navigationId){

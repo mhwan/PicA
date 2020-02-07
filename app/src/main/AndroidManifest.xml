@@ -22,18 +22,42 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyB3I329Lpte8qJm3xXw-o05LqgDRgaPRdc" />
+
+
+
         <activity android:name=".Activity.LocationListActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Activity.CreateAlbumActivity"
+
+
+
+
+
+        <activity
+            android:name=".Activity.NotificationListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.FriendListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+
+        <activity
+            android:name=".Activity.CreateAlbumActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
-        <activity android:name=".Activity.InviteMemberActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:windowSoftInputMode="adjustPan" />
+
+
+
+
+        <activity
+            android:name=".Activity.InviteMemberActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activity.UploadPicActivity" />
         <activity android:name=".Activity.UploadAlbumActivity" />
-        <activity android:name=".Activity.NewAlbumUploadActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Activity.NewAlbumUploadActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"

@@ -464,8 +464,8 @@ public class LocationListActivity extends AppCompatActivity
 
 
     /*
-    * 사용자가 GPS 기능을 켰는지 확인하기 값이 TRue면 킨것
-    * */
+     * 사용자가 GPS 기능을 켰는지 확인하기 값이 TRue면 킨것
+     * */
     public boolean checkLocationServicesStatus() {
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
@@ -528,7 +528,7 @@ public class LocationListActivity extends AppCompatActivity
     }
 
 
-   // 이전에도 사진에 위치정보가 있었을경우
+    // 이전에도 사진에 위치정보가 있었을경우
     // 그 위치 정보를 기반으로 기본 위치 설정
     // 위치 기본은 서울로 설정
     public void setDefaultLocation() {

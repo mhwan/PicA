@@ -8,6 +8,15 @@ public class ContactItem implements Serializable {
     private long personId;
     private int id;
     private boolean isChecked;
+    private ContactStatus status = ContactStatus.NONREGISTER;
+
+    public ContactStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(ContactStatus status) {
+        this.status = status;
+    }
 
     public ContactItem(){}
     public ContactItem(String name, String phoneNumber){
@@ -67,4 +76,6 @@ public class ContactItem implements Serializable {
 
         return false;
     }
+
+    public enum ContactStatus { REGISTER, NONREGISTER }
 }

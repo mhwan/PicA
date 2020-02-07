@@ -2,6 +2,7 @@ package com.picaproject.pica.CustomView;
 
 import android.graphics.Rect;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 
 
@@ -48,14 +49,22 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
                     outRect.left = mSpace;
             } else if (orientation == RecyclerViewOrientation.GRID && mRow > 0) {
                 //first line need top other is not
-                int i = parent.getChildAdapterPosition(view);
-                outRect.bottom = mSpace;
-                outRect.right = mSpace;
-                if (i < mRow)
-                    outRect.top = mSpace;
 
-                if (i % mRow == 0)
+                int i = parent.getChildAdapterPosition(view);
+                Log.d("grid deco", i+"");
+                outRect.bottom = mSpace;
+                outRect.right = mSpace/2;
+                if (i < mRow) {
+                    outRect.top = mSpace;
+                    Log.d("grid item", "top");
+                } else
+                    outRect.top = 0;
+
+                if (i % mRow == 0) {
                     outRect.left = mSpace;
+                    Log.d("grid item", "left");
+                } else
+                    outRect.left = 0;
             }
         }
         if (mSpace > -1) {
