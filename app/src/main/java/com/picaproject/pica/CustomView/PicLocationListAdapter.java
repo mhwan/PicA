@@ -1,28 +1,29 @@
 package com.picaproject.pica.CustomView;
 
 import android.content.Context;
-import android.util.Log;
+
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.picaproject.pica.Activity.LocationListActivity;
+import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Listener.PlaceTextClickListener;
 import com.picaproject.pica.R;
 
 import java.util.List;
 
-import noman.googleplaces.Place;
+
 
 public class PicLocationListAdapter extends BaseAdapter {
 
-    private List<Place> items;
+    private List<PicPlaceData> items;
     private LocationListActivity.ActivityCallBack activityCallBack;
 
-    public PicLocationListAdapter(List<Place> items, LocationListActivity.ActivityCallBack activityCallBack) {
+    public PicLocationListAdapter(List<PicPlaceData> items, LocationListActivity.ActivityCallBack activityCallBack) {
         this.items = items;
         this.activityCallBack = activityCallBack;
     }
@@ -61,7 +62,7 @@ public class PicLocationListAdapter extends BaseAdapter {
 
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        Place p = items.get(i);
+        PicPlaceData p = items.get(i);
 
         placeText.setText(p.getName());
         view.setOnClickListener(new PlaceTextClickListener(activityCallBack,p));

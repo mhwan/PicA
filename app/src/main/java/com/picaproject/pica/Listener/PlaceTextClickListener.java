@@ -4,14 +4,13 @@ import android.util.Log;
 import android.view.View;
 
 import com.picaproject.pica.Activity.LocationListActivity;
-
-import noman.googleplaces.Place;
+import com.picaproject.pica.Item.PicPlaceData;
 
 public class PlaceTextClickListener implements View.OnClickListener {
     private LocationListActivity.ActivityCallBack activityCallBack;
-    private Place p;
+    private PicPlaceData p;
 
-    public PlaceTextClickListener(LocationListActivity.ActivityCallBack activityCallBack, Place p) {
+    public PlaceTextClickListener(LocationListActivity.ActivityCallBack activityCallBack, PicPlaceData p) {
         this.activityCallBack = activityCallBack;
         this.p = p;
     }

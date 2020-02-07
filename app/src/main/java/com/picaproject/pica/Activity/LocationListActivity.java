@@ -10,7 +10,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Handler;
-import android.os.Looper;
+
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.Snackbar;
@@ -24,13 +24,16 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
+
 import com.google.android.gms.location.LocationRequest;
-import com.google.android.gms.location.LocationResult;
+
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.maps.CameraUpdate;
@@ -51,6 +54,7 @@ import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.LocationParser;
 
 
 import java.io.IOException;
@@ -78,7 +82,7 @@ public class LocationListActivity extends AppCompatActivity
     // 가져온 주변장소 마커를 보관하는 리스트
     List<Marker> previous_marker = null;
     // 어댑터와 연결될 주변 장소 객체 보관 리스트
-    List<Place> placeList = null;
+    List<PicPlaceData> placeList = null;
     //
     PicLocationListAdapter adapter;
     private GoogleMap mMap;
@@ -109,7 +113,7 @@ public class LocationListActivity extends AppCompatActivity
     private Handler handler;
     private Geocoder geocoder;
     private View mLayout;  // Snackbar 사용하기 위해서는 View가 필요합니다.
-
+    private EditText serchView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -148,6 +152,8 @@ public class LocationListActivity extends AppCompatActivity
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
+        // android:id="@+id/search_text"
+        serchView = (EditText) findViewById(R.id.search_text);
 
         FrameLayout bottomsheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
@@ -161,6 +167,8 @@ public class LocationListActivity extends AppCompatActivity
 
 
     }
+
+
 
     @Override
     public void onMapReady(final GoogleMap googleMap) {
@@ -220,15 +228,7 @@ public class LocationListActivity extends AppCompatActivity
 
         mMap.getUiSettings().setMyLocationButtonEnabled(true);
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
-        mMap.setOnMapClickListener(new GoogleMap.OnMapClickListener() {
 
-            @Override
-            public void onMapClick(LatLng latLng) {
-
-                Log.d( TAG, "onMapClick :");
-
-            }
-        });
         // 만약 가져온 PicData에 기존 위치정보가 있을경우
         // onMapReady에서 지도뷰가 준비되면 바로 기존 위치정보로 뷰를 갱신한다.
         if(picData.getLocation()!=null){
@@ -259,44 +259,33 @@ public class LocationListActivity extends AppCompatActivity
             showPlaceInformation(currentPosition);
         }
 
-
-    }
-    /*
-    LocationCallback locationCallback = new LocationCallback() {
-        @Override
-        public void onLocationResult(LocationResult locationResult) {
-            super.onLocationResult(locationResult);
-
-            List<Location> locationList = locationResult.getLocations();
-
-            if (locationList.size() > 0) {
-                location = locationList.get(locationList.size() - 1);
-                //location = locationList.get(0);
-
-                currentPosition
-                        = new LatLng(location.getLatitude(), location.getLongitude());
-
-
-                String markerTitle = getAddressFromLatLng(currentPosition);
-                String markerSnippet = "위도:" + String.valueOf(location.getLatitude())
-                        + " 경도:" + String.valueOf(location.getLongitude());
-
-                Log.d(TAG, "onLocationResult : " + markerSnippet);
-
-
-                //현재 위치에 마커 생성하고 이동
-                setLocationOnMap(location.getLatitude(),location.getLongitude(), markerTitle, markerSnippet);
-
-                mCurrentLocatiion = location;
-
-                // 주변 위치 정보는 1번만 가져와야함으로 이전 주변위치 정보가 없을때만 가져옴.
-                if(previous_marker.size()==0){
-                    showPlaceInformation(currentPosition);
+        serchView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                switch (actionId) {
+                    case EditorInfo.IME_ACTION_SEARCH:
+                        // 검색 동작
+                        if(serchView.getText().length()<1){
+                            break;
+                        }
+                        List<Address>  addresses = getAddressFromString(serchView.getText().toString(),20);
+                        if(addresses==null){
+                            Toast.makeText(getApplicationContext(), "장소를 찾지 못하였습니다.", Toast.LENGTH_LONG).show();
+                            break;
+                        }
+                        setLocationOnMap(addresses);
+                        placeList.clear();
+                        placeList.addAll(LocationParser.addressToPicPlaceData(addresses));
+                        adapter.notifyDataSetChanged();
+                        break;
+                    default:
+                        // 기본 엔터키 동작
+                        return false;
                 }
+                return true;
             }
-        }
-    };
-    */
+        });
+    }
 
     OnCompleteListener<Location> locationCallback = new OnCompleteListener<Location>() {
         @Override
@@ -403,7 +392,6 @@ public class LocationListActivity extends AppCompatActivity
 
 
     // 좌표 정보가담긴 LatLng 객체를 입력받아 그 정보로 위치 정보 검색해서 반환하기
-
     public String getAddressFromLatLng(LatLng latlng) {
 
         //지오코더... GPS를 주소로 변환
@@ -439,6 +427,41 @@ public class LocationListActivity extends AppCompatActivity
         }
 
     }
+    // 지역 이름 검색해서 나온 결과를 최대max개만큼 검색해 반환
+    public List<Address> getAddressFromString(String serch,int max) {
+
+        //지오코더... GPS를 주소로 변환
+        Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+
+        List<Address> addresses;
+
+        try {
+
+            addresses = geocoder.getFromLocationName(serch,max);
+        } catch (IOException ioException) {
+            //네트워크 문제
+            //Toast.makeText(this, "지오코더 서비스 사용불가", Toast.LENGTH_LONG).show();
+            Log.e(TAG,"getAddressFromString 지오코더 서비스 사용불가 : "+ioException);
+            return null;
+        } catch (IllegalArgumentException illegalArgumentException) {
+            //Toast.makeText(this, "잘못된 GPS 좌표", Toast.LENGTH_LONG).show();
+            Log.e(TAG,"getAddressFromString 잘못된 GPS 좌표 : "+illegalArgumentException);
+            // 잘못된 GPS 좌표
+            return null;
+        }
+
+
+        if (addresses == null || addresses.size() == 0) {
+            //Toast.makeText(this, "주소 미발견", Toast.LENGTH_LONG).show();
+            Log.e(TAG,"getAddressFromString 주소 미발견");
+            // 주소 미발견
+            return null;
+        } else {
+            return addresses;
+        }
+    }
+
+
 
     /*
     * 사용자가 GPS 기능을 켰는지 확인하기 값이 TRue면 킨것
@@ -473,6 +496,37 @@ public class LocationListActivity extends AppCompatActivity
         mMap.moveCamera(cameraUpdate);
 
     }
+
+    public void setLocationOnMap(List<Address> address){
+
+        if (address == null||address.size()==0) return;
+
+        if (currentMarker != null) currentMarker.remove();
+
+        LatLng firstLng = null;
+
+        for(Address a : address){
+            double lat = a.getLatitude();
+            double lng = a.getLongitude();
+            LatLng latLng = new LatLng(lat,lng);
+
+            if(firstLng==null){
+                firstLng = latLng;
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                currentMarker = mMap.addMarker(markerOptions);
+            }
+            else{
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.position(latLng);
+                mMap.addMarker(markerOptions);
+            }
+
+        }
+        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLng(firstLng);
+        mMap.moveCamera(cameraUpdate);
+    }
+
 
    // 이전에도 사진에 위치정보가 있었을경우
     // 그 위치 정보를 기반으로 기본 위치 설정
@@ -693,7 +747,7 @@ public class LocationListActivity extends AppCompatActivity
                     markerOptions.snippet(markerSnippet);
                     Marker item = mMap.addMarker(markerOptions);
                     previous_marker.add(item);
-                    placeList.add(place);
+                    placeList.add(LocationParser.placeToPicPlaceData(place));
                     isRun=true;
                 }
                 if(isRun==true){
@@ -776,7 +830,7 @@ public class LocationListActivity extends AppCompatActivity
          * 1. 지도 위치를 선택한곳으로 맞춰줌
          * 2. UploadPicData의 Place 정보를 변경 (이렇게 변경한 정보는 submit()에서 전송)
          * */
-        public void setLocationFromList(Place p){
+        public void setLocationFromList(PicPlaceData p){
             //1. 지도 위치를 선택한곳으로 맞춰줌
             LatLng latLng = new LatLng(p.getLatitude(),p.getLongitude());
 
