@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="14dp"
+    android:paddingRight="13dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:id="@+id/bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.picaproject.pica.CustomView.ProfileIconView
+        android:layout_width="42dp"
+        android:layout_height="42dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/profile_icon"
+        android:layout_marginLeft="10dp"
+        app:bg_color="@color/colorPrimary"
+        app:icon_padding="12dp"/>
+
+    <ImageView
+        android:id="@+id/remove_alarm"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_close_black_24dp"/>
+    <TextView
+        android:layout_toRightOf="@id/profile_icon"
+        android:layout_toLeftOf="@id/remove_alarm"
+        android:layout_marginLeft="14dp"
+        android:id="@+id/alarm_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="mhwan님이 '앨범샘플1'에 당신을 초대했습니다. 이 알림을 클릭해서 다양한 사진을 친구들과 공유해보세요!"
+        android:textSize="13sp"
+        android:textColor="@color/colorPrimaryBlack"/>
+
+    <TextView
+        android:id="@+id/alarm_date"
+        android:layout_marginTop="4dp"
+        android:layout_alignLeft="@id/alarm_content"
+        android:layout_below="@id/alarm_content"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2020.02.06 PM 11:30"
+        android:textSize="11sp"
+        android:textColor="@color/colorDarkGray"/>
+</RelativeLayout>

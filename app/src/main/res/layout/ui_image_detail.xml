@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:src="@drawable/img_sample"
+        android:scaleType="fitXY"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="64dp"
+        android:layout_marginLeft="14dp"
+        android:layout_marginRight="14dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="12dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical"
+        android:background="@drawable/bg_transparent_black"
+        android:minHeight="56dp"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:layout_gravity="right|bottom"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:padding="4dp"
+            android:src="@drawable/ic_visibility_black_24dp"
+            android:background="@drawable/bg_transparent_black"/>
+
+        <LinearLayout
+            android:layout_alignParentBottom="true"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="위치 : 경기도 수원시 장안구 천천동"/>
+            <TextView
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="내용 : 이거 여기 케이크 존맛이었는데 ㅇㅈasdfasdfasdfjasdlfjsakdfjlasdkjflaksdjflkasdjflkasjdkfljasdlkfjasdklfjalsdjfklsadfjlasdkjflasdjfkasjdlfkjasdklfjasdkjfkalsdjfasdfasdfasdfasdfasd?"
+                android:textColor="@android:color/white"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@android:color/white"
+                android:text="태그 : #케잌 #존맛 #송도"/>
+
+        </LinearLayout>
+
+    </FrameLayout>
+</FrameLayout>

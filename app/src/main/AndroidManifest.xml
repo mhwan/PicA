@@ -2,11 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.picaproject.pica">
 
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -14,18 +9,32 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Activity.LocationListActivity"
+        <activity android:name=".Activity.ImageDetailActivity"
             android:theme="@style/AppTheme.NoActionBar"></activity>
-        <activity android:name=".Activity.CreateAlbumActivity"
+        <activity
+            android:name=".Activity.NotificationListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.FriendListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.SettingActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.LocationListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".Activity.CreateAlbumActivity"
             android:theme="@style/AppTheme.NoActionBar"
-            android:windowSoftInputMode="adjustPan">
-        </activity>
-        <activity android:name=".Activity.InviteMemberActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name=".Activity.InviteMemberActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".Activity.UploadPicActivity" />
         <activity android:name=".Activity.UploadAlbumActivity" />
-        <activity android:name=".Activity.NewAlbumUploadActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
+        <activity
+            android:name=".Activity.NewAlbumUploadActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
@@ -40,5 +49,10 @@
             android:name=".Activity.AlbumMainActivity"
             android:theme="@style/AppTheme.NoStatusBar" />
     </application>
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
 
 </manifest>

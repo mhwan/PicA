@@ -48,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbarTextView);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
+        toolbar.findViewById(R.id.toolbar_setting).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, SettingActivity.class));
+            }
+        });
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager();

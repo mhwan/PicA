@@ -34,7 +34,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="배명"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/colorPrimaryBlack"
         android:textSize="14sp" />
 
     <TextView
@@ -45,7 +45,7 @@
         android:layout_below="@id/select_name"
         android:layout_marginTop="3dp"
         android:text="01050574876"
-        android:textColor="@color/colorPrimaryBlack"
+        android:textColor="@color/colorDarkGray"
         android:textSize="13dp" />
 
 </RelativeLayout>

@@ -3,10 +3,15 @@ package com.picaproject.pica.Activity;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.picaproject.pica.CustomView.BottomSheetListView;
+import com.picaproject.pica.CustomView.SelectContactsAdapter;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.AppUtility;
 
 public class LocationListActivity extends AppCompatActivity {
     private BottomSheetBehavior bottomSheetBehavior;
@@ -28,6 +33,7 @@ public class LocationListActivity extends AppCompatActivity {
         bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
 
         bottomSheetListView = (BottomSheetListView) findViewById(R.id.map_listview);
+
     }
 
 }

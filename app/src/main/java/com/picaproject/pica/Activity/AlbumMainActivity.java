@@ -19,12 +19,10 @@ import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.picaproject.pica.CustomView.InvitedFriendsRecyclerAdapter;
-import com.picaproject.pica.Fragment.AlbumMainFragment;
+import com.picaproject.pica.Fragment.ImageGridFragment;
 import com.picaproject.pica.Fragment.UserInfoFragment;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.UploadPicData;
-import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.PicDataParser;
 
@@ -155,7 +153,7 @@ public class AlbumMainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new AlbumMainFragment(), "사진보기");
+        adapter.addFragment(ImageGridFragment.newInstance(), "사진보기");
         adapter.addFragment(new UserInfoFragment(), "기타");
         viewPager.setAdapter(adapter);
     }

@@ -10,10 +10,12 @@ public class BottomSheetListView extends ListView {
         super(context, p_attrs);
     }
 
+
+    /*
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         return true;
-    }
+    }*/
 
     @Override
     public boolean onTouchEvent(MotionEvent ev) {

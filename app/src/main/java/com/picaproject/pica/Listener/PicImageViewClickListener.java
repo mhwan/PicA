@@ -2,6 +2,7 @@ package com.picaproject.pica.Listener;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 
@@ -17,15 +18,19 @@ import com.picaproject.pica.Item.UploadPicData;
 public class PicImageViewClickListener implements View.OnClickListener {
 
     private AppCompatActivity context;
+    private Fragment fragment;
     public PicImageViewClickListener(AppCompatActivity context) {
         this.context = context;
     }
-
+    public PicImageViewClickListener(Fragment fragment) { this.fragment = fragment; }
     @Override
     public void onClick(View view) {
         Intent intent = new Intent(Intent.ACTION_PICK);
-        intent. setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
-        context.startActivityForResult(intent, IntentProtocol.GET_GALLERY_IMAGE);
+        intent.setDataAndType(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI, "image/*");
+        if (context != null)
+            context.startActivityForResult(intent, IntentProtocol.GET_GALLERY_IMAGE);
+        else if (fragment != null)
+            fragment.startActivityForResult(intent, IntentProtocol.GET_GALLERY_IMAGE);
     }
 
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,10 +18,11 @@ import com.picaproject.pica.R;
 
 import java.util.ArrayList;
 
-public class MyAlbumFragment extends Fragment {
+public class MyAlbumFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private View view;
     private ArrayList<AlbumItem> albumList;
+    private SwipeRefreshLayout swipeRefreshLayout;
     public MyAlbumFragment() {
         // Required empty public constructor
     }
@@ -43,6 +45,8 @@ public class MyAlbumFragment extends Fragment {
     private void initView(){
         RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
+        swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.album_refresh);
+        swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setAdapter(new AlbumRecyclerAdapter(getContext(), albumList));
@@ -54,5 +58,10 @@ public class MyAlbumFragment extends Fragment {
         for (int i = 0; i<7; i++)
             albumList.add(new AlbumItem("앨범 샘플"+(i+1), "mhwan", R.drawable.img_sample));
 
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(false);
     }
 }
