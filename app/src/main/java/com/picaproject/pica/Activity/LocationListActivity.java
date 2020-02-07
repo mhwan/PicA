@@ -562,9 +562,10 @@ public class LocationListActivity extends AppCompatActivity
 
 
             if ( check_result ) {
-
-                // 퍼미션을 허용했다면 위치 업데이트를 시작합니다.
-                startLocationUpdates();
+                // 퍼미션을 허용했다면 위치 업데이트를 시작합니다. 할려했으나 이떄쯤이면 위치 업데이트가 적용안됨
+                // 액티비티 재실행
+                //startLocationUpdates();
+                activityRestartRequest();
             }
             else {
                 // 거부한 퍼미션이 있다면 앱을 사용할 수 없는 이유를 설명해주고 앱을 종료합니다.2 가지 경우가 있습니다.
@@ -579,7 +580,6 @@ public class LocationListActivity extends AppCompatActivity
 
                         @Override
                         public void onClick(View view) {
-
                             finish();
                         }
                     }).show();
@@ -738,12 +738,26 @@ public class LocationListActivity extends AppCompatActivity
             }
         },3000);
     }
+
     // 조작된 UploadPicData를 NewAlbumUploadActivity에 전달
     private void submit(){
         Intent resultIntent = new Intent();
         resultIntent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME,picData);
         setResult(IntentProtocol.SET_PIC_LOCATION, resultIntent);
         finish();
+    }
+
+    // UploadPicData를 그대로 다시 NewAlbumUploadActivity에 전달하고 앱을 재실행해달라고 요청
+    private void activityRestartRequest(){
+        /*
+        Intent resultIntent = new Intent();
+        resultIntent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME,picData);
+        setResult(IntentProtocol.RESTART_PIC_LOCATION_ACTIVITY, resultIntent);
+        finish();
+        */
+        Intent intent = getIntent();
+        finish();
+        startActivity(intent);
     }
     // TODO 등록버튼이 안되서 여기서 임시로 볼륨업키 구현
     @Override
