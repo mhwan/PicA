@@ -8,11 +8,12 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 
 import com.picaproject.pica.Fragment.NewAlbumUploadFragment;
+import com.picaproject.pica.Item.UploadPicData;
 
 import java.util.ArrayList;
 
 public class NewAlbumUploadAdapter extends FragmentStatePagerAdapter {
-    ArrayList<Fragment> items = new ArrayList<Fragment>();
+    private ArrayList<NewAlbumUploadFragment> items = new ArrayList<NewAlbumUploadFragment>();
 
     //어댑터 안에서 각각의 아이템을 데이터로서 관리한다
     public NewAlbumUploadAdapter(FragmentManager fm) {
@@ -22,9 +23,19 @@ public class NewAlbumUploadAdapter extends FragmentStatePagerAdapter {
     public void addFragment(NewAlbumUploadFragment fragment){
         items.add(fragment);
     }
+    // 주어진 인덱스의 UploadPicData를 변경한다.
+    // 성공시 True 실패시 False 리턴
+    public boolean setDataAtIndex(int index,UploadPicData data){
+        NewAlbumUploadFragment f = items.get(index);
+        if(f!=null){
+            f.setUploadPicData(data);
+            return true;
+        }
+        return false;
+    }
     // addFragment로 추가된 Fragment를 여기서 리턴해줌.
     @Override
-    public Fragment getItem(int position) {
+    public NewAlbumUploadFragment getItem(int position) {
         return items.get(position);
     }
 

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.picaproject.pica.CustomView.UploadPicController;
+import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.Listener.NewAlbumSetLocationClickListener;
 import com.picaproject.pica.R;
@@ -43,6 +44,12 @@ public class NewAlbumUploadFragment extends Fragment {
         this.activity = activity;
         glide = Glide.with(this.activity);
     }
+
+    public void setLocationText(String s){
+        if(locationEdit!=null)
+            locationEdit.setText(s);
+    }
+
 
     public void setController(UploadPicController controller) {
         this.controller = controller;
@@ -77,6 +84,11 @@ public class NewAlbumUploadFragment extends Fragment {
 
         locationEdit.setOnClickListener(new NewAlbumSetLocationClickListener(controller,uploadPicData));
 
+        PicPlaceData p = uploadPicData.getLocation();
+
+        if(p!=null){
+            locationEdit.setText(p.getName());
+        }
 
 
         return rootView;

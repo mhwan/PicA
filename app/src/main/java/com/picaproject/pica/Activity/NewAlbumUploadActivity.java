@@ -193,6 +193,14 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         if(requestCode == IntentProtocol.SET_PIC_LOCATION && data != null){
             //TODO
             UploadPicData picData = (UploadPicData)data.getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+            int idx = serchItemIndex(picData.getClassId());
+            if(idx!=-1){
+                dataList.set(idx,picData);
+                recyclerDataList.set(idx,picData);
+                adapter.setDataAtIndex(idx,picData);
+                adapter.notifyDataSetChanged();
+                recyclerAdapter.notifyDataSetChanged();
+            }
             Log.i("test_hs","NewAlbumUploadActivity SET_PIC_LOCATION : "+picData.getLocation().toString());
         }
 
@@ -206,6 +214,17 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         removeFragment(itemIdx);
         adapter.notifyDataSetChanged();
         recyclerAdapter.notifyDataSetChanged();
+    }
+    // UploadPIcData의 ID를 기반으로 몇번째에 데이터가 있는지 인덱스를 찾아서
+    // 반환함. 못찾았을경우 -1 반환
+    private int serchItemIndex(long dataId){
+        int cnt;
+        for(cnt=0;cnt<dataList.size();cnt++){
+            long itemId = dataList.get(cnt).getClassId();
+            if(dataId==itemId)
+                return cnt;
+        }
+        return -1;
     }
 
 }

@@ -18,6 +18,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
 import android.view.KeyEvent;
@@ -64,7 +65,7 @@ import noman.googleplaces.Place;
 import noman.googleplaces.PlacesException;
 import noman.googleplaces.PlacesListener;
 
-public class LocationListActivity extends BaseToolbarActivity
+public class LocationListActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback, PlacesListener {
 
@@ -254,7 +255,7 @@ public class LocationListActivity extends BaseToolbarActivity
             //현재 위치에 마커 생성하고 이동
             setLocationOnMap(p.getLatitude(),p.getLongitude(), markerTitle, markerSnippet);
             mCurrentLocatiion = location;
-
+            Log.d(TAG, "LocationListActivity  showPlaceInformation 1 has Data : ");
             showPlaceInformation(currentPosition);
         }
 
@@ -321,7 +322,7 @@ public class LocationListActivity extends BaseToolbarActivity
                 setLocationOnMap(location.getLatitude(),location.getLongitude(), markerTitle, markerSnippet);
 
                 mCurrentLocatiion = location;
-
+                Log.d(TAG, "LocationListActivity  showPlaceInformation 2 Not Data : ");
                 showPlaceInformation(currentPosition);
             }
         }
@@ -369,15 +370,6 @@ public class LocationListActivity extends BaseToolbarActivity
     protected void onStart() {
         super.onStart();
         Log.d(TAG, "onStart");
-        //setToolbarTitle("사진");
-        //setToolbarButton(
-        setToolbarTitle("위치 선택");
-        setToolbarButton("등록", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                submit();
-            }
-        });
 
         if (checkPermission()) {
 
@@ -668,22 +660,27 @@ public class LocationListActivity extends BaseToolbarActivity
     // PlacesListener 오버라이딩
     @Override
     public void onPlacesFailure(PlacesException e) {
-
+        Log.e(TAG, "LocationListActivity  onPlacesFailure : "+e.toString());
     }
 
     @Override
     public void onPlacesStart() {
 
     }
+
+
+
+
     // 주변 정보를 전부 가져오는데 성공했을때 할 행동
     @Override
     public void onPlacesSuccess(final List<Place> places) {
         handler.post(new Runnable() {
             @Override
             public void run() {
+                boolean isRun=false;
+                Log.d(TAG, "LocationListActivity  onPlacesSuccess : ");
                 //https://github.com/nomanr/Android-Google-Places-API/blob/master/placesAPI/src/main/java/noman/googleplaces/Place.java
                 for (noman.googleplaces.Place place : places) {
-
                     LatLng latLng
                             = new LatLng(place.getLatitude()
                             , place.getLongitude());
@@ -697,16 +694,16 @@ public class LocationListActivity extends BaseToolbarActivity
                     Marker item = mMap.addMarker(markerOptions);
                     previous_marker.add(item);
                     placeList.add(place);
+                    isRun=true;
                 }
-
-                //중복 마커 제거
-                HashSet<Marker> hashSet = new HashSet<Marker>();
-                hashSet.addAll(previous_marker);
-                previous_marker.clear();
-                previous_marker.addAll(hashSet);
-
-
-                adapter.notifyDataSetChanged();
+                if(isRun==true){
+                    //중복 마커 제거
+                    HashSet<Marker> hashSet = new HashSet<Marker>();
+                    hashSet.addAll(previous_marker);
+                    previous_marker.clear();
+                    previous_marker.addAll(hashSet);
+                    adapter.notifyDataSetChanged();
+                }
             }
         });
 
@@ -716,32 +713,30 @@ public class LocationListActivity extends BaseToolbarActivity
     public void onPlacesFinished() {
 
     }
-
-    public void showPlaceInformation(LatLng location)
+    // E/test_hs: LocationListActivity  onPlacesFailure : noman.googleplaces.PlacesException: OVER_QUERY_LIMIT
+    // OVER_QUERY_LIMIT 발생을 막기 위해 천천히 실행
+    // 2.5초 딜레이를 줘도 너무 자주 위치에 접근하면 OVER_QUERY_LIMIT 발생함
+    // TODO 주의 : OVER_QUERY_LIMIT가 상당히 오래걸림 한번 발생하고 오래걸린다면 거의 1분 이상 지연해야 가능한듯.
+    // 진짜 심각하게 느림 언제 회복되냐 애국가를 4절까지 불러야하는가
+    public void showPlaceInformation(final LatLng location)
     {
         mMap.clear();//지도 클리어
 
         if (previous_marker != null)
             previous_marker.clear();//이전에 가져온 주변 지역정보 초기화
-        /*
-        new NRPlaces.Builder()
-                .listener(LocationListActivity.this)
-                .key("AIzaSyCGtSKl81RRcPu9xNFYXU3N4zBkwAFXSN8")
-                .latlng(location.latitude, location.longitude)//현재 위치
-                .radius(500) //500 미터 내에서 검색
-                .type(PlaceType.RESTAURANT) //음식점
-                .build()
-                .execute();
-
-         */
-        new NRPlaces.Builder()
-                .listener(LocationListActivity.this)
-                .key("AIzaSyCGtSKl81RRcPu9xNFYXU3N4zBkwAFXSN8")
-                .latlng(location.latitude, location.longitude)//현재 위치
-                .radius(500) //500 미터 내에서 검색
-                .build()
-                .execute();
-
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //.type(PlaceType.RESTAURANT) //음식점
+                new NRPlaces.Builder()
+                        .listener(LocationListActivity.this)
+                        .key("AIzaSyCGtSKl81RRcPu9xNFYXU3N4zBkwAFXSN8")
+                        .latlng(location.latitude, location.longitude)//현재 위치
+                        .radius(500) //500 미터 내에서 검색
+                        .build()
+                        .execute();
+            }
+        },3000);
     }
     // 조작된 UploadPicData를 NewAlbumUploadActivity에 전달
     private void submit(){
