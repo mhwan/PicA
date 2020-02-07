@@ -11,10 +11,18 @@ public class PermissionChecker {
     private String[] permission_list;
     // 권한을 요구하고싶은 액티비티
     private AppCompatActivity activity;
+    // 권한을 사용자가 허용 / 거절 했을때 행동
+    private PermissioEventCallback eventCallback;
 
     public PermissionChecker(String[] permission_list, AppCompatActivity activity) {
         this.permission_list = permission_list;
         this.activity = activity;
+    }
+
+    public PermissionChecker(String[] permission_list, AppCompatActivity activity, PermissioEventCallback eventCallback) {
+        this.permission_list = permission_list;
+        this.activity = activity;
+        this.eventCallback = eventCallback;
     }
 
     // OnCreate에서 API 버전과 상관없이 무조건 호출필요
@@ -42,11 +50,21 @@ public class PermissionChecker {
             {
                 //허용됬다면
                 if(grantResults[i]==PackageManager.PERMISSION_GRANTED){
+
                 }
                 else {
-                    Toast.makeText(activity.getApplicationContext(),"저장소 접근 권한을 허용해주셔야 이용이 가능합니다.",Toast.LENGTH_LONG).show();
-                    activity.finish();
+                    if(eventCallback!=null){
+                        eventCallback.OnDenial();
+                    }
+                    else{
+                        Toast.makeText(activity.getApplicationContext(),"저장소 접근 권한을 허용해주셔야 이용이 가능합니다.",Toast.LENGTH_LONG).show();
+                        activity.finish();
+                    }
+                    return;
                 }
+            }
+            if(eventCallback!=null){
+                eventCallback.OnPermit();
             }
         }
     }

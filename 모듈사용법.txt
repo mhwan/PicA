@@ -51,3 +51,9 @@
             pc.requestPermissionsResult(requestCode,grantResults);
     }
 
+
+    + 2020 02 07 추가
+    PermissioEventCallback 인터페이스를 구현하여  PermissionChecker 생성자에 전달하면
+    OnPermit 함수가 권한 허용시 , OnDenial 함수가 권한 거부시 실행되며
+    PermissioEventCallback 인터페이스를 구현하지 않으면 기본적으로 권한을 거부했을때 액티비티가 종료되며
+    권한을 허용하면 추가적인 동작은 하지않습니다.
