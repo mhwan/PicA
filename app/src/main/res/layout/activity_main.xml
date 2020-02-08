@@ -8,12 +8,12 @@
     android:background="@color/colorBackground"
     tools:context=".Activity.MainActivity">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:paddingBottom="16dp"
         android:layout_height="wrap_content">
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbarCustom"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
@@ -41,9 +41,9 @@
                 android:layout_marginRight="16dp"
                 app:srcCompat="@drawable/ic_settings_black_24dp"
                 tools:ignore="VectorDrawableCompat" />
-        </android.support.v7.widget.Toolbar>
+        </androidx.appcompat.widget.Toolbar>
 
-        <android.support.v7.widget.SearchView
+        <androidx.appcompat.widget.SearchView
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             android:id="@+id/searchView"
@@ -53,15 +53,15 @@
             android:elevation="2dp"
             android:background="#fff"
             android:layout_height="wrap_content">
-        </android.support.v7.widget.SearchView>
+        </androidx.appcompat.widget.SearchView>
 
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v4.view.ViewPager
+        <androidx.viewpager.widget.ViewPager
             android:id="@+id/viewpager"
             android:layout_marginBottom="52dp"
             android:layout_width="match_parent"

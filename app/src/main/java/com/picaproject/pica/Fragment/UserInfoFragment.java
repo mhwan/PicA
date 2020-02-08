@@ -3,15 +3,14 @@ package com.picaproject.pica.Fragment;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.ShapeDrawable;
 import android.graphics.drawable.shapes.OvalShape;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v4.widget.SwipeRefreshLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,9 +20,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.picaproject.pica.Activity.FriendListActivity;
-import com.picaproject.pica.Activity.MainActivity;
 import com.picaproject.pica.Activity.NotificationListActivity;
-import com.picaproject.pica.Activity.SettingActivity;
 import com.picaproject.pica.CustomView.ProfileIconView;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Listener.PicImageViewClickListener;
@@ -53,7 +50,7 @@ public class UserInfoFragment extends Fragment implements SwipeRefreshLayout.OnR
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view =  inflater.inflate(R.layout.fragment_user_info, container, false);
-        glide = Glide.with(this);
+        glide = Glide.with(getActivity());
         initView();
         return view;
     }

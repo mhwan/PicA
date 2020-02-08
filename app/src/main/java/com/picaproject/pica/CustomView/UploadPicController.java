@@ -1,8 +1,8 @@
 package com.picaproject.pica.CustomView;
 
 import android.content.Intent;
-import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
+import androidx.viewpager.widget.ViewPager;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 
 import com.picaproject.pica.Activity.LocationListActivity;

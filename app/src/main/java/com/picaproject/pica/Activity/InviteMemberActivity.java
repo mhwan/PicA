@@ -5,16 +5,13 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SearchView;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.SearchView;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.view.animation.TranslateAnimation;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
@@ -170,13 +167,13 @@ public class InviteMemberActivity extends BaseToolbarActivity implements SelectC
 
         SearchView.SearchAutoComplete autoComplete = ((SearchView.SearchAutoComplete) searchView.findViewById(R.id.search_src_text));
         ImageView searchCloseButton = (ImageView) ll3.getChildAt(1);
-        ImageView searchIcon = (ImageView) searchView.findViewById(android.support.v7.appcompat.R.id.search_mag_icon);
+        //ImageView searchIcon = (ImageView) searchView.findViewById(android.R.id.search_mag_icon);
         ImageView labelView = (ImageView) ll.getChildAt(1);
         //autoComplete.setTextSize(TypedValue.COMPLEX_UNIT_PX, AppUtility.getAppinstance().dpToPx(18));
         autoComplete.setHintTextColor(getResources().getColor(android.R.color.darker_gray));
         autoComplete.setTextColor(getResources().getColor(R.color.colorPrimary));
 
-        searchIcon.getDrawable().setColorFilter(Color.parseColor("#858585"), PorterDuff.Mode.MULTIPLY);
+        //searchIcon.getDrawable().setColorFilter(Color.parseColor("#858585"), PorterDuff.Mode.MULTIPLY);
         searchCloseButton.getDrawable().setColorFilter(Color.parseColor("#858585"), PorterDuff.Mode.MULTIPLY);
         labelView.getDrawable().setColorFilter(getResources().getColor(R.color.colorPrimary), PorterDuff.Mode.MULTIPLY);
     }

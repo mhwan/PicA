@@ -11,12 +11,12 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/select_recyclerview"
             android:layout_marginBottom="2dp"
             android:layout_width="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
+            android:layout_height="wrap_content"></androidx.recyclerview.widget.RecyclerView>
         <View
             android:layout_below="@id/select_recyclerview"
             android:id="@+id/divider"
@@ -33,7 +33,7 @@
             android:paddingBottom="4dp"
             android:elevation="4dp">
 
-            <android.support.v7.widget.SearchView
+            <androidx.appcompat.widget.SearchView
                 android:layout_marginLeft="16dp"
                 android:layout_marginRight="16dp"
                 android:id="@+id/searchView"
@@ -41,7 +41,7 @@
                 android:queryBackground="@android:color/transparent"
                 app:queryBackground="@android:color/transparent"
                 android:layout_height="wrap_content">
-            </android.support.v7.widget.SearchView>
+            </androidx.appcompat.widget.SearchView>
         </LinearLayout>
         <ListView
             android:layout_below="@id/searchviewFrame"

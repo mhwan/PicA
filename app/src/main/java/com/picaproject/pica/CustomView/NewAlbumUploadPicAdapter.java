@@ -1,11 +1,9 @@
 package com.picaproject.pica.CustomView;
 
-import android.app.Activity;
-import android.net.Uri;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.RecyclerView;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +15,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
 import com.picaproject.pica.Item.UploadPicData;
 
-import com.picaproject.pica.Listener.NewUploadRecyclerAddImageBtnClickListener;
 import com.picaproject.pica.Listener.NewUploadRecyclerImageViewClickListener;
 import com.picaproject.pica.Listener.NewUploadRecyclerRemoveBtnClickListener;
 import com.picaproject.pica.R;

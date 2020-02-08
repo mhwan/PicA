@@ -1,16 +1,14 @@
 package com.picaproject.pica.Activity;
 
 import android.content.Intent;
-import android.database.Cursor;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
-import android.provider.MediaStore;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -46,9 +44,9 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        String buttonName = "앨범생성";
+        String buttonName = "생성";
         if (isManageMode)
-            buttonName = "앨범수정";
+            buttonName = "수정";
         setToolbarButton(buttonName, new View.OnClickListener() {
             @Override
             public void onClick(View v) {

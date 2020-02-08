@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 
-public class PicMetaTextView extends android.support.v7.widget.AppCompatTextView {
+public class PicMetaTextView extends androidx.appcompat.widget.AppCompatTextView {
 
     private String metaText;
     /*

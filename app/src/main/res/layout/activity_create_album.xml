@@ -49,20 +49,73 @@
                 android:src="@drawable/img_sample"></ImageView>
         </RelativeLayout>
 
-        <android.support.design.widget.TextInputLayout
+        <LinearLayout
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="앨범이름"
+                android:layout_marginBottom="6dp"
+                android:textColor="@color/colorPrimaryBlack"
+                android:textSize="13sp"></TextView>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="앨범이름 입력"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:inputType="text"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="14dp"
+                android:background="@drawable/bg_rounded_bgcolor"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_marginTop="16dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="앨범설명"
+                android:layout_marginBottom="6dp"
+                android:textColor="@color/colorPrimaryBlack"
+                android:textSize="13sp"></TextView>
+            <EditText
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:hint="간단 앨범설명 입력"
+                android:textColor="@color/colorPrimary"
+                android:textSize="14sp"
+                android:inputType="text"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingLeft="14dp"
+                android:background="@drawable/bg_rounded_bgcolor"/>
+        </LinearLayout>
+        <!--
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/album_name"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
             style="@style/TextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/album_name_editText"
                 android:hint="앨범 이름" />
-        </android.support.design.widget.TextInputLayout>
-        <android.support.design.widget.TextInputLayout
+        </com.google.android.material.textfield.TextInputLayout>
+        <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/album_summary"
             android:layout_marginLeft="16dp"
             android:layout_marginRight="16dp"
@@ -70,12 +123,13 @@
             style="@style/TextInputLayoutStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-            <android.support.design.widget.TextInputEditText
+            <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/summary_editText"
                 android:hint="앨범 설명" />
-        </android.support.design.widget.TextInputLayout>
+        </com.google.android.material.textfield.TextInputLayout>
+        -->
 
         <LinearLayout
             android:layout_marginTop="16dp"
@@ -88,11 +142,12 @@
                 android:layout_height="wrap_content"
                 android:text="앨범 내 친구"
                 android:textColor="@color/colorPrimaryBlack"
-                android:textSize="15sp"></TextView>
+                android:textSize="13sp"></TextView>
             <TextView
                 android:id="@+id/invite_friends_count"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textSize="13sp"
                 android:layout_marginLeft="6dp"
                 android:textColor="@color/colorPrimary"
                 android:text="(4명)"/>
@@ -107,11 +162,11 @@
             android:gravity="center">
         </TextView>
 
-        <android.support.v7.widget.RecyclerView
+        <androidx.recyclerview.widget.RecyclerView
             android:visibility="gone"
             android:layout_marginTop="4dp"
             android:id="@+id/invite_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+            android:layout_height="match_parent"></androidx.recyclerview.widget.RecyclerView>
     </LinearLayout>
 </RelativeLayout>

@@ -1,14 +1,11 @@
 package com.picaproject.pica.Listener;
 
-import android.content.Context;
 import android.content.Intent;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
-import com.picaproject.pica.Activity.UploadPicActivity;
 import com.picaproject.pica.IntentProtocol;
-import com.picaproject.pica.Item.UploadPicData;
 
 /*
 * 사진추가 화면에서 이미지 뷰
