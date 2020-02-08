@@ -4,7 +4,7 @@
     android:layout_height="56dp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.picaproject.pica.CustomView.ProfileIconView
+    <com.mhwan.profileiconview.ProfileIconView
         android:id="@+id/profile_icon"
         android:layout_width="38dp"
         android:layout_centerHorizontal="true"
@@ -12,7 +12,7 @@
         android:layout_marginTop="2dp"
         app:icon_padding="12dp"
         app:bg_color="@color/colorPrimary"
-        android:layout_height="38dp"></com.picaproject.pica.CustomView.ProfileIconView>
+        android:layout_height="38dp"></com.mhwan.profileiconview.ProfileIconView>
     <TextView
         android:layout_below="@id/profile_icon"
         android:id="@+id/profile_name"
@@ -32,7 +32,7 @@
         android:layout_width="18dp"
         android:id="@+id/profile_remove"
         android:layout_height="18dp">
-        <com.picaproject.pica.CustomView.CircleView
+        <com.mhwan.profileiconview.CircleView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             app:circle_background_color="@android:color/darker_gray"/>

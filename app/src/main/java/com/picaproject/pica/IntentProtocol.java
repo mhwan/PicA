@@ -26,6 +26,8 @@ public class IntentProtocol {
     public static int REQUEST_INVITE_MEMBER = 7001;
 
     public static final String INTENT_FLAG_MODE = "mode";
+    public static final String INTENT_START_POSITION = "startPosition";
+    public static final String INTENT_ALBUM_IMAGE_LIST = "image_list";
     public static final String INTENT_ALBUM_MODE = "album_mode";
     public static final String INTENT_FLAG_DATA_INDEX = "DataIndex";
     public static final String PIC_DATA_CLASS_NAME = "UploadPicData";

@@ -9,7 +9,7 @@
     android:id="@+id/bg"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <com.picaproject.pica.CustomView.ProfileIconView
+    <com.mhwan.profileiconview.ProfileIconView
         android:layout_width="42dp"
         android:layout_height="42dp"
         android:layout_alignParentLeft="true"

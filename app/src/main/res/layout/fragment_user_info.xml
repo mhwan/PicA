@@ -69,7 +69,7 @@
                                 android:id="@+id/profile_frame"
                                 android:layout_gravity="center_horizontal"
                                 android:layout_height="72dp">
-                                <com.picaproject.pica.CustomView.ProfileIconView
+                                <com.mhwan.profileiconview.ProfileIconView
                                     android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     app:bg_color="@color/colorPrimary"
@@ -101,10 +101,10 @@
                             android:layout_alignParentTop="true"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content">
-                            <com.picaproject.pica.CustomView.CircleView
+                            <com.mhwan.profileiconview.CircleView
                                 android:layout_width="16dp"
                                 app:circle_background_color="@color/colorRed"
-                                android:layout_height="16dp"></com.picaproject.pica.CustomView.CircleView>
+                                android:layout_height="16dp"></com.mhwan.profileiconview.CircleView>
 
                             <TextView
                                 android:id="@+id/badge_text"

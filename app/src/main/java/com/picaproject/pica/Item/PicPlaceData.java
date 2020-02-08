@@ -10,6 +10,12 @@ public class PicPlaceData implements Serializable {
     private double latitude;
     private double longitude;
 
+    public PicPlaceData(String name) {
+        this.name = name;
+    }
+
+    public PicPlaceData(){}
+
     public String getName() {
         return name;
     }

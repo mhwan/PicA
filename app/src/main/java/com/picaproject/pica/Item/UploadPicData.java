@@ -10,6 +10,11 @@ import java.util.ArrayList;
 * tags : 태그 목록
 * contents,tags는 null일수있음
 * */
+
+/**
+ * 2차 수정 from. mhwan
+ * 임시적으로 사용할 샘플 이미지의 id값을 넣기위함
+ */
 public class UploadPicData implements Serializable {
     // 직렬화 버전 표시 : https://lktprogrammer.tistory.com/150
     private static final long serialVersionUID = 1L;
@@ -26,13 +31,26 @@ public class UploadPicData implements Serializable {
 
 
     private PicPlaceData location;
-
-
     private long classId;
+    private int imgSampleId;
     public UploadPicData(String src){
         classId = CLASS_ID;
         CLASS_ID++;
         this.src=src;
+    }
+
+    public UploadPicData(int id){
+        classId = CLASS_ID;
+        CLASS_ID++;
+        this.imgSampleId = id;
+    }
+
+    public int getImgSampleId() {
+        return imgSampleId;
+    }
+
+    public void setImgSampleId(int imgSampleId) {
+        this.imgSampleId = imgSampleId;
     }
 
     public String getContents() {

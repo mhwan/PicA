@@ -8,12 +8,12 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.picaproject.pica.CustomView.ProfileIconView
+    <com.mhwan.profileiconview.ProfileIconView
         android:id="@+id/friends_profile"
         android:layout_width="36dp"
         android:layout_height="36dp"
         app:icon_padding="10dp"
-        app:bg_color="@color/colorPrimary"></com.picaproject.pica.CustomView.ProfileIconView>
+        app:bg_color="@color/colorPrimary"></com.mhwan.profileiconview.ProfileIconView>
     <TextView
         android:layout_marginLeft="12dp"
         android:layout_centerVertical="true"

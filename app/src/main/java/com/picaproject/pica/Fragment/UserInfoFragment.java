@@ -19,9 +19,9 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.mhwan.profileiconview.ProfileIconView;
 import com.picaproject.pica.Activity.FriendListActivity;
 import com.picaproject.pica.Activity.NotificationListActivity;
-import com.picaproject.pica.CustomView.ProfileIconView;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Listener.PicImageViewClickListener;
 import com.picaproject.pica.R;

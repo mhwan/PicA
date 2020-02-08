@@ -12,9 +12,12 @@ import android.view.ViewGroup;
 import com.picaproject.pica.CustomView.ImageRecyclerAdapter;
 import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.Item.ImageItem;
+import com.picaproject.pica.Item.PicPlaceData;
+import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.R;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -74,10 +77,15 @@ public class ImageGridFragment extends Fragment {
     public void changeImageList(){
         adapter.resetImageList(makeImageSampleList());
     }
-    private ArrayList<ImageItem> makeImageSampleList(){
-        ArrayList<ImageItem> imageItems = new ArrayList<>();
+    private ArrayList<UploadPicData> makeImageSampleList(){
+        ArrayList<UploadPicData> imageItems = new ArrayList<>();
+        UploadPicData data = new UploadPicData(R.drawable.img_sample);
+        data.setLocation(new PicPlaceData("강남대학교"));
+        data.setContents("여기 케이크 진짜 맛있었는데 크림이 사르르");
+        data.setTags(new ArrayList<String>(Arrays.asList(new String[] {"카페", "케이크", "송도맛집"})));
+
         for (int i=0; i< 35; i++)
-            imageItems.add(new ImageItem(R.drawable.img_sample));
+            imageItems.add(data);
 
         return imageItems;
     }
