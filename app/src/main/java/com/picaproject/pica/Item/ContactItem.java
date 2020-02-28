@@ -2,7 +2,7 @@ package com.picaproject.pica.Item;
 
 import java.io.Serializable;
 
-public class ContactItem implements Serializable {
+public class ContactItem implements Serializable, Comparable<ContactItem> {
     private String name;
     private String phoneNumber;
     private long personId;
@@ -75,6 +75,16 @@ public class ContactItem implements Serializable {
             return getPhoneNumber().equals(((ContactItem) o).getPhoneNumber());
 
         return false;
+    }
+
+    @Override
+    public int compareTo(ContactItem o) {
+        if (this.getName() != null) {
+            return this.getName().compareTo(o.getPhoneNumber());
+
+        }
+        else
+            return this.getPhoneNumber().compareTo(o.getPhoneNumber());
     }
 
     public enum ContactStatus { REGISTER, NONREGISTER }

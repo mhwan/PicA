@@ -83,10 +83,12 @@ public class InviteMemberActivity extends BaseToolbarActivity implements SelectC
     }
 
     private void setRecyclerViewFist(){
-        if (numOfSelect == 0)
+        if (numOfSelect == 0) {
+            findViewById(R.id.invited_frame).setVisibility(View.GONE);
             recyclerView.setVisibility(View.GONE);
-        else {
+        } else {
             recyclerView.setVisibility(View.VISIBLE);
+            findViewById(R.id.invited_frame).setVisibility(View.VISIBLE);
             for (int i =0; i< numOfSelect; i++)
                 recyclerAdapter.addSeletedContact(contactItems.get(preSelectList[i]), i);
         }
@@ -212,21 +214,26 @@ public class InviteMemberActivity extends BaseToolbarActivity implements SelectC
         animate.setFillAfter(true);
         recyclerView.startAnimation(animate);
     }*/
-    private void animateRecyclerView(boolean visibility) {
-        if (visibility) {
+    private void changeInvitedView() {
+        if (numOfSelect == 1 && recyclerView.getVisibility() == View.GONE) {
             recyclerView.setVisibility(View.VISIBLE);
+            findViewById(R.id.invited_frame).setVisibility(View.VISIBLE);
             //slideDown();
-        } else {
+        } else if (numOfSelect == 0 && recyclerView.getVisibility() == View.VISIBLE){
             //slideUp();
             recyclerView.setVisibility(View.GONE);
+            findViewById(R.id.invited_frame).setVisibility(View.GONE);
         }
     }
 
+
+    /**
+     *
+     * @param isTrue
+     * @param id
+     */
     private void onStateChange(boolean isTrue, int id) {
-        if (numOfSelect == 1 && recyclerView.getVisibility() == View.GONE)
-            animateRecyclerView(true);
-        else if (numOfSelect == 0 && recyclerView.getVisibility() == View.VISIBLE)
-            animateRecyclerView(false);
+        changeInvitedView();
 
         if (isTrue) {
             recyclerAdapter.addSeletedContact(contactItems.get(id), numOfSelect);
@@ -240,6 +247,7 @@ public class InviteMemberActivity extends BaseToolbarActivity implements SelectC
         numOfSelect--;
         setCountToolbarTitle();
 
+        changeInvitedView();
         boolean isChecked = listviewAdapter.getOriginalItemChecked(id);
         listviewAdapter.setOriginalItemChecked(id, !isChecked);
         listviewAdapter.notifyDataSetChanged();

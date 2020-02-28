@@ -29,9 +29,9 @@
     <RelativeLayout
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_width="18dp"
+        android:layout_width="19dp"
         android:id="@+id/profile_remove"
-        android:layout_height="18dp">
+        android:layout_height="19dp">
         <com.mhwan.profileiconview.CircleView
             android:layout_width="match_parent"
             android:layout_height="match_parent"

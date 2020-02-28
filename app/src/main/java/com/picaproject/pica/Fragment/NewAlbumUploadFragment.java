@@ -11,10 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.picaproject.pica.CustomView.UploadPicController;
 import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadPicData;
@@ -23,9 +25,7 @@ import com.picaproject.pica.R;
 
 public class NewAlbumUploadFragment extends Fragment {
     private ImageView imageView;
-    private TextView locationEdit;
-    private EditText contentEdit;
-    private EditText tagEdit;
+    private RelativeLayout tags, locations, contents;
     private UploadPicData uploadPicData;
     private  static RequestManager glide;
     private Activity activity;
@@ -44,10 +44,11 @@ public class NewAlbumUploadFragment extends Fragment {
         glide = Glide.with(this.activity);
     }
 
+    /*
     public void setLocationText(String s){
         if(locationEdit!=null)
             locationEdit.setText(s);
-    }
+    }*/
 
 
     public void setController(UploadPicController controller) {
@@ -60,9 +61,17 @@ public class NewAlbumUploadFragment extends Fragment {
         ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.item_album_upload_view_pager, container, false);
 
         imageView = rootView.findViewById(R.id.image);
-        locationEdit = rootView.findViewById(R.id.location_edit);
-        contentEdit = rootView.findViewById(R.id.content_edit);
-        tagEdit = rootView.findViewById(R.id.tag_edit);
+        locations = rootView.findViewById(R.id.locations);
+        contents = rootView.findViewById(R.id.contents);
+        tags = rootView.findViewById(R.id.tags);
+
+        locations.setOnClickListener(new NewAlbumSetLocationClickListener(controller,uploadPicData));
+        contents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showContentsInput();
+            }
+        });
 
         // 주의사항 : 이 화면에서 이미지를 여러개 List처럼 불러들이는곳은 뷰페이저, 리사이클러 뷰 두군데다.
         if(uploadPicData!=null){
@@ -81,16 +90,20 @@ public class NewAlbumUploadFragment extends Fragment {
             Log.e("test_hs","NewAlbumUploadFragment : uploadPicData is NULL");
         }
 
-        locationEdit.setOnClickListener(new NewAlbumSetLocationClickListener(controller,uploadPicData));
-
         PicPlaceData p = uploadPicData.getLocation();
 
         if(p!=null){
-            locationEdit.setText(p.getName());
+            //locationEdit.setText(p.getName());
         }
 
 
         return rootView;
     }
+
+    private void showContentsInput(){
+        InputBottomSheetDialogFragment inputBottomSheetDialogFragment = (InputBottomSheetDialogFragment) InputBottomSheetDialogFragment.newInstance(false);
+        inputBottomSheetDialogFragment.show(getFragmentManager(), "");
+    }
+
 
 }

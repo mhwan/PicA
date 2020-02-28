@@ -2,9 +2,11 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:padding="16dp">
 
 
+    <!--
     <LinearLayout
         android:layout_marginTop="16dp"
         android:id="@+id/frame_contents"
@@ -81,8 +83,63 @@
                 android:layout_height="wrap_content">
             </EditText>
         </LinearLayout>
-    </LinearLayout>
+    </LinearLayout> -->
 
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/frame_contents">
+        <RelativeLayout
+            android:id="@+id/contents"
+            android:layout_width="52dp"
+            android:layout_marginLeft="32dp"
+            android:layout_marginRight="32dp"
+            android:layout_height="52dp"
+            android:layout_centerHorizontal="true">
+            <com.mhwan.profileiconview.CircleView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:circle_background_color="@color/colorLightWhiteGray"/>
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_forum_black_24dp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/locations"
+            android:layout_toLeftOf="@id/contents"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_centerHorizontal="true">
+            <com.mhwan.profileiconview.CircleView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:circle_background_color="@color/colorLightWhiteGray"/>
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_location_on_black_24dp"/>
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/tags"
+            android:layout_toRightOf="@id/contents"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_centerHorizontal="true">
+            <com.mhwan.profileiconview.CircleView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:circle_background_color="@color/colorLightWhiteGray"/>
+            <ImageView
+                android:layout_centerInParent="true"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_location_on_black_24dp"/>
+        </RelativeLayout>
+    </RelativeLayout>
     <ImageView
         android:layout_above="@id/frame_contents"
         android:layout_alignParentTop="true"

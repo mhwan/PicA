@@ -18,6 +18,7 @@
         <LinearLayout
             android:id="@+id/image_upload"
             android:layout_width="72dp"
+            android:layout_marginRight="2dp"
             android:layout_height="72dp">
             <ImageView
                 android:visibility="visible"

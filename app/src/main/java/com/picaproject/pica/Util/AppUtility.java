@@ -9,6 +9,8 @@ import android.util.Log;
 import com.picaproject.pica.Item.ContactItem;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 
 public class AppUtility {
@@ -32,13 +34,11 @@ public class AppUtility {
                 ContactsContract.Contacts._ID
         };
 
-        String[] selectionArgs = null;
-
         String sortOrder = ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME
                 + " COLLATE LOCALIZED ASC";
 
         Cursor cursor = context.getContentResolver().query(uri, projection, null,
-                null, null);
+                null, sortOrder);
 
         LinkedHashSet<ContactItem> hashlist = new LinkedHashSet<>();
         Log.d("contacts Count!", cursor.getCount()+"");
@@ -56,6 +56,7 @@ public class AppUtility {
         }
 
         ArrayList<ContactItem> contactItems = new ArrayList<>(hashlist);
+        //Collections.sort(contactItems);
 
         for (int i = 0; i < contactItems.size(); i++) {
             contactItems.get(i).setId(i);

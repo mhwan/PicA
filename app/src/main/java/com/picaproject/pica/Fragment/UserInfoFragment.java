@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
+import com.bumptech.glide.request.RequestOptions;
 import com.mhwan.profileiconview.ProfileIconView;
 import com.picaproject.pica.Activity.FriendListActivity;
 import com.picaproject.pica.Activity.NotificationListActivity;
@@ -65,10 +66,7 @@ public class UserInfoFragment extends Fragment implements SwipeRefreshLayout.OnR
         profileIconView = (ProfileIconView) view.findViewById(R.id.default_profile);
 
         view.findViewById(R.id.profile_frame).setOnClickListener(new PicImageViewClickListener(UserInfoFragment.this));
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            profileView.setBackground(new ShapeDrawable(new OvalShape()));
-            profileView.setClipToOutline(true);
-        }
+
 
         badgeText = (TextView) view.findViewById(R.id.badge_text);
         view.findViewById(R.id.btn_friend_list).setOnClickListener(new View.OnClickListener() {
@@ -111,7 +109,9 @@ public class UserInfoFragment extends Fragment implements SwipeRefreshLayout.OnR
             profileIconView.setVisibility(View.GONE);
             profileView.setVisibility(View.VISIBLE);
             Uri selectedImage = data.getData();
-            glide.load(selectedImage).into(profileView);
+            glide.load(selectedImage)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(profileView);
         }
     }
 
