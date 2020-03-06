@@ -93,8 +93,9 @@ public class LocationListActivity extends AppCompatActivity
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int UPDATE_INTERVAL_MS = 1000;  // 1초
     private static final int FASTEST_UPDATE_INTERVAL_MS = 500; // 0.5초
-
-
+    // 안드로이드 스튜디오 대문자 변환 = 드래그해서 컨트+쉬프트+U
+    // 주변 위치 검색 거리 500 = 500미터
+    private static final int PLACE_SERCH_DISTANCE = 1500;
     // onRequestPermissionsResult에서 수신된 결과에서 ActivityCompat.requestPermissions를 사용한 퍼미션 요청을 구별하기 위해 사용됩니다.
     private static final int PERMISSIONS_REQUEST_CODE = 100;
     boolean needRequest = false;
@@ -786,7 +787,7 @@ public class LocationListActivity extends AppCompatActivity
                         .listener(LocationListActivity.this)
                         .key("AIzaSyCGtSKl81RRcPu9xNFYXU3N4zBkwAFXSN8")
                         .latlng(location.latitude, location.longitude)//현재 위치
-                        .radius(500) //500 미터 내에서 검색
+                        .radius(PLACE_SERCH_DISTANCE) // PLACE_SERCH_DISTANCE 미터 내에서 검색
                         .build()
                         .execute();
             }
