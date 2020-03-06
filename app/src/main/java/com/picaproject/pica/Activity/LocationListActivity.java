@@ -753,7 +753,7 @@ public class LocationListActivity extends AppCompatActivity
                     // 이 마커는 mMap (구글 지도 관리객체 , moveCamera등도 가능) 담기면 지도에 출력됨.
                     // 마커의 클릭
                     Marker item = mMap.addMarker(markerOptions);
-                    // 핵심 : item.showInfoWindow();
+
                     previous_marker.add(item);
                     /**
                      * TODO : 2. NRPlaces.Builder 완료 후 얻어온 주변 위치를 나타내는 객체 places를 임의로 만든 PlaceData 변환하고
@@ -844,8 +844,11 @@ public class LocationListActivity extends AppCompatActivity
          * 사용자가 리스트에서 Place 목록중 하나를 터치했을때 동작
          * 1. 지도 위치를 선택한곳으로 맞춰줌
          * 2. UploadPicData의 Place 정보를 변경 (이렇게 변경한 정보는 submit()에서 전송)
+         * 3. PicPlaceDataWrapper에서 마커를 꺼낸후 마커가 있으면 showInfoWindow
          * */
-        public void setLocationFromList(PicPlaceData p){
+        //item.showInfoWindow();
+        public void setLocationFromList(PicPlaceDataWrapper pWrapper){
+            PicPlaceData p = pWrapper.getPicPlaceData();
             //1. 지도 위치를 선택한곳으로 맞춰줌
             LatLng latLng = new LatLng(p.getLatitude(),p.getLongitude());
 
@@ -862,6 +865,11 @@ public class LocationListActivity extends AppCompatActivity
             placeData.setLongitude(p.getLatitude());
             placeData.setName(p.getName());
             picData.setLocation(placeData);
+            // 마커는 NULL일수있음.
+            if(pWrapper.getMarker()!=null){
+                Marker marker = pWrapper.getMarker();
+                marker.showInfoWindow();
+            }
         }
 
 

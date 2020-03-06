@@ -63,9 +63,9 @@ public class PicLocationListAdapter extends BaseAdapter {
 
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        PicPlaceData p = items.get(i).getPicPlaceData();
+        PicPlaceDataWrapper p = items.get(i);
 
-        placeText.setText(p.getName());
+        placeText.setText(p.getPicPlaceData().getName());
         view.setOnClickListener(new PlaceTextClickListener(activityCallBack,p));
 
         return view;

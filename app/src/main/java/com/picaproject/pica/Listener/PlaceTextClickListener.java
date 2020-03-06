@@ -5,12 +5,13 @@ import android.view.View;
 
 import com.picaproject.pica.Activity.LocationListActivity;
 import com.picaproject.pica.Item.PicPlaceData;
+import com.picaproject.pica.Item.PicPlaceDataWrapper;
 
 public class PlaceTextClickListener implements View.OnClickListener {
     private LocationListActivity.ActivityCallBack activityCallBack;
-    private PicPlaceData p;
+    private PicPlaceDataWrapper p;
 
-    public PlaceTextClickListener(LocationListActivity.ActivityCallBack activityCallBack, PicPlaceData p) {
+    public PlaceTextClickListener(LocationListActivity.ActivityCallBack activityCallBack, PicPlaceDataWrapper p) {
         this.activityCallBack = activityCallBack;
         this.p = p;
     }
