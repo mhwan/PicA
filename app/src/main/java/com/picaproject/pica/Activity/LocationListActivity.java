@@ -53,6 +53,7 @@ import com.picaproject.pica.CustomView.BottomSheetListView;
 import com.picaproject.pica.CustomView.PicLocationListAdapter;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
+import com.picaproject.pica.Item.PicPlaceDataWrapper;
 import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.LocationParser;
@@ -83,7 +84,7 @@ public class LocationListActivity extends AppCompatActivity
     // 가져온 주변장소 마커를 보관하는 리스트
     List<Marker> previous_marker = null;
     // 어댑터와 연결될 주변 장소 객체 보관 리스트
-    List<PicPlaceData> placeList = null;
+    List<PicPlaceDataWrapper> placeList = null;
     //
     PicLocationListAdapter adapter;
     private GoogleMap mMap;
@@ -276,7 +277,9 @@ public class LocationListActivity extends AppCompatActivity
                         }
                         setLocationOnMap(addresses);
                         placeList.clear();
-                        placeList.addAll(LocationParser.addressToPicPlaceData(addresses));
+                        // placeList의 아이템 -> PicPlaceDataWrapper
+                        // 여기서는 마커가 없음.
+                        placeList.addAll(LocationParser.addressToPicPlaceDataWrapper(addresses));
                         adapter.notifyDataSetChanged();
                         break;
                     default:
@@ -746,9 +749,20 @@ public class LocationListActivity extends AppCompatActivity
                     markerOptions.position(latLng);
                     markerOptions.title(place.getName());
                     markerOptions.snippet(markerSnippet);
+                    // TODO : 1. 지도에 표시되는 주변위치의 마커
+                    // 이 마커는 mMap (구글 지도 관리객체 , moveCamera등도 가능) 담기면 지도에 출력됨.
+                    // 마커의 클릭
                     Marker item = mMap.addMarker(markerOptions);
+                    // 핵심 : item.showInfoWindow();
                     previous_marker.add(item);
-                    placeList.add(LocationParser.placeToPicPlaceData(place));
+                    /**
+                     * TODO : 2. NRPlaces.Builder 완료 후 얻어온 주변 위치를 나타내는 객체 places를 임의로 만든 PlaceData 변환하고
+                     * PlaceData를 placeList에 추가하고 adapter를 통해 View 생성
+                     * 원하는것 : 리스트 뷰의 아이템 클릭시 마커 위의 부연설명이 표시되면서
+                     */
+                    // 여기서 PlaceData에 마커도 같이넣고 리스트뷰에서 클릭 이벤트 발생시 마커에서 표시?
+
+                    placeList.add(LocationParser.placeToPicPlaceDataWrapper(place,item));
                     isRun=true;
                 }
                 if(isRun==true){

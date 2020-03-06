@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.picaproject.pica.Activity.LocationListActivity;
 import com.picaproject.pica.Item.PicPlaceData;
+import com.picaproject.pica.Item.PicPlaceDataWrapper;
 import com.picaproject.pica.Listener.PlaceTextClickListener;
 import com.picaproject.pica.R;
 
@@ -20,10 +21,10 @@ import java.util.List;
 
 public class PicLocationListAdapter extends BaseAdapter {
 
-    private List<PicPlaceData> items;
+    private List<PicPlaceDataWrapper> items;
     private LocationListActivity.ActivityCallBack activityCallBack;
 
-    public PicLocationListAdapter(List<PicPlaceData> items, LocationListActivity.ActivityCallBack activityCallBack) {
+    public PicLocationListAdapter(List<PicPlaceDataWrapper> items, LocationListActivity.ActivityCallBack activityCallBack) {
         this.items = items;
         this.activityCallBack = activityCallBack;
     }
@@ -62,7 +63,7 @@ public class PicLocationListAdapter extends BaseAdapter {
 
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        PicPlaceData p = items.get(i);
+        PicPlaceData p = items.get(i).getPicPlaceData();
 
         placeText.setText(p.getName());
         view.setOnClickListener(new PlaceTextClickListener(activityCallBack,p));
