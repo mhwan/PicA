@@ -85,16 +85,18 @@ public class NewAlbumUploadFragment extends Fragment {
                 Log.e("test_hs","NewAlbumUploadFragment error e : "+e.toString());
             }
             */
+
+            PicPlaceData p = uploadPicData.getLocation();
+
+            if(p!=null){
+                //locationEdit.setText(p.getName());
+            }
         }
         else{
             Log.e("test_hs","NewAlbumUploadFragment : uploadPicData is NULL");
         }
 
-        PicPlaceData p = uploadPicData.getLocation();
 
-        if(p!=null){
-            //locationEdit.setText(p.getName());
-        }
 
 
         return rootView;
