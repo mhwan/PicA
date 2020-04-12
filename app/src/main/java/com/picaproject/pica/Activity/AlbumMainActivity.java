@@ -2,7 +2,6 @@ package com.picaproject.pica.Activity;
 
 import android.content.ClipData;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -24,10 +23,8 @@ import android.widget.Toast;
 import com.picaproject.pica.Fragment.ImageGridFragment;
 import com.picaproject.pica.Fragment.UserInfoFragment;
 import com.picaproject.pica.IntentProtocol;
-import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.R;
-import com.picaproject.pica.Util.ImageMetadataParser;
 import com.picaproject.pica.Util.PicDataParser;
 
 
@@ -210,21 +207,15 @@ public class AlbumMainActivity extends AppCompatActivity {
             ArrayList<UploadPicData> prasePicDatas;
             // 사진 여러장 선택시
             if(datas!=null){
-                prasePicDatas = PicDataParser.parseDataFromClipData(getApplicationContext(), datas);
+                prasePicDatas = PicDataParser.parseDataFromClipData(datas);
                 // 갤러리에서 가져온 n장의 사진 처리
                 Log.i("test_hs","AlbumMainActivity onActivityResult : "+prasePicDatas.toString());
 
             }
             // 사진 1장 선택시
             else if(data.getData()!=null){
-                Uri uri = data.getData();
-                PicPlaceData placeData = ImageMetadataParser.getLocationMetaData(getApplicationContext(), uri);
-                UploadPicData uploadPicData = new UploadPicData(data.getData().toString());
-                if (placeData != null)
-                    uploadPicData.setLocation(placeData);
-
                 prasePicDatas = new ArrayList<>();
-                prasePicDatas.add(uploadPicData);
+                prasePicDatas.add(new UploadPicData(data.getData().toString()));
                 Log.i("test_hs","AlbumMainActivity onActivityResult 2 : "+prasePicDatas.toString());
             }
             // 사진 선택 안했을시

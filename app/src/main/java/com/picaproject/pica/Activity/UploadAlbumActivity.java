@@ -61,7 +61,7 @@ public class UploadAlbumActivity extends AppCompatActivity {
         picAdapter.notifyDataSetChanged();
         //필수 2줄
         pc = new PermissionChecker(permission_list,this);
-        pc.checkPermission("외부 저장소 접근 권한이 거부되었습니다. 사진을 불러오려면 권한을 허용해주세요.");
+        pc.checkPermission();
     }
 
     @Override
@@ -133,7 +133,7 @@ public class UploadAlbumActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         //필수
-        pc.requestPermissionsResult(requestCode,grantResults, "외부저장소 접근권한을 허용 후에 이용해주세요.");
+        pc.requestPermissionsResult(requestCode,grantResults);
     }
 
 }

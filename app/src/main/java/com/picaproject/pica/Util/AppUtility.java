@@ -2,25 +2,16 @@ package com.picaproject.pica.Util;
 
 import android.content.Context;
 import android.database.Cursor;
-import android.location.Address;
-import android.location.Geocoder;
-import android.location.LocationManager;
 import android.net.Uri;
 import android.provider.ContactsContract;
 import android.util.Log;
 
-import com.google.android.gms.maps.model.LatLng;
 import com.picaproject.pica.Item.ContactItem;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Locale;
-
-import static android.content.Context.LOCATION_SERVICE;
 
 public class AppUtility {
     private static AppUtility instance;
@@ -71,35 +62,5 @@ public class AppUtility {
             contactItems.get(i).setId(i);
         }
         return contactItems;
-    }
-
-    public String getAddress(double lat, double lng) {
-        String nowAddress ="주소를 알 수가 없습니다.";
-        Geocoder geocoder = new Geocoder(AppContext.getContext(), Locale.getDefault());
-        List<Address> address;
-        try {
-            if (geocoder != null) {
-                //세번째 파라미터는 좌표에 대해 주소를 리턴 받는 갯수로
-                //한좌표에 대해 두개이상의 이름이 존재할수있기에 주소배열을 리턴받기 위해 최대갯수 설정
-                address = geocoder.getFromLocation(lat, lng, 1);
-
-                if (address != null && address.size() > 0) {
-                    // 주소 받아오기
-                    String currentLocationAddress = address.get(0).getAddressLine(0).toString();
-                    nowAddress  = currentLocationAddress;
-                }
-            }
-        } catch (IOException e) {
-            nowAddress = "주소를 가져오는데 실패했습니다.";
-            e.printStackTrace();
-        }
-        return nowAddress;
-    }
-
-    public boolean checkLocationServicesStatus() {
-        LocationManager locationManager = (LocationManager) AppContext.getContext().getSystemService(LOCATION_SERVICE);
-
-        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
-                || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
 }

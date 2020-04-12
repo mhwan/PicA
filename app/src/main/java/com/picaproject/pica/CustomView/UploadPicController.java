@@ -7,7 +7,6 @@ import android.view.View;
 
 import com.picaproject.pica.Activity.LocationListActivity;
 import com.picaproject.pica.Activity.NewAlbumUploadActivity;
-import com.picaproject.pica.Activity.NewLocationActivity;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.UploadPicData;
 
@@ -61,16 +60,10 @@ public class UploadPicController {
     // 위치 선택 액티비티 열기
     // 사진 추가 플래그먼트에서 위치 TextView 선택시 이동
     public void openLoactionView(UploadPicData data){
-
-        /*
         Intent intent = new Intent(activity, LocationListActivity.class);
         intent.putExtra(IntentProtocol.INTENT_ALBUM_MODE, true);
         intent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME,data);
-        activity.startActivityForResult(intent,IntentProtocol.SET_PIC_LOCATION);*/
-
-        Intent intent = new Intent(activity, NewLocationActivity.class);
-        intent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME, data);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent,IntentProtocol.SET_PIC_LOCATION);
     }
 
 

@@ -1,13 +1,8 @@
 package com.picaproject.pica.Util;
 
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.os.Build;
-
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-
 import android.widget.Toast;
 
 
@@ -32,7 +27,7 @@ public class PermissionChecker {
 
     // OnCreate에서 API 버전과 상관없이 무조건 호출필요
     // API 버전에 따른 체크는 함수내부에서 진행
-    public void checkPermission(String onceDeniedMessage){
+    public void checkPermission(){
         //현재 안드로이드 버전이 6.0미만이면 메서드를 종료한다.
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return;
@@ -41,32 +36,14 @@ public class PermissionChecker {
             //권한 허용 여부를 확인한다.
             int chk = activity.checkCallingOrSelfPermission(permission);
 
-            if(chk != PackageManager.PERMISSION_GRANTED){
+            if(chk == PackageManager.PERMISSION_DENIED){
                 //권한 허용을여부를 확인하는 창을 띄운다
-                if (ActivityCompat.shouldShowRequestPermissionRationale(activity,
-                        permission)) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                    builder.setMessage(onceDeniedMessage);
-                    builder.setCancelable(true);
-                    builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-                    builder.create().show();
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-                } else {
-                    activity.requestPermissions(permission_list, 0);
-                }
+                activity.requestPermissions(permission_list,0);
             }
         }
     }
     // 각 AppCompatActivity의 onRequestPermissionsResult 메소드를 재정의 한 후 이 PermissionChecker의 requestPermissionsResult 호출
-    public void requestPermissionsResult(int requestCode,int[] grantResults, String deniedMessage){
+    public void requestPermissionsResult(int requestCode,int[] grantResults){
         if(requestCode==0)
         {
             for(int i=0; i<grantResults.length; i++)
@@ -80,7 +57,7 @@ public class PermissionChecker {
                         eventCallback.OnDenial();
                     }
                     else{
-                        Toast.makeText(activity.getApplicationContext(),deniedMessage,Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity.getApplicationContext(),"저장소 접근 권한을 허용해주셔야 이용이 가능합니다.",Toast.LENGTH_LONG).show();
                         activity.finish();
                     }
                     return;
