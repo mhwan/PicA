@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.ClipData;
 import android.content.Intent;
 
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
 import androidx.annotation.NonNull;
@@ -26,9 +27,11 @@ import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.CustomView.UploadPicController;
 import com.picaproject.pica.Fragment.NewAlbumUploadFragment;
 import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.Listener.NewUploadRecyclerAddImageBtnClickListener;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.ImageMetadataParser;
 import com.picaproject.pica.Util.PermissionChecker;
 import com.picaproject.pica.Util.PicDataParser;
 
@@ -111,7 +114,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         handler.sendEmptyMessage(0);
         //필수 2줄
         pc = new PermissionChecker(permission_list,this);
-        pc.checkPermission();
+        pc.checkPermission("외부 저장소 접근 권한이 거부되었습니다. 사진을 불러오려면 권한을 허용해주세요.");
     }
 
     @Override
@@ -147,7 +150,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         //필수
-        pc.requestPermissionsResult(requestCode,grantResults);
+        pc.requestPermissionsResult(requestCode,grantResults, "외부저장소 접근권한을 허용 후에 이용해주세요.");
     }
 
     @Override
@@ -158,15 +161,21 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             ArrayList<UploadPicData> prasePicDatas;
             // 사진 여러장 선택시
             if(datas!=null){
-                prasePicDatas = PicDataParser.parseDataFromClipData(datas);
+                prasePicDatas = PicDataParser.parseDataFromClipData(getApplicationContext(), datas);
                 // 갤러리에서 가져온 n장의 사진 처리
                 Log.i("test_hs","NewAlbumUploadActivity onActivityResult : "+prasePicDatas.toString());
 
             }
             // 사진 1장 선택시
             else if(data.getData()!=null){
+                Uri uri = data.getData();
+                PicPlaceData placeData = ImageMetadataParser.getLocationMetaData(getApplicationContext(), uri);
+                UploadPicData uploadPicData = new UploadPicData(data.getData().toString());
+                if (placeData != null)
+                    uploadPicData.setLocation(placeData);
+
                 prasePicDatas = new ArrayList<>();
-                prasePicDatas.add(new UploadPicData(data.getData().toString()));
+                prasePicDatas.add(uploadPicData);
                 Log.i("test_hs","NewAlbumUploadActivity onActivityResult 2 : "+prasePicDatas.toString());
             }
             // 사진 선택 안했을시 아무 동작 안함.

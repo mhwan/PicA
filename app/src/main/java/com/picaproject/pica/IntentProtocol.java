@@ -25,6 +25,8 @@ public class IntentProtocol {
     public static int RESULT_LOAD_IMAGE = 8001;
     public static int REQUEST_INVITE_MEMBER = 7001;
 
+    public static final int GPS_SETTING = 1341;
+
     public static final String INTENT_FLAG_MODE = "mode";
     public static final String INTENT_START_POSITION = "startPosition";
     public static final String INTENT_ALBUM_IMAGE_LIST = "image_list";

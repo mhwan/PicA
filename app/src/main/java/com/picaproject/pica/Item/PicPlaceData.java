@@ -16,6 +16,12 @@ public class PicPlaceData implements Serializable {
 
     public PicPlaceData(){}
 
+    public PicPlaceData(double latitude, double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.name = "";
+    }
+
     public String getName() {
         return name;
     }

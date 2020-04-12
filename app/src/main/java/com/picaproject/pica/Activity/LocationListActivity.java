@@ -71,6 +71,10 @@ import noman.googleplaces.Place;
 import noman.googleplaces.PlacesException;
 import noman.googleplaces.PlacesListener;
 
+/**
+ *
+ * mFusedLocationClient 현재 위치정보를 받아오는데 사용하는것
+ */
 public class LocationListActivity extends AppCompatActivity
         implements OnMapReadyCallback,
         ActivityCompat.OnRequestPermissionsResultCallback, PlacesListener {
@@ -156,7 +160,7 @@ public class LocationListActivity extends AppCompatActivity
         mapFragment.getMapAsync(this);
 
         // android:id="@+id/search_text"
-        serchView = (EditText) findViewById(R.id.search_text);
+        //serchView = (EditText) findViewById(R.id.search_text);
 
         FrameLayout bottomsheet = findViewById(R.id.bottom_sheet);
         bottomSheetBehavior = BottomSheetBehavior.from(bottomsheet);
@@ -195,7 +199,7 @@ public class LocationListActivity extends AppCompatActivity
 
             // 2. 이미 퍼미션을 가지고 있다면
             // ( 안드로이드 6.0 이하 버전은 런타임 퍼미션이 필요없기 때문에 이미 허용된 걸로 인식합니다.)
-            startLocationUpdates(); // 3. 위치 업데이트 시작
+            startLocationUpdates(); // 3. 위치 업데이트 시작, 권한 관련
 
 
         }else {  //2. 퍼미션 요청을 허용한 적이 없다면 퍼미션 요청이 필요합니다. 2가지 경우(3-1, 4-1)가 있습니다.
@@ -352,6 +356,7 @@ public class LocationListActivity extends AppCompatActivity
             //mFusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper());
 
 
+            //구글맵에 현재위치 업데이트 띄우는거 우측 위에 있는 조그마한 버튼
             if (checkPermission())
                 mMap.setMyLocationEnabled(true);
 
@@ -523,6 +528,7 @@ public class LocationListActivity extends AppCompatActivity
             else{
                 MarkerOptions markerOptions = new MarkerOptions();
                 markerOptions.position(latLng);
+                markerOptions.title("asdfasdf");
                 mMap.addMarker(markerOptions);
             }
 

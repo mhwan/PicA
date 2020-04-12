@@ -3,35 +3,23 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.picaproject.pica">
 
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.READ_CONTACTS" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <!-- 지도 API 관련 : https://developers.naver.com/forum/posts/13956 -->
     <application
+        android:name=".Util.AppContext"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
+        <activity android:name=".Activity.NewLocationActivity"></activity>
 
-        <meta-data
-            android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyB3I329Lpte8qJm3xXw-o05LqgDRgaPRdc" />
+        <activity
+            android:name=".Activity.LocationListActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
-
-
-        <activity android:name=".Activity.LocationListActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
-
-        <activity android:name=".Activity.ImageDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"/>
-
-
+        <activity
+            android:name=".Activity.ImageDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar" />
 
         <activity
             android:name=".Activity.NotificationListActivity"
@@ -42,15 +30,10 @@
         <activity
             android:name=".Activity.SettingActivity"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".Activity.CreateAlbumActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="adjustPan" />
-
-
-
-
         <activity
             android:name=".Activity.InviteMemberActivity"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -72,6 +55,25 @@
         <activity
             android:name=".Activity.AlbumMainActivity"
             android:theme="@style/AppTheme.NoStatusBar" />
+        <!--
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyB3I329Lpte8qJm3xXw-o05LqgDRgaPRdc" />
+-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAgX56T7hDyocbYf7B-xYYNUatNdh7tRj8"/>
+
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
 </manifest>
