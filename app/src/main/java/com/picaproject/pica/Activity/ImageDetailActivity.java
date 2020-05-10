@@ -42,7 +42,7 @@ public class ImageDetailActivity extends BaseToolbarActivity implements View.OnC
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_image_detail);
-        imageList = (ArrayList<UploadPicData>) getIntent().getSerializableExtra(IntentProtocol.INTENT_ALBUM_IMAGE_LIST);
+        imageList = getIntent().getParcelableArrayListExtra(IntentProtocol.INTENT_ALBUM_IMAGE_LIST);
         startId = getIntent().getIntExtra(IntentProtocol.INTENT_START_POSITION, 0);
         initView();
     }

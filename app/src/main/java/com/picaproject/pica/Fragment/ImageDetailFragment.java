@@ -15,8 +15,10 @@ import androidx.fragment.app.Fragment;
 
 import com.davemorrissey.labs.subscaleview.ImageSource;
 import com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView;
+import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadPicData;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.AppUtility;
 
 public class ImageDetailFragment extends Fragment {
     private UploadPicData pictureData;
@@ -60,7 +62,13 @@ public class ImageDetailFragment extends Fragment {
                 }
                 if (pictureData.getLocation() != null) {
                     location.setVisibility(View.VISIBLE);
-                    location.setText("위치 : "+pictureData.getLocation().getName());
+                    PicPlaceData placeData = pictureData.getLocation();
+                    if (placeData.getName() != null && !placeData.getName().equals(""))
+                        location.setText("위치 : "+pictureData.getLocation().getName());
+                    else {
+                        Log.d("address", AppUtility.getAppinstance().getAddress(placeData.getLatitude(), placeData.getLongitude()));
+                        location.setText("위치 : " + AppUtility.getAppinstance().getAddress(placeData.getLatitude(), placeData.getLongitude()));
+                    }
                 }
                 if (pictureData.getTags() != null) {
                     tag.setVisibility(View.VISIBLE);

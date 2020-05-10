@@ -5,6 +5,8 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.os.Build;
 import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.SearchView;
@@ -17,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.picaproject.pica.CustomView.SelectContactsAdapter;
 import com.picaproject.pica.CustomView.SelectedProfileRecyclerAdapter;
@@ -26,6 +29,8 @@ import com.picaproject.pica.Item.ContactItem;
 import com.picaproject.pica.Listener.SelectContactsRemoveListener;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.AppUtility;
+import com.picaproject.pica.Util.PermissioEventCallback;
+import com.picaproject.pica.Util.PermissionChecker;
 
 import java.util.ArrayList;
 
@@ -41,17 +46,39 @@ public class InviteMemberActivity extends BaseToolbarActivity implements SelectC
     private SelectedProfileRecyclerAdapter recyclerAdapter;
     private SelectContactsAdapter listviewAdapter;
     private int[] preSelectList;
-
+    private PermissionChecker permissionChecker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_invite_member);
-        setContactList();
+        permissionChecker = new PermissionChecker(new String[]{}, this, new PermissioEventCallback() {
+            @Override
+            public void OnPermit() {
+                Log.d("permission", "permitted");
+                setContactList();
+                listviewAdapter.refreshAllItem(contactItems);
+            }
+
+            @Override
+            public void OnDenial() {
+                Log.d("permission", "denied");
+                Toast.makeText(getApplicationContext(),"연락처 권한이 거부되어 친구를 초대할 수 없습니다.",Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        });
+        int result = permissionChecker.checkPermission("연락처 권한이 거부되어 친구를 초대할 수 없습니다.");
+
+        contactItems = new ArrayList<>();
+
+        if (result == 1) {
+            setContactList();
+        }
         initView();
     }
 
     private void setContactList(){
-        contactItems = AppUtility.getAppinstance().getContactList(getApplicationContext());
+        contactItems.clear();
+        contactItems.addAll(AppUtility.getAppinstance().getContactList(getApplicationContext()));
         ArrayList<ContactItem> invitelist = (ArrayList<ContactItem>) getIntent().getSerializableExtra(IntentProtocol.INTENT_CONTACT_LIST);
         if (invitelist != null && invitelist.size() > 0) {
             preSelectList = new int[invitelist.size()];
@@ -80,6 +107,12 @@ public class InviteMemberActivity extends BaseToolbarActivity implements SelectC
         });
 
         setCountToolbarTitle();
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        permissionChecker.requestPermissionsResult(requestCode, grantResults, "연락처 권한을 허용후에 이용해주세요.");
     }
 
     private void setRecyclerViewFist(){

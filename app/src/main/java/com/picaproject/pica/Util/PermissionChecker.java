@@ -32,10 +32,18 @@ public class PermissionChecker {
 
     // OnCreate에서 API 버전과 상관없이 무조건 호출필요
     // API 버전에 따른 체크는 함수내부에서 진행
-    public void checkPermission(String onceDeniedMessage){
+
+    /**
+     * 권한이 이미 허용 1 :
+     * 미허용 0 -> 허용요청
+     * -1 : 필요없음
+     * @param onceDeniedMessage
+     * @return
+     */
+    public int checkPermission(String onceDeniedMessage){
         //현재 안드로이드 버전이 6.0미만이면 메서드를 종료한다.
         if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
-            return;
+            return -1;
 
         for(String permission : permission_list){
             //권한 허용 여부를 확인한다.
@@ -62,8 +70,11 @@ public class PermissionChecker {
                 } else {
                     activity.requestPermissions(permission_list, 0);
                 }
+                return 0;
             }
         }
+
+        return 1;
     }
     // 각 AppCompatActivity의 onRequestPermissionsResult 메소드를 재정의 한 후 이 PermissionChecker의 requestPermissionsResult 호출
     public void requestPermissionsResult(int requestCode,int[] grantResults, String deniedMessage){

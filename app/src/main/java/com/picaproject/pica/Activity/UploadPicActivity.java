@@ -56,7 +56,7 @@ public class UploadPicActivity extends AppCompatActivity {
         Intent intent = getIntent();
         // 앨범추가 화면에서 넘어온 데이터가 "기존 사진 수정" 인지 "새 사진 추가인지" MODE 구분 / 만약 값이 없다면 기본값은 새 사진 추가
         mode = intent.getIntExtra(IntentProtocol.INTENT_FLAG_MODE,IntentProtocol.ADD_PIC_MODE);
-        UploadPicData picData = (UploadPicData)intent.getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+        UploadPicData picData = (UploadPicData)intent.getParcelableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
         this.picData=picData;
 
 

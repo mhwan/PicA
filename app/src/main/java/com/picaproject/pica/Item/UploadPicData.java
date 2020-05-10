@@ -1,5 +1,11 @@
 package com.picaproject.pica.Item;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.clustering.ClusterItem;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -14,8 +20,14 @@ import java.util.ArrayList;
 /**
  * 2차 수정 from. mhwan
  * 임시적으로 사용할 샘플 이미지의 id값을 넣기위함
+ *
+ * id값을 다른곳에서 사용하기위해 하나 더 추가함 (mhwan)
+ * 이걸 다른 id값과 같이 통일시켜야할 필요가 있지않나 싶음?
+ *
+ * 여러 이유로 serializable 에서 parcelable로 바꿈
+ * 근데 classid는 그럼 자동으로 오르는 방식을 굳이 써야하는가?
  */
-public class UploadPicData implements Serializable {
+public class UploadPicData implements Parcelable, ClusterItem {
     // 직렬화 버전 표시 : https://lktprogrammer.tistory.com/150
     private static final long serialVersionUID = 1L;
     // UploadPicData 클래스 ID
@@ -33,6 +45,7 @@ public class UploadPicData implements Serializable {
     private PicPlaceData location;
     private long classId;
     private int imgSampleId;
+    private int id;
     public UploadPicData(String src){
         classId = CLASS_ID;
         CLASS_ID++;
@@ -44,6 +57,28 @@ public class UploadPicData implements Serializable {
         CLASS_ID++;
         this.imgSampleId = id;
     }
+
+    protected UploadPicData(Parcel in) {
+        src = in.readString();
+        contents = in.readString();
+        tags = in.createStringArrayList();
+        location = in.readParcelable(PicPlaceData.class.getClassLoader());
+        classId = in.readLong();
+        imgSampleId = in.readInt();
+        //id = in.readInt();
+    }
+
+    public static final Creator<UploadPicData> CREATOR = new Creator<UploadPicData>() {
+        @Override
+        public UploadPicData createFromParcel(Parcel in) {
+            return new UploadPicData(in);
+        }
+
+        @Override
+        public UploadPicData[] newArray(int size) {
+            return new UploadPicData[size];
+        }
+    };
 
     public int getImgSampleId() {
         return imgSampleId;
@@ -81,6 +116,9 @@ public class UploadPicData implements Serializable {
         return classId;
     }
 
+    public void setClassId(long id) {
+        this.classId = id;
+    }
     public PicPlaceData getLocation() {
         return location;
     }
@@ -96,5 +134,39 @@ public class UploadPicData implements Serializable {
                 ", contents='" + contents + '\'' +
                 ", tags=" + tags +
                 '}';
+    }
+
+    @Override
+    public LatLng getPosition() {
+        if (location != null){
+            return location.getLatLng();
+        } else return null;
+    }
+
+    @Override
+    public String getTitle() {
+        return null;
+    }
+
+    @Override
+    public String getSnippet() {
+        return null;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(src);
+        dest.writeString(contents);
+        dest.writeStringList(tags);
+        dest.writeParcelable(location, PARCELABLE_WRITE_RETURN_VALUE);
+        dest.writeLong(classId);
+        dest.writeInt(imgSampleId);
+        //dest.writeInt(id);
     }
 }

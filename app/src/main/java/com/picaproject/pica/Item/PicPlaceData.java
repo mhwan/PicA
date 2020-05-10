@@ -1,8 +1,13 @@
 package com.picaproject.pica.Item;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import com.google.android.gms.maps.model.LatLng;
+
 import java.io.Serializable;
 
-public class PicPlaceData implements Serializable {
+public class PicPlaceData implements Serializable, Parcelable {
     // 직렬화 버전 표시 : https://lktprogrammer.tistory.com/150
     private static final long serialVersionUID = 1L;
 
@@ -16,11 +21,35 @@ public class PicPlaceData implements Serializable {
 
     public PicPlaceData(){}
 
+    public PicPlaceData(LatLng latLng) {
+        this.latitude = latLng.latitude;
+        this.longitude = latLng.longitude;
+        this.name = "";
+    }
+
     public PicPlaceData(double latitude, double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
         this.name = "";
     }
+
+    protected PicPlaceData(Parcel in) {
+        name = in.readString();
+        latitude = in.readDouble();
+        longitude = in.readDouble();
+    }
+
+    public static final Creator<PicPlaceData> CREATOR = new Creator<PicPlaceData>() {
+        @Override
+        public PicPlaceData createFromParcel(Parcel in) {
+            return new PicPlaceData(in);
+        }
+
+        @Override
+        public PicPlaceData[] newArray(int size) {
+            return new PicPlaceData[size];
+        }
+    };
 
     public String getName() {
         return name;
@@ -32,6 +61,15 @@ public class PicPlaceData implements Serializable {
 
     public double getLatitude() {
         return latitude;
+    }
+
+    public void setLatLng(LatLng latLng) {
+        setLatitude(latLng.latitude);
+        setLongitude(latLng.longitude);
+    }
+
+    public LatLng getLatLng(){
+        return new LatLng(latitude, longitude);
     }
 
     public void setLatitude(double latitude) {
@@ -53,5 +91,17 @@ public class PicPlaceData implements Serializable {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(name);
+        dest.writeDouble(latitude);
+        dest.writeDouble(longitude);
     }
 }

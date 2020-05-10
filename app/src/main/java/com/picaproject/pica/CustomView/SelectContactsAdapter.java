@@ -16,6 +16,7 @@ import com.picaproject.pica.Item.ContactItem;
 import com.picaproject.pica.R;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class SelectContactsAdapter extends BaseAdapter implements Filterable {
     private ArrayList<ContactItem> contactItems;
@@ -48,6 +49,15 @@ public class SelectContactsAdapter extends BaseAdapter implements Filterable {
         origList.get(id).setChecked(value);
     }
 
+    public void refreshAllItem(ArrayList<ContactItem> contactItems) {
+        this.contactItems.clear();
+        this.origList.clear();
+
+        this.contactItems.addAll(contactItems);
+        this.origList.addAll(contactItems);
+
+        notifyDataSetChanged();
+    }
     public boolean getOriginalItemChecked(int id){
         return origList.get(id).isChecked();
     }

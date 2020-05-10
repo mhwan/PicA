@@ -20,15 +20,18 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.picaproject.pica.CustomView.NewAlbumUploadAdapter;
 import com.picaproject.pica.CustomView.NewAlbumUploadPicAdapter;
 import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.CustomView.UploadPicController;
+import com.picaproject.pica.Fragment.ImageDetailFragment;
 import com.picaproject.pica.Fragment.NewAlbumUploadFragment;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Listener.NewAlbumSetLocationClickListener;
 import com.picaproject.pica.Listener.NewUploadRecyclerAddImageBtnClickListener;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.ImageMetadataParser;
@@ -46,6 +49,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
     private PermissionChecker pc;
     private NewAlbumUploadPicAdapter recyclerAdapter;
     private UploadPicController controller;
+    private RelativeLayout resize, photoFilter, locations, contents;
     // 리사이클러용 데이터 리스트랑 Fragment용 데이터리스트는 따로 둠
     // recyclerDataList에는 항상 첫번째에 ADD_BTN 데이터가 들어가고
     // Fragment에는 이런 ADD_BTN 데이터가 영향을 미치지 않기 위함.
@@ -55,6 +59,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
     private Handler handler;
+    private boolean isEditMode = false;
 
     // 마지막 위치 저장하면서 사용하기
     // 위치가 바뀌었을때만 visible 명령을 사용하여 오버헤딩을 방지하기위함.
@@ -111,6 +116,8 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             }
         };
 
+        initBottomManageView();
+
         handler.sendEmptyMessage(0);
         //필수 2줄
         pc = new PermissionChecker(permission_list,this);
@@ -126,10 +133,43 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             @Override
             public void onClick(View v) {
                 //사진이 등록될때의 행동
+                if (isEditMode) {
+                    changeEditMdoe();
+                } else {
+
+                }
             }
         });
     }
 
+    private void initBottomManageView(){
+        locations = findViewById(R.id.locations);
+        contents = findViewById(R.id.contents);
+        resize = findViewById(R.id.resize);
+        photoFilter = findViewById(R.id.filter);
+
+        locations.setOnClickListener(new NewAlbumSetLocationClickListener(controller, dataList.get(viewPager.getCurrentItem())));
+        contents.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //showContentsInput();
+                changeEditMdoe();
+            }
+        });
+    }
+
+    private void changeEditMdoe(){
+        if (isEditMode) {
+            isEditMode = !isEditMode;
+            setToolbarButtonText("업로드");
+
+        } else {
+            isEditMode = !isEditMode;
+            setToolbarButtonText("확인");
+        }
+
+        ((NewAlbumUploadFragment)viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem())).showContentsInput(isEditMode);
+    }
     // 데이터를 가져와서 플래그먼트로 변환해 추가하기
     private void addFragment(ArrayList<UploadPicData> dataList){
         for(int i=0; i<dataList.size();i++){
@@ -201,7 +241,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         //if(requestCode == IntentProtocol.UPDATE_PIC_MODE){
         if(requestCode == IntentProtocol.SET_PIC_LOCATION && data != null){
             //TODO
-            UploadPicData picData = (UploadPicData)data.getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+            UploadPicData picData = (UploadPicData)data.getParcelableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
             int idx = serchItemIndex(picData.getClassId());
             if(idx!=-1){
                 dataList.set(idx,picData);
@@ -224,6 +264,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         adapter.notifyDataSetChanged();
         recyclerAdapter.notifyDataSetChanged();
     }
+
     // UploadPIcData의 ID를 기반으로 몇번째에 데이터가 있는지 인덱스를 찾아서
     // 반환함. 못찾았을경우 -1 반환
     private int serchItemIndex(long dataId){

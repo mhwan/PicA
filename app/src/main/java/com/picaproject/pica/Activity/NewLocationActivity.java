@@ -74,7 +74,7 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_location);
-        pictureData = (UploadPicData) getIntent().getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+        pictureData = (UploadPicData) getIntent().getParcelableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
         initView();
     }
 
@@ -92,7 +92,8 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
                 if (currentLocation != null) {
                     Intent intent = new Intent();
                     pictureData.setLocation(new PicPlaceData(currentLocation.latitude, currentLocation.longitude));
-                    setResult(RESULT_OK, intent);
+                    intent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME,pictureData);
+                    setResult(IntentProtocol.SET_PIC_LOCATION, intent);
                     finish();
                 } else
                     Toast.makeText(getApplicationContext(), "위치를 선택한 이후에 등록해주세요.", Toast.LENGTH_SHORT).show();
@@ -209,10 +210,10 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
     private void setLocationOkayButton(){
         if (currentLocation != null && currentMarker != null) {
             location_okay.setEnabled(true);
-            location_okay.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorDarkGray));
+            location_okay.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
         } else {
             location_okay.setEnabled(false);
-            location_okay.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
+            location_okay.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorDarkGray));
         }
     }
 

@@ -5,12 +5,15 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.picaproject.pica.CustomView.ImageRecyclerAdapter;
 import com.picaproject.pica.CustomView.SpacesItemDecoration;
+import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.ImageItem;
 import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadPicData;
@@ -27,6 +30,7 @@ public class ImageGridFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ImageRecyclerAdapter adapter;
     private boolean recyclerviewScroll = true;
+    private ArrayList<UploadPicData> picDataArrayList = null;
 
     public ImageGridFragment(){
         // Required empty public constructor
@@ -36,6 +40,14 @@ public class ImageGridFragment extends Fragment {
         ImageGridFragment fragment = new ImageGridFragment();
         Bundle args = new Bundle();
         args.putBoolean("param1", param);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static Fragment newInstance(ArrayList<UploadPicData> picData) {
+        ImageGridFragment fragment = new ImageGridFragment();
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(IntentProtocol.KEY_PARCELABLE_PHOTO_DATA, picData);
         fragment.setArguments(args);
         return fragment;
     }
@@ -50,6 +62,7 @@ public class ImageGridFragment extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             recyclerviewScroll = getArguments().getBoolean("param1");
+            picDataArrayList = getArguments().getParcelableArrayList(IntentProtocol.KEY_PARCELABLE_PHOTO_DATA);
         }
     }
 
@@ -67,7 +80,11 @@ public class ImageGridFragment extends Fragment {
         mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
         if (!recyclerviewScroll)
             mRecyclerView.setNestedScrollingEnabled(false);
-        adapter = new ImageRecyclerAdapter(getContext(), makeImageSampleList());
+        if (picDataArrayList == null) {
+            Log.d("pickArraylist", "is null");
+            picDataArrayList = makeImageSampleList();
+        }
+        adapter = new ImageRecyclerAdapter(getContext(), picDataArrayList);
         mRecyclerView.setAdapter(adapter);
         SpacesItemDecoration decoration = new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.GRID, 4, 3);
         mRecyclerView.addItemDecoration(decoration);

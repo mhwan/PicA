@@ -4,6 +4,8 @@ import android.content.ClipData;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -22,6 +24,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.picaproject.pica.Fragment.ImageGridFragment;
+import com.picaproject.pica.Fragment.MapPhotoClusterFragment;
 import com.picaproject.pica.Fragment.UserInfoFragment;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
@@ -32,10 +35,12 @@ import com.picaproject.pica.Util.PicDataParser;
 
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 public class AlbumMainActivity extends AppCompatActivity {
-
+    private Random mRandom = new Random(1984);
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -158,9 +163,50 @@ public class AlbumMainActivity extends AppCompatActivity {
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(ImageGridFragment.newInstance(), "사진보기");
-        adapter.addFragment(new UserInfoFragment(), "기타");
+
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(IntentProtocol.KEY_PARCELABLE_PHOTO_DATA, makeImageSampleList());
+        MapPhotoClusterFragment fragment1 = new MapPhotoClusterFragment();
+        fragment1.setArguments(bundle);
+
+
+        ImageGridFragment fragment = (ImageGridFragment) ImageGridFragment.newInstance(makeImageSampleList());
+
+        adapter.addFragment(fragment, "사진");
+        adapter.addFragment(fragment1, "지도로보기");
         viewPager.setAdapter(adapter);
+    }
+    /**
+     * item의 위치를 랜덤으로 넣기위해 존재
+     *
+     * 37.561763, 126.903369 ~ 37.404931, 127.117462
+     * 서울 마포부터 성남사이의 위치
+     * @param min
+     * @param max
+     * @return
+     */
+    private double random(double min, double max) {
+        return mRandom.nextDouble() * (max - min) + min;
+    }
+
+    private LatLng createRandomLocation() {
+        return new LatLng(random(37.561763, 37.404931), random(127.117462, 126.903369));
+    }
+    private ArrayList<UploadPicData> makeImageSampleList(){
+
+
+        ArrayList<UploadPicData> imageItems = new ArrayList<>();
+        for (int i=0; i< 35; i++) {
+            UploadPicData data = new UploadPicData(R.drawable.img_sample);
+            data.setLocation(new PicPlaceData(createRandomLocation()));
+            data.setContents("여기 케이크 진짜 맛있었는데 크림이 사르르");
+            data.setTags(new ArrayList<String>(Arrays.asList(new String[] {"카페", "케이크", "송도맛집"})));
+            data.setClassId(i);
+            imageItems.add(data);
+
+        }
+
+        return imageItems;
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

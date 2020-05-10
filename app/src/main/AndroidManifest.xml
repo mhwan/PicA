@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.picaproject.pica">
 
+    <uses-permission android:name="android.permission.VIBRATE" />
     <application
         android:name=".Util.AppContext"
         android:allowBackup="false"
@@ -41,6 +42,7 @@
         <activity android:name=".Activity.UploadAlbumActivity" />
         <activity
             android:name=".Activity.NewAlbumUploadActivity"
+            android:windowSoftInputMode="adjustPan"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".Activity.MainActivity"
@@ -74,6 +76,5 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
-    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
 </manifest>

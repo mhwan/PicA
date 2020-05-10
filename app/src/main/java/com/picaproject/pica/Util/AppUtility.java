@@ -75,6 +75,7 @@ public class AppUtility {
 
     public String getAddress(double lat, double lng) {
         String nowAddress ="주소를 알 수가 없습니다.";
+        Log.d("Apputility-getAddress", lat+", "+lng);
         Geocoder geocoder = new Geocoder(AppContext.getContext(), Locale.getDefault());
         List<Address> address;
         try {
@@ -94,6 +95,25 @@ public class AppUtility {
             e.printStackTrace();
         }
         return nowAddress;
+    }
+
+    public int getTextByte(String s){
+        int en = 0, kr = 0, etc = 0;
+        char[] string = s.toCharArray();
+
+        for (int i = 0; i < s.length(); i++) {
+            if (string[i] >= 'A' && string[i] <= 'z')
+                en++;
+            else if (string[i] >= '\uAC00' && string[i] <= '\uD7A3')
+                kr += 2;
+            else
+                etc++;
+        }
+        return en + kr + etc;
+    }
+
+    public LatLng getDefaultLocation(){
+        return new LatLng(37.5647689,126.9720057);
     }
 
     public boolean checkLocationServicesStatus() {

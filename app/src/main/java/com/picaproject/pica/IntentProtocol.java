@@ -36,6 +36,7 @@ public class IntentProtocol {
     public static final String PIC_DATA_LIST_NAME = "ArrayList_UploadPicData";
     public static final String INTENT_CONTACT_LIST = "select_contactlist";
     public static final String INTENT_RESULT_SELECTED_ID = "selected_id_list";
+    public static final String KEY_PARCELABLE_PHOTO_DATA = "key_parcelabed_data_list";
 
 
 }

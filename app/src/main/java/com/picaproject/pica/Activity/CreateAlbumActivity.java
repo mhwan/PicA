@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,8 +20,14 @@ import com.picaproject.pica.CustomView.InvitedFriendsRecyclerAdapter;
 import com.picaproject.pica.IntentProtocol;
 import com.picaproject.pica.Item.ContactItem;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.NetworkUtility;
 
 import java.util.ArrayList;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class CreateAlbumActivity extends BaseToolbarActivity {
     private ImageView imageShow;
@@ -28,9 +35,11 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
     private RecyclerView recyclerView;
     private TextView noFriendsView;
     private TextView countFriendsView;
+    private EditText editName, editDesc;
     private InvitedFriendsRecyclerAdapter recyclerAdapter;
     private CustomBottomButton customBottomButton;
     private boolean isManageMode = false;
+    private Uri pictureUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,13 +59,34 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
         setToolbarButton(buttonName, new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(CreateAlbumActivity.this, AlbumMainActivity.class));
+                //startActivity(new Intent(CreateAlbumActivity.this, AlbumMainActivity.class));
+                createAlbumTask();
             }
         });
 
     }
 
+    private void createAlbumTask(){
+        NetworkUtility.getInstance().createNewAlbum(pictureUri, editName.getText().toString(), editDesc.getText().toString(), 1,  new Callback<ResponseBody>(){
+
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                if (response.isSuccessful()) {
+                    Log.i("CREATE ALBUM", response.body().toString());
+                } else
+                    Log.i("CREATE ALBUM", "onresponse but failed");
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.i("CREATE ALBUM", "FAILED");
+            }
+        });
+    }
+
     private void initView(){
+        editName = (EditText) findViewById(R.id.edit_albumname);
+        editDesc = (EditText) findViewById(R.id.edit_albumdesc);
         noFriendsView = (TextView) findViewById(R.id.no_friends_text);
         countFriendsView = (TextView) findViewById(R.id.invite_friends_count);
         imageShow = (ImageView) findViewById(R.id.imageview_show);
@@ -121,6 +151,8 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
             imageShow.setVisibility(View.VISIBLE);
             imageUpload.setVisibility(View.GONE);
             imageShow.setImageURI(selectedImage);
+
+            pictureUri = selectedImage;
             //imageShow.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         } else if (requestCode == IntentProtocol.REQUEST_INVITE_MEMBER && resultCode == RESULT_OK) {
             ArrayList<ContactItem> contactList = (ArrayList<ContactItem>)data.getSerializableExtra(IntentProtocol.INTENT_RESULT_SELECTED_ID);

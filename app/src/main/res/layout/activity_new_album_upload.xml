@@ -1,45 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
+    android:background="@android:color/white"
     tools:context=".Activity.NewAlbumUploadActivity">
 
-    <include layout="@layout/header_base_toolbar"/>
-
-    <LinearLayout
-        android:orientation="horizontal"
+    <RelativeLayout
+        android:id="@+id/frame_contents"
         android:layout_width="match_parent"
-        android:layout_margin="12dp"
-        android:layout_height="72dp">
+        android:layout_height="46dp"
+        android:layout_alignParentBottom="true"
+        android:background="@color/colorLightWhiteGray"
+        android:gravity="center_horizontal"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp">
+
+        <RelativeLayout
+            android:id="@+id/contents"
+            android:layout_width="62dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_mode_edit_black_24dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/locations"
+
+            android:layout_width="62dp"
+            android:layout_height="match_parent"
+
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_toRightOf="@id/contents">
+
+            <ImageView
+                android:id="@+id/locations_imageview"
+                android:layout_width="22dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_location_on_black_24dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/resize"
+
+            android:layout_width="62dp"
+            android:layout_height="match_parent"
+
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_toRightOf="@id/locations">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_crop_black_24dp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/filter"
+
+            android:layout_width="62dp"
+            android:layout_height="match_parent"
+
+            android:layout_marginLeft="12dp"
+            android:layout_marginRight="12dp"
+            android:layout_toRightOf="@id/resize">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/ic_photo_filter_black_24dp" />
+        </RelativeLayout>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_above="@id/frame_contents"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+        <include layout="@layout/header_base_toolbar"/>
 
         <LinearLayout
-            android:id="@+id/image_upload"
-            android:layout_width="72dp"
-            android:layout_marginRight="2dp"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_margin="12dp"
             android:layout_height="72dp">
-            <ImageView
-                android:visibility="visible"
+
+            <LinearLayout
+                android:id="@+id/image_upload"
+                android:layout_width="72dp"
+                android:layout_marginRight="2dp"
+                android:layout_height="72dp">
+                <ImageView
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:padding="20dp"
+                    android:src="@drawable/ic_add_black_24dp"
+                    android:background="@android:color/darker_gray"></ImageView>
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:padding="20dp"
-                android:src="@drawable/ic_add_black_24dp"
-                android:background="@android:color/darker_gray"></ImageView>
+                android:scrollbars="vertical"
+                android:id="@+id/upload_pic_list_view" />
         </LinearLayout>
 
-        <androidx.recyclerview.widget.RecyclerView
+
+        <androidx.viewpager.widget.ViewPager
+            android:id="@+id/view_pager"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:scrollbars="vertical"
-            android:id="@+id/upload_pic_list_view" />
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
 
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-</LinearLayout>
+</RelativeLayout>
