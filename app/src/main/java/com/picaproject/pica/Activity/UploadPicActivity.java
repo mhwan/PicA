@@ -12,8 +12,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import com.picaproject.pica.IntentProtocol;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Util.IntentProtocol;
+import com.picaproject.pica.Item.UploadImageItem;
 import com.picaproject.pica.Listener.PicImageViewClickListener;
 import com.picaproject.pica.Listener.UploadPicSubmitButtonClickListener;
 import com.picaproject.pica.R;
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 
 public class UploadPicActivity extends AppCompatActivity {
 
-    private UploadPicData picData;
+    private UploadImageItem picData;
     private ImageView imageView;
     private Button submit;
     private EditText picTagEdit;
@@ -56,7 +56,7 @@ public class UploadPicActivity extends AppCompatActivity {
         Intent intent = getIntent();
         // 앨범추가 화면에서 넘어온 데이터가 "기존 사진 수정" 인지 "새 사진 추가인지" MODE 구분 / 만약 값이 없다면 기본값은 새 사진 추가
         mode = intent.getIntExtra(IntentProtocol.INTENT_FLAG_MODE,IntentProtocol.ADD_PIC_MODE);
-        UploadPicData picData = (UploadPicData)intent.getParcelableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+        UploadImageItem picData = (UploadImageItem)intent.getParcelableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
         this.picData=picData;
 
 

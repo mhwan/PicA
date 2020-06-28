@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.bumptech.glide.Glide;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -20,32 +21,48 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.picaproject.pica.CustomView.AlbumRecyclerAdapter;
 import com.picaproject.pica.Fragment.ImageGridFragment;
 import com.picaproject.pica.Fragment.MapPhotoClusterFragment;
-import com.picaproject.pica.Fragment.UserInfoFragment;
-import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Item.UploadImageItem;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.ImageMetadataParser;
+import com.picaproject.pica.Util.NetworkItems.AlbumResultItem;
+import com.picaproject.pica.Util.NetworkItems.ImageResultItem;
+import com.picaproject.pica.Util.NetworkUtility;
 import com.picaproject.pica.Util.PicDataParser;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class AlbumMainActivity extends AppCompatActivity {
     private Random mRandom = new Random(1984);
+    private int albumId;
+    private TextView tab_header, tab_desc;
+    private ImageView tab_image;
+    private MapPhotoClusterFragment mapPhotoClusterFragment;
+    private ImageGridFragment imageGridFragment;
+    private AlbumResultItem albumItem;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_album_main);
-
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null)
+            albumId = bundle.getInt(AlbumRecyclerAdapter.KEY_EXTRA_ALBUM_ID, -1);
         initView();
     }
 
@@ -66,6 +83,10 @@ public class AlbumMainActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        tab_image = findViewById(R.id.tab_header_image);
+        tab_header = findViewById(R.id.tab_title);
+        tab_desc = findViewById(R.id.tab_desc);
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -132,6 +153,8 @@ public class AlbumMainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(AlbumMainActivity.this, CreateAlbumActivity.class);
                 intent.putExtra(IntentProtocol.INTENT_ALBUM_MODE, true);
+                intent.putExtra(IntentProtocol.INTENT_INPUT_ALBUM_TITLE, albumItem.getName());
+                intent.putExtra(IntentProtocol.INTENT_INPUT_ALBUM_DESC, albumItem.getDescription());
                 startActivity(intent);
             }
         });
@@ -159,32 +182,119 @@ public class AlbumMainActivity extends AppCompatActivity {
                     ContextCompat.getColor(this, R.color.colorPrimaryDark)
             );
         }*/
+
+        //temporaryImageLoadTask();
+        getLoadPictureTask();
     }
 
     private void setupViewPager(ViewPager viewPager) {
+        //getLoadPictureTask();
+        //temporaryImageLoadTask();
+
+        //ArrayList<ImageResultItem> resultItems = makeImageSamples();
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        Bundle bundle = new Bundle();
-        bundle.putParcelableArrayList(IntentProtocol.KEY_PARCELABLE_PHOTO_DATA, makeImageSampleList());
-        MapPhotoClusterFragment fragment1 = new MapPhotoClusterFragment();
-        fragment1.setArguments(bundle);
+        mapPhotoClusterFragment = new MapPhotoClusterFragment();
+        imageGridFragment = (ImageGridFragment) ImageGridFragment.newInstance(true);
 
-
-        ImageGridFragment fragment = (ImageGridFragment) ImageGridFragment.newInstance(makeImageSampleList());
-
-        adapter.addFragment(fragment, "사진");
-        adapter.addFragment(fragment1, "지도로보기");
+        adapter.addFragment(imageGridFragment, "사진");
+        adapter.addFragment(mapPhotoClusterFragment, "지도로보기");
         viewPager.setAdapter(adapter);
+
+        //temporaryImageLoadTask();
     }
+
+    /*
+    //initview에서 마지막 단계에서 이걸 진행시켰으나 프래그먼트에 initview가 실행되지 않아 문제 발생
+    private void temporaryImageLoadTask(){
+        ArrayList<ImageResultItem> resultItems = makeImageSamples();
+        imageGridFragment.resetImageList(resultItems);
+        mapPhotoClusterFragment.resetPhotoList(resultItems);
+    }*/
+
+    private void setAlbumInfo(){
+        tab_header.setText(albumItem.getName());
+        tab_desc.setText(albumItem.getDescription());
+        Glide.with(getApplicationContext()).load(albumItem.getDefaultPicture()).error(R.drawable.img_sample).into(tab_image);
+    }
+    private void getLoadPictureTask(){
+        Log.d("album_id", albumId+"");
+        NetworkUtility.getInstance().getAlbumPhotoList(albumId, 1,  new Callback<AlbumResultItem>() {
+            @Override
+            public void onResponse(Call<AlbumResultItem> call, Response<AlbumResultItem> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.i("album_photo_Response", response.body().toString());
+                    AlbumResultItem albumResultItem = response.body();
+
+                    switch (albumResultItem.getCode()){
+                        case NetworkUtility.APIRESULT.RESULT_SUCCESS :
+                            ArrayList<ImageResultItem> result;
+                            albumItem = new AlbumResultItem();
+                            albumItem.setName(albumResultItem.getName());
+                            albumItem.setDescription(albumResultItem.getDescription());
+                            albumItem.setDefaultPicture(albumResultItem.getDefaultPicture());
+
+                            if (albumResultItem.getResult() != null && albumResultItem.getResult().size() > 0)
+                                result = (ArrayList) albumResultItem.getResult();
+                            else
+                                result = new ArrayList<>();
+
+                            setAlbumInfo();
+
+                            for (int i = 0; i < result.size(); i++) {
+                                result.get(i).setArrayIndex(i);
+                            }
+
+                            imageGridFragment.resetImageList(result);
+                            mapPhotoClusterFragment.resetPhotoList(result);
+                            break;
+                        case NetworkUtility.APIRESULT.RESULT_NOT_EXIST :
+                            Toast.makeText(getApplicationContext(), "존재하지 않는 앨범입니다.", Toast.LENGTH_SHORT).show();
+                            break;
+                        case NetworkUtility.APIRESULT.RESULT_FILE_GET_ERROR :
+                            Toast.makeText(getApplicationContext(), "파일을 가져오는데 실패하였습니다.", Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case NetworkUtility.APIRESULT.RESULT_NO_AUTHOR :
+                            Toast.makeText(getApplicationContext(), "권한이 없습니다.", Toast.LENGTH_SHORT).show();
+                            break;
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<AlbumResultItem> call, Throwable t) {
+                Log.i("GET_ALBUM_PHOTO", "FAILED");
+                t.printStackTrace();
+            }
+        });
+    }
+
+    /*
+    private ArrayList<ImageResultItem> makeImageSamples(){
+        ArrayList<ImageResultItem> items = new ArrayList<>();
+        for (int i = 0; i < 20; i++){
+            ImageResultItem imageResultItem = new ImageResultItem();
+            imageResultItem.setPictureId(i);
+            imageResultItem.setArrayIndex(i);
+            imageResultItem.setUploadDate("2014-01-01");
+            imageResultItem.setFile("https://picsum.photos/200");
+            LatLng latLng = createRandomLocation();
+            imageResultItem.setLongitude(latLng.longitude);
+            imageResultItem.setLatitude(latLng.latitude);
+            items.add(imageResultItem);
+        }
+
+        return items;
+    }*/
     /**
      * item의 위치를 랜덤으로 넣기위해 존재
      *
      * 37.561763, 126.903369 ~ 37.404931, 127.117462
      * 서울 마포부터 성남사이의 위치
-     * @param min
-     * @param max
      * @return
      */
+
     private double random(double min, double max) {
         return mRandom.nextDouble() * (max - min) + min;
     }
@@ -192,12 +302,14 @@ public class AlbumMainActivity extends AppCompatActivity {
     private LatLng createRandomLocation() {
         return new LatLng(random(37.561763, 37.404931), random(127.117462, 126.903369));
     }
-    private ArrayList<UploadPicData> makeImageSampleList(){
+    /*
+
+    private ArrayList<UploadImageItem> makeImageSampleList(){
 
 
-        ArrayList<UploadPicData> imageItems = new ArrayList<>();
+        ArrayList<UploadImageItem> imageItems = new ArrayList<>();
         for (int i=0; i< 35; i++) {
-            UploadPicData data = new UploadPicData(R.drawable.img_sample);
+            UploadImageItem data = new UploadImageItem(R.drawable.img_sample);
             data.setLocation(new PicPlaceData(createRandomLocation()));
             data.setContents("여기 케이크 진짜 맛있었는데 크림이 사르르");
             data.setTags(new ArrayList<String>(Arrays.asList(new String[] {"카페", "케이크", "송도맛집"})));
@@ -208,7 +320,7 @@ public class AlbumMainActivity extends AppCompatActivity {
 
         return imageItems;
     }
-
+*/
     class ViewPagerAdapter extends FragmentPagerAdapter {
         private final List<Fragment> mFragmentList = new ArrayList<>();
         private final List<String> mFragmentTitleList = new ArrayList<>();
@@ -253,7 +365,7 @@ public class AlbumMainActivity extends AppCompatActivity {
         Log.i("test_hs","AlbumMainActivity  : ");
         if(requestCode == IntentProtocol.GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null){
             ClipData datas = data.getClipData();
-            ArrayList<UploadPicData> prasePicDatas;
+            ArrayList<UploadImageItem> prasePicDatas;
             // 사진 여러장 선택시
             if(datas!=null){
                 prasePicDatas = PicDataParser.parseDataFromClipData(getApplicationContext(), datas);
@@ -265,12 +377,12 @@ public class AlbumMainActivity extends AppCompatActivity {
             else if(data.getData()!=null){
                 Uri uri = data.getData();
                 PicPlaceData placeData = ImageMetadataParser.getLocationMetaData(getApplicationContext(), uri);
-                UploadPicData uploadPicData = new UploadPicData(data.getData().toString());
+                UploadImageItem uploadImageItem = new UploadImageItem(data.getData().toString());
                 if (placeData != null)
-                    uploadPicData.setLocation(placeData);
+                    uploadImageItem.setLocation(placeData);
 
                 prasePicDatas = new ArrayList<>();
-                prasePicDatas.add(uploadPicData);
+                prasePicDatas.add(uploadImageItem);
                 Log.i("test_hs","AlbumMainActivity onActivityResult 2 : "+prasePicDatas.toString());
             }
             // 사진 선택 안했을시

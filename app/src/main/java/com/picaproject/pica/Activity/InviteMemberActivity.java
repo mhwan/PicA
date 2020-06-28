@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.picaproject.pica.CustomView.SelectContactsAdapter;
 import com.picaproject.pica.CustomView.SelectedProfileRecyclerAdapter;
 import com.picaproject.pica.CustomView.SpacesItemDecoration;
-import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.Item.ContactItem;
 import com.picaproject.pica.Listener.SelectContactsRemoveListener;
 import com.picaproject.pica.R;

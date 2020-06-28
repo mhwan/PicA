@@ -3,13 +3,21 @@ package com.picaproject.pica.CustomView;
 import android.content.Intent;
 import androidx.viewpager.widget.ViewPager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.net.Uri;
+import android.util.Log;
 import android.view.View;
 
-import com.picaproject.pica.Activity.LocationListActivity;
+import com.picaproject.pica.Activity.ImageFilterActivity;
+import com.picaproject.pica.Activity.ImageInputContentActivity;
 import com.picaproject.pica.Activity.NewAlbumUploadActivity;
 import com.picaproject.pica.Activity.NewLocationActivity;
-import com.picaproject.pica.IntentProtocol;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Util.IntentProtocol;
+import com.picaproject.pica.Item.UploadImageItem;
+import com.picaproject.pica.Util.ImageCropUtility;
+import com.yalantis.ucrop.UCrop;
+
+import java.io.File;
 
 /*
  * UploadPic 화면 Ui에서 리사이클러 <-> 플래그먼트 <-> 액티비티가 서로 이벤트를 주고받기위한 컨트롤러
@@ -58,9 +66,16 @@ public class UploadPicController {
         }
     }
 
+    public void openInputContentsView(UploadImageItem data) {
+        Intent intent = new Intent(activity, ImageInputContentActivity.class);
+        intent.putExtra(IntentProtocol.INTENT_INPUT_CONTENT, data.getContents());
+        intent.putExtra(IntentProtocol.INTENT_INPUT_TAGS, data.getTags());
+
+        activity.startActivityForResult(intent, IntentProtocol.REQUEST_EDIT_CONTENTS);
+    }
     // 위치 선택 액티비티 열기
     // 사진 추가 플래그먼트에서 위치 TextView 선택시 이동
-    public void openLoactionView(UploadPicData data){
+    public void openLoactionView(UploadImageItem data){
 
         /*
         Intent intent = new Intent(activity, LocationListActivity.class);
@@ -68,9 +83,31 @@ public class UploadPicController {
         intent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME,data);
         activity.startActivityForResult(intent,IntentProtocol.SET_PIC_LOCATION);*/
 
+        Log.d("openLocationView", data.toString());
         Intent intent = new Intent(activity, NewLocationActivity.class);
         intent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME, data);
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, IntentProtocol.SET_PIC_LOCATION);
+    }
+
+    public void openFilterEffectImage(UploadImageItem data){
+        Intent intent = new Intent(activity, ImageFilterActivity.class);
+        intent.putExtra(IntentProtocol.INTENT_FILTER_INPUT, data.getSrc());
+        activity.startActivityForResult(intent, IntentProtocol.REQUEST_IMAGE_FILTER);
+    }
+
+    public void openCropImage(UploadImageItem data, File cacheDir) {
+        StringBuilder sb = new StringBuilder("CropImage");
+        sb.append(System.currentTimeMillis());
+        sb.append("jpeg");
+        Uri mDestinationUri = Uri.fromFile(new File(cacheDir, sb.toString()));
+        UCrop uCrop = UCrop.of(Uri.parse(data.getSrc()), mDestinationUri);
+
+        uCrop = ImageCropUtility.getInstance().setRatio(uCrop, 0, 0, 0);
+        uCrop = ImageCropUtility.getInstance().setSize(uCrop, 0, 0);
+
+        uCrop = ImageCropUtility.getInstance().advancedConfig(uCrop, 2, 90);
+
+        uCrop.start(activity);
     }
 
 

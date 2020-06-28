@@ -13,7 +13,7 @@ import android.widget.RelativeLayout;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestManager;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Item.UploadImageItem;
 
 import com.picaproject.pica.Listener.NewUploadRecyclerImageViewClickListener;
 import com.picaproject.pica.Listener.NewUploadRecyclerRemoveBtnClickListener;
@@ -25,14 +25,14 @@ import java.util.ArrayList;
 public class NewAlbumUploadPicAdapter extends RecyclerView.Adapter<NewUploadPicHolder> {
 
     private  static RequestManager glide;
-    private ArrayList<UploadPicData> dataList;
+    private ArrayList<UploadImageItem> dataList;
     private AppCompatActivity activity;
     private UploadPicController controller;
     /*
      * 주의 : dataList의 첫번째에는 무조건 추가버튼이 들어가야함.
      *
      * */
-    public NewAlbumUploadPicAdapter(ArrayList<UploadPicData> list,AppCompatActivity activity,UploadPicController controller) {
+    public NewAlbumUploadPicAdapter(ArrayList<UploadImageItem> list, AppCompatActivity activity, UploadPicController controller) {
         this.dataList = list;
         this.activity = activity;
         this.controller = controller;
@@ -59,7 +59,7 @@ public class NewAlbumUploadPicAdapter extends RecyclerView.Adapter<NewUploadPicH
     @Override
     public void onBindViewHolder(@NonNull NewUploadPicHolder uploadPicHolder, int i) {
         Log.i("test_hs","AlbumUploadPicAdapter : "+dataList.toString());
-        UploadPicData data = dataList.get(i);
+        UploadImageItem data = dataList.get(i);
         String contents = data.getContents();
         ImageView imgView = uploadPicHolder.getImageView();
         RelativeLayout removeBtn = uploadPicHolder.getRemoveBtn();

@@ -13,14 +13,11 @@ import android.view.ViewGroup;
 
 import com.picaproject.pica.CustomView.ImageRecyclerAdapter;
 import com.picaproject.pica.CustomView.SpacesItemDecoration;
-import com.picaproject.pica.IntentProtocol;
-import com.picaproject.pica.Item.ImageItem;
-import com.picaproject.pica.Item.PicPlaceData;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.NetworkItems.ImageResultItem;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -30,12 +27,20 @@ public class ImageGridFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private ImageRecyclerAdapter adapter;
     private boolean recyclerviewScroll = true;
-    private ArrayList<UploadPicData> picDataArrayList = null;
+    private ArrayList<ImageResultItem> picDataArrayList = null;
 
     public ImageGridFragment(){
         // Required empty public constructor
     }
 
+    public static Fragment newInstance(boolean param, ArrayList<ImageResultItem> picData) {
+        ImageGridFragment fragment = new ImageGridFragment();
+        Bundle args = new Bundle();
+        args.putBoolean("param1", param);
+        args.putParcelableArrayList(IntentProtocol.KEY_PARCELABLE_PHOTO_DATA, picData);
+        fragment.setArguments(args);
+        return fragment;
+    }
     public static Fragment newInstance(boolean param) {
         ImageGridFragment fragment = new ImageGridFragment();
         Bundle args = new Bundle();
@@ -44,13 +49,6 @@ public class ImageGridFragment extends Fragment {
         return fragment;
     }
 
-    public static Fragment newInstance(ArrayList<UploadPicData> picData) {
-        ImageGridFragment fragment = new ImageGridFragment();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(IntentProtocol.KEY_PARCELABLE_PHOTO_DATA, picData);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public static Fragment newInstance(){
         ImageGridFragment fragment = new ImageGridFragment();
@@ -76,34 +74,26 @@ public class ImageGridFragment extends Fragment {
     }
 
     private void initView(){
+        Log.d("imageGridFragment", "initview");
         mRecyclerView = (RecyclerView) view.findViewById(R.id.recyclerview);
-        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(3, StaggeredGridLayoutManager.VERTICAL));
+        mRecyclerView.setLayoutManager(new StaggeredGridLayoutManager(5, StaggeredGridLayoutManager.VERTICAL));
         if (!recyclerviewScroll)
             mRecyclerView.setNestedScrollingEnabled(false);
-        if (picDataArrayList == null) {
-            Log.d("pickArraylist", "is null");
-            picDataArrayList = makeImageSampleList();
-        }
+
+        if (picDataArrayList == null)
+            picDataArrayList = new ArrayList<>();
         adapter = new ImageRecyclerAdapter(getContext(), picDataArrayList);
         mRecyclerView.setAdapter(adapter);
-        SpacesItemDecoration decoration = new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.GRID, 4, 3);
+        SpacesItemDecoration decoration = new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.GRID, 1, 5);
         mRecyclerView.addItemDecoration(decoration);
     }
 
 
-    public void changeImageList(){
-        adapter.resetImageList(makeImageSampleList());
-    }
-    private ArrayList<UploadPicData> makeImageSampleList(){
-        ArrayList<UploadPicData> imageItems = new ArrayList<>();
-        UploadPicData data = new UploadPicData(R.drawable.img_sample);
-        data.setLocation(new PicPlaceData("강남대학교"));
-        data.setContents("여기 케이크 진짜 맛있었는데 크림이 사르르");
-        data.setTags(new ArrayList<String>(Arrays.asList(new String[] {"카페", "케이크", "송도맛집"})));
-
-        for (int i=0; i< 35; i++)
-            imageItems.add(data);
-
-        return imageItems;
+    public void resetImageList(ArrayList<ImageResultItem> list){
+        if (picDataArrayList == null)
+            picDataArrayList = new ArrayList<>();
+        picDataArrayList.clear();
+        picDataArrayList.addAll(list);
+        adapter.resetImageList(picDataArrayList);
     }
 }

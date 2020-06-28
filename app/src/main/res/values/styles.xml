@@ -28,4 +28,12 @@
         <item name="colorControlActivated">@color/colorPrimary</item>
     </style>
 
+    <style name="EditTextStyle">
+        <item name="colorControlNormal">@color/colorLightGray</item>
+        <item name="colorControlActivated">@color/colorPrimary</item>
+    </style>
+    <style name="DialogStyle" parent="Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+    </style>
 </resources>

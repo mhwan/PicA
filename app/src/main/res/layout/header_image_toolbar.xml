@@ -30,6 +30,18 @@
             app:srcCompat="@drawable/ic_close_black_24dp"
             tools:ignore="VectorDrawableCompat" />
 
+        <ImageView
+            android:layout_alignParentRight="true"
+            android:id="@+id/toolbar_remove"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="16dp"
+            android:scaleType="fitXY"
+            android:background="?selectableItemBackgroundBorderless"
+            android:clickable="true"
+            app:srcCompat="@drawable/ic_delete_black_24dp"
+            tools:ignore="VectorDrawableCompat" />
         <LinearLayout
             android:layout_toRightOf="@id/toolbar_close"
             android:orientation="vertical"

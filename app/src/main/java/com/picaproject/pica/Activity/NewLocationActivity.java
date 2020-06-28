@@ -4,10 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -18,7 +18,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,16 +36,14 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.libraries.places.api.Places;
 import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
 import com.google.android.libraries.places.widget.AutocompleteSupportFragment;
 import com.google.android.libraries.places.widget.listener.PlaceSelectionListener;
 import com.picaproject.pica.BuildConfig;
-import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Item.UploadImageItem;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.AppUtility;
-import com.picaproject.pica.Util.GpsTracker;
 import com.picaproject.pica.Util.PermissionChecker;
 
 import java.util.Arrays;
@@ -57,7 +54,7 @@ import java.util.Arrays;
  */
 public class NewLocationActivity extends AppCompatActivity implements OnMapReadyCallback {
     private AutocompleteSupportFragment autocompleteFragment;
-    private UploadPicData pictureData;
+    private UploadImageItem pictureData;
     private GoogleMap googleMap;
     private LatLng currentLocation;
     private Marker currentMarker;
@@ -68,17 +65,18 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private Location mLastKnownLocation;
     private TextView location_label, location_okay;
-    private LatLng mDefaultLocation = new LatLng(37.5650168,126.8491219);
+    private LatLng mDefaultLocation = new LatLng(37.5650168, 126.8491219);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_location);
-        pictureData = (UploadPicData) getIntent().getParcelableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+        pictureData = (UploadImageItem) getIntent().getParcelableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+        Log.d("init pic data", pictureData.toString());
         initView();
     }
 
-    private void initView(){
+    private void initView() {
         pick_img = (ImageView) findViewById(R.id.pick_map_custom_marker);
         pick_button_frame = findViewById(R.id.pick_frame);
         general_frame = findViewById(R.id.generals_frame);
@@ -92,8 +90,9 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
                 if (currentLocation != null) {
                     Intent intent = new Intent();
                     pictureData.setLocation(new PicPlaceData(currentLocation.latitude, currentLocation.longitude));
-                    intent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME,pictureData);
-                    setResult(IntentProtocol.SET_PIC_LOCATION, intent);
+                    intent.putExtra(IntentProtocol.PIC_DATA_CLASS_NAME, pictureData);
+                    Log.d("save data", pictureData.toString());
+                    setResult(RESULT_OK, intent);
                     finish();
                 } else
                     Toast.makeText(getApplicationContext(), "위치를 선택한 이후에 등록해주세요.", Toast.LENGTH_SHORT).show();
@@ -152,7 +151,7 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
     /**
      * pickmode : true 위치 직접 선택하는 모드
      */
-    private void managePickMode(){
+    private void managePickMode() {
         isPickMode = !isPickMode;
         if (isPickMode) {
             pick_button_frame.setVisibility(View.VISIBLE);
@@ -164,6 +163,7 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
             pick_img.setVisibility(View.GONE);
         }
     }
+
     protected void showAlertbox() {
         AlertDialog.Builder builder = new AlertDialog.Builder(NewLocationActivity.this);
         builder.setTitle("위치서비스 비활성화");
@@ -185,7 +185,7 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
         builder.create().show();
     }
 
-    private void setLocationLabelText(String name){
+    private void setLocationLabelText(String name) {
         String text = "현재 사진의 위치가 설정되지 않았습니다.\n위치를 검색 또는 지도에서 직접 마커를 찍으세요.";
         if (currentLocation != null && currentMarker != null) {
             StringBuilder sb = new StringBuilder("사진 위치 : ");
@@ -194,8 +194,7 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
                 sb.append("(주소 : ");
                 sb.append(AppUtility.getAppinstance().getAddress(currentLocation.latitude, currentLocation.longitude));
                 sb.append(")");
-            }
-            else {
+            } else {
                 sb.append(AppUtility.getAppinstance().getAddress(currentLocation.latitude, currentLocation.longitude));
             }
 
@@ -207,7 +206,7 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
         setLocationOkayButton();
     }
 
-    private void setLocationOkayButton(){
+    private void setLocationOkayButton() {
         if (currentLocation != null && currentMarker != null) {
             location_okay.setEnabled(true);
             location_okay.setBackgroundColor(ContextCompat.getColor(getApplicationContext(), R.color.colorPrimary));
@@ -217,8 +216,8 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
         }
     }
 
-    private void getCurrentLocation(boolean isAlertbox){
-        if (!AppUtility.getAppinstance().checkLocationServicesStatus()){
+    private void getCurrentLocation(boolean isAlertbox) {
+        if (!AppUtility.getAppinstance().checkLocationServicesStatus()) {
             if (isAlertbox)
                 showAlertbox();
             else
@@ -258,8 +257,7 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
                             if (mLastKnownLocation != null) {
                                 changeCameraPosition(new LatLng(mLastKnownLocation.getLatitude(), mLastKnownLocation.getLongitude()));
                                 autocompleteFragment.setText(AppUtility.getAppinstance().getAddress(currentLocation.latitude, currentLocation.longitude));
-                            }
-                            else
+                            } else
                                 setMapDefaultLocation();
                         } else {
                             Log.d("Google map", "Current location is null. Using defaults.");
@@ -270,12 +268,22 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
                     }
                 });
             }
-        } catch(SecurityException e)  {
+        } catch (SecurityException e) {
             Log.e("Exception: %s", e.getMessage());
         }
     }
 
-    private void setMapDefaultLocation(){
+    private void setMapDefaultLocation() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
         googleMap.setMyLocationEnabled(false);
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(mDefaultLocation, 15));
         autocompleteFragment.setText(AppUtility.getAppinstance().getAddress(mDefaultLocation.latitude, mDefaultLocation.longitude));

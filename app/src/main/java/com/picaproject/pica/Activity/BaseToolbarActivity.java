@@ -44,6 +44,10 @@ public class BaseToolbarActivity extends AppCompatActivity {
         ((TextView)toolbar.findViewById(R.id.toolbar_button)).setText(name);
     }
     protected void setToolbarTitle(String title){
+        if (toolbar == null)
+            setToolbar();
+        if (toolbarTitle == null)
+            toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbar_title);
         toolbarTitle.setVisibility(View.VISIBLE);
         toolbarTitle.setText(title);
     }

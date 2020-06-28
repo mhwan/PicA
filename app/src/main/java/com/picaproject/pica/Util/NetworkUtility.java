@@ -1,31 +1,32 @@
 package com.picaproject.pica.Util;
 
-import android.content.ContentUris;
-import android.content.Context;
-import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
-import android.os.Environment;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
+import android.util.Log;
 
-import com.picaproject.pica.Util.NetworkItems.AlbumRequestItem;
+import com.picaproject.pica.Item.UploadImageItem;
+import com.picaproject.pica.Util.NetworkItems.AlbumResultItem;
+import com.picaproject.pica.Util.NetworkItems.DefaultResultItem;
+import com.picaproject.pica.Util.NetworkItems.MemberRegisterItem;
+import com.picaproject.pica.Util.NetworkItems.MyAlbumResultListItem;
 
 import java.io.File;
-import java.util.Map;
+import java.util.ArrayList;
 
+import dagger.internal.GenerationOptions;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-import retrofit2.http.Body;
+import retrofit2.http.Field;
+import retrofit2.http.FormUrlEncoded;
+import retrofit2.http.GET;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
+import retrofit2.http.Query;
 
 public class NetworkUtility {
     private static NetworkUtility instance;
@@ -40,7 +41,7 @@ public class NetworkUtility {
         return instance;
     }
 
-    public Retrofit getRetrofitClient() {
+    private Retrofit getRetrofitClient() {
         //If condition to ensure we don't create multiple retrofit instances in a single application
         if (retrofit == null) {
             //Defining the Retrofit using Builder
@@ -52,8 +53,8 @@ public class NetworkUtility {
         return retrofit;
     }
 
-    public void createNewAlbum(Uri fileUri, String name, String description, int cretor_id, Callback<ResponseBody> callback){
-        String filePath = getRealPathFromUri(fileUri);
+    public void createNewAlbum(Uri fileUri, String name, String description, int cretor_id, Callback<DefaultResultItem> callback){
+        String filePath = AppUtility.getAppinstance().getRealPathFromUri(fileUri);
         if (filePath != null && !filePath.isEmpty()) {
             File file = new File(filePath);
             if (file.exists()) {
@@ -70,7 +71,8 @@ public class NetworkUtility {
                 RequestBody descs =
                         RequestBody.create(MediaType.parse("text/plain"), description);
                 RequestBody ids = RequestBody.create(MediaType.parse("text/plain"), Integer.toString(cretor_id));
-                Call<ResponseBody> call = apiService.createAlbum(body, names, descs, ids);
+
+                Call<DefaultResultItem> call = apiService.createAlbumService(body, names, descs, ids);
                 call.enqueue(callback);
 
             }
@@ -79,112 +81,150 @@ public class NetworkUtility {
 
     }
 
-    public String getRealPathFromUri(final Uri uri) {
-        // DocumentProvider
-        Context mContext = AppContext.getContext();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT && DocumentsContract.isDocumentUri(mContext, uri)) {
-            // ExternalStorageProvider
-            if (isExternalStorageDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
+    public void registerMember(MemberRegisterItem item, Callback<DefaultResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
 
-                if ("primary".equalsIgnoreCase(type)) {
-                    return Environment.getExternalStorageDirectory() + "/" + split[1];
+        Call<DefaultResultItem> call = apiService.registerMemberService(item.email, item.password, item.nickname, item.phonenumber);
+        call.enqueue(callback);
+    }
+
+    public void getMyAlbumList(int memberId, Callback<MyAlbumResultListItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<MyAlbumResultListItem> call = apiService.getMyAlbumListService(memberId);
+        call.enqueue(callback);
+    }
+
+    public void getAlbumPhotoList(int albumid, int memberid, Callback<AlbumResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<AlbumResultItem> call = apiService.getMyAlbumPhotoService(albumid, memberid);
+        call.enqueue(callback);
+    }
+
+    /**
+     * 업로드 해야할것
+     * file, contents, tags 합친것, latitude, longitude,
+     *
+     * @Part MultipartBody.Part realfile, @Part("latitude") RequestBody latitude, @Part("longitude") RequestBody longitude,
+     * @Part("contents") RequestBody contents, @Part("p_member_id") RequestBody p_member_id, @Part("p_album_id") RequestBody p_album_id, @Part("tags") RequestBody tags
+     */
+
+    public void uploadSinglePictureToAlbum(int albumId, int memberId, UploadImageItem uploadImageItem, Callback<DefaultResultItem> callback){
+        Log.i("upload Image Service", uploadImageItem.toString());
+
+        Uri fileUri = Uri.parse(uploadImageItem.getSrc());
+        String filePath = AppUtility.getAppinstance().getRealPathFromUri(fileUri);
+        if (filePath != null && !filePath.isEmpty()) {
+            File file = new File(filePath);
+            if (file.exists()) {
+                Retrofit retrofit = getRetrofitClient();
+                NetworkUtility.ApiService apiService = retrofit.create(NetworkUtility.ApiService.class);
+                // creates RequestBody instance from file
+                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                // MultipartBody.Part is used to send also the actual filename
+                MultipartBody.Part body = MultipartBody.Part.createFormData("realfile", file.getName(), requestFile);
+                RequestBody latitude =
+                        RequestBody.create(MediaType.parse("text/plain"), Double.toString(uploadImageItem.getLocation().getLatitude()));
+                RequestBody longitude =
+                        RequestBody.create(MediaType.parse("text/plain"), Double.toString(uploadImageItem.getLocation().getLongitude()));
+
+                String tmpContent = "";
+                if (uploadImageItem.getContents() != null)
+                    tmpContent = uploadImageItem.getContents();
+                RequestBody contents =
+                        RequestBody.create(MediaType.parse("text/plain"), tmpContent);
+                RequestBody memberIdbody =
+                        RequestBody.create(MediaType.parse("text/plain"), Integer.toString(memberId));
+                RequestBody albumIdBody =
+                        RequestBody.create(MediaType.parse("text/plain"), Integer.toString(albumId));
+                RequestBody tags =
+                        RequestBody.create(MediaType.parse("text/plain"), uploadImageItem.parsingTagString());
+
+                Call<DefaultResultItem> call = apiService.uploadPictureService(body, latitude, longitude, contents, memberIdbody, albumIdBody, tags);
+                call.enqueue(callback);
+
+            }
+
+        }
+    }
+
+    /*
+    public void uploadPictureToAlbum(int albumId, int memberId, ArrayList<UploadImageItem> imageList, Callback<DefaultResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        NetworkUtility.ApiService apiService = retrofit.create(NetworkUtility.ApiService.class);
+
+        for (int i = 0; i< imageList.size(); i++) {
+            String filePath = AppUtility.getAppinstance().getRealPathFromUri(imageList.get(i).getSrc());
+            if (filePath != null && !filePath.isEmpty()) {
+                File file = new File(filePath);
+                if (file.exists()) {
+                    RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                    // MultipartBody.Part is used to send also the actual filename
+                    MultipartBody.Part body = MultipartBody.Part.createFormData("realfile", file.getName(), requestFile);
+
+                    RequestBody names =
+                            RequestBody.create(MediaType.parse("text/plain"), name);
+
+                    RequestBody descs =
+                            RequestBody.create(MediaType.parse("text/plain"), description);
+
+                    RequestBody ids = RequestBody.create(MediaType.parse("text/plain"), Integer.toString(cretor_id));
+
+                    Call<DefaultResultItem> call = apiService.createAlbumService(body, names, descs, ids);
+                    call.enqueue(callback);
+                } else {
+                    //파일이 존재하지 않는경우
                 }
-            }
-            // DownloadsProvider
-            else if (isDownloadsDocument(uri)) {
 
-                final String id = DocumentsContract.getDocumentId(uri);
-                final Uri contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), Long.valueOf(id));
-
-                return getDataColumn(mContext, contentUri, null, null);
-            }
-            // MediaProvider
-            else if (isMediaDocument(uri)) {
-                final String docId = DocumentsContract.getDocumentId(uri);
-                final String[] split = docId.split(":");
-                final String type = split[0];
-
-                Uri contentUri = null;
-                if ("image".equals(type)) {
-                    contentUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-                } else if ("video".equals(type)) {
-                    contentUri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI;
-                } else if ("audio".equals(type)) {
-                    contentUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-                }
-
-                final String selection = "_id=?";
-                final String[] selectionArgs = new String[]{
-                        split[1]
-                };
-
-                return getDataColumn(mContext, contentUri, selection, selectionArgs);
             }
         }
-        // MediaStore (and general)
-        else if ("content".equalsIgnoreCase(uri.getScheme())) {
+    }*/
 
-            // Return the remote address
-            if (isGooglePhotosUri(uri))
-                return uri.getLastPathSegment();
-
-            return getDataColumn(mContext, uri, null, null);
-        }
-        // File
-        else if ("file".equalsIgnoreCase(uri.getScheme())) {
-            return uri.getPath();
-        }
-
-        return null;
-    }
-
-
-    private String getDataColumn(Context context, Uri uri, String selection,
-                                 String[] selectionArgs) {
-
-        Cursor cursor = null;
-        final String column = "_data";
-        final String[] projection = {
-                column
-        };
-
-        try {
-            cursor = context.getContentResolver().query(uri, projection, selection, selectionArgs,
-                    null);
-            if (cursor != null && cursor.moveToFirst()) {
-                final int index = cursor.getColumnIndexOrThrow(column);
-                return cursor.getString(index);
-            }
-        } finally {
-            if (cursor != null)
-                cursor.close();
-        }
-        return null;
-    }
-
-    private boolean isExternalStorageDocument(Uri uri) {
-        return "com.android.externalstorage.documents".equals(uri.getAuthority());
-    }
-
-    private boolean isDownloadsDocument(Uri uri) {
-        return "com.android.providers.downloads.documents".equals(uri.getAuthority());
-    }
-
-    private boolean isMediaDocument(Uri uri) {
-        return "com.android.providers.media.documents".equals(uri.getAuthority());
-    }
-
-    private boolean isGooglePhotosUri(Uri uri) {
-        return "com.google.android.apps.photos.content".equals(uri.getAuthority());
-    }
 
     public interface ApiService {
         @Multipart
         @POST(UrlList.CREATE_ALBUM_URL)
-        Call<ResponseBody> createAlbum(@Part MultipartBody.Part file, @Part("name") RequestBody name, @Part("description") RequestBody description, @Part("create_p_member_id") RequestBody member_id);
+        Call<DefaultResultItem> createAlbumService(@Part MultipartBody.Part file, @Part("name") RequestBody name, @Part("description") RequestBody description, @Part("create_p_member_id") RequestBody member_id);
+
+        @FormUrlEncoded
+        @POST(UrlList.REGISTER_MEMBER_URL)
+        Call<DefaultResultItem> registerMemberService(@Field("email") String email, @Field("password") String pw, @Field("nickname") String nickname, @Field("phonenumber") String phonenumber);
+
+        @GET(UrlList.GET_MY_ALBUM_LIST_URL)
+        Call<MyAlbumResultListItem> getMyAlbumListService(@Query("member_id") int memberID);
+
+        @GET(UrlList.SHOW_MY_ALBUM_URL)
+        Call<AlbumResultItem> getMyAlbumPhotoService(@Query("album_id") int albumId, @Query("member_id") int memberId);
+
+        @Multipart
+        @POST(UrlList.UPLOAD_PICTURE_URL)
+        Call<DefaultResultItem> uploadPictureService(@Part MultipartBody.Part realfile,
+                                                     @Part("latitude") RequestBody latitude, @Part("longitude") RequestBody longitude,
+                                                     @Part("contents") RequestBody contents, @Part("p_member_id") RequestBody p_member_id, @Part("p_album_id") RequestBody p_album_id, @Part("tags") RequestBody tags);
+    }
+
+    public class APIRESULT {
+        //공통으로 사용
+        public static final int RESULT_SUCCESS = 0;
+        public static final int RESULT_FAIL = -1;
+
+        //회원가입
+        public static final int RESULT_REGISTER_ALREADY_EXIST = 1;
+
+        //앨범생성
+        public static final int RESULT_CREATEALBUM_SERVER_ERROR = -1;
+        public static final int RESULT_CREATEALBUM_DB_ERROR = -2;
+
+        //내 앨범보기 (멤버없음), 앨범조회 (앨범없음), 사진조회 (사진없음)
+        public static final int RESULT_NOT_EXIST = -1;
+        public static final int RESULT_MYALBUM_FILE_ERROR = -2;
+
+        //앨범조회 (가져오기실패, 권한없음), 사진상세보기(가져오기실패, 권한없음)
+        public static final int RESULT_FILE_GET_ERROR = -2;
+        public static final int RESULT_NO_AUTHOR = -3;
     }
 }

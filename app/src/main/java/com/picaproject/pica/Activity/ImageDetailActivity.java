@@ -1,24 +1,26 @@
 package com.picaproject.pica.Activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import android.content.Intent;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.os.Bundle;
 import android.view.View;
-import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.picaproject.pica.Fragment.ImageDetailFragment;
-import com.picaproject.pica.IntentProtocol;
-import com.picaproject.pica.Item.ImageItem;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.NetworkItems.ImageResultItem;
 
 import java.util.ArrayList;
 
@@ -29,7 +31,7 @@ import java.util.ArrayList;
  */
 public class ImageDetailActivity extends BaseToolbarActivity implements View.OnClickListener {
 
-    private ArrayList<UploadPicData> imageList;
+    private ArrayList<ImageResultItem> imageList;
     private ViewPager viewPager;
     private int startId;
     private boolean isShow = true;
@@ -37,6 +39,10 @@ public class ImageDetailActivity extends BaseToolbarActivity implements View.OnC
     private ScreenSlidePagerAdapter pagerAdapter;
     private RelativeLayout indicatorFrame;
     private TextView indicatorText;
+    private Animation scaleAnim;
+    private boolean isHearted;
+    private ImageView img_favorite;
+    private TextView toolbarUserName, toolbarDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +50,7 @@ public class ImageDetailActivity extends BaseToolbarActivity implements View.OnC
         setContentView(R.layout.activity_image_detail);
         imageList = getIntent().getParcelableArrayListExtra(IntentProtocol.INTENT_ALBUM_IMAGE_LIST);
         startId = getIntent().getIntExtra(IntentProtocol.INTENT_START_POSITION, 0);
-        initView();
+        //initView();
     }
 
     private void initView(){
@@ -61,6 +67,9 @@ public class ImageDetailActivity extends BaseToolbarActivity implements View.OnC
             public void onPageSelected(int position) {
                 startId = position;
                 showIndicatorView();
+
+                setToolbarTitle("hs");
+                setToolbarSubTitle(imageList.get(position).getUploadDate());
                 ((ImageDetailFragment)viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem())).setInfoView(isShow);
             }
 
@@ -74,16 +83,19 @@ public class ImageDetailActivity extends BaseToolbarActivity implements View.OnC
         viewPager.setCurrentItem(startId);
         showInfo = (ImageView) findViewById(R.id.show_img_info);
         showInfo.setOnClickListener(this);
-        findViewById(R.id.favorite).setOnClickListener(new View.OnClickListener() {
+        img_favorite = findViewById(R.id.favorite);
+        img_favorite.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                img_favorite.startAnimation(scaleAnim);
             }
         });
-        findViewById(R.id.remove).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.comment).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                Intent intent_info = new Intent(getApplicationContext(), CommentActivity.class);
+                startActivity(intent_info);
+                overridePendingTransition(R.anim.slide_up, 0);
             }
         });
         findViewById(R.id.download).setOnClickListener(new View.OnClickListener() {
@@ -93,10 +105,23 @@ public class ImageDetailActivity extends BaseToolbarActivity implements View.OnC
             }
         });
 
+        loadFavoriteAnimation();
+
+        isHearted = false;
+        if (!isHearted) {
+            changeFavoriteColor(android.R.color.white);
+        } else
+            changeFavoriteColor(android.R.color.holo_red_light);
         if (startId == 0)
             showIndicatorView();
     }
 
+    private void changeFavoriteColor(int color) {
+        PorterDuffColorFilter porterDuffColorFilter = new PorterDuffColorFilter(ContextCompat.getColor(getApplicationContext(), color),
+                PorterDuff.Mode.SRC_ATOP);
+
+        img_favorite.setColorFilter(porterDuffColorFilter);
+    }
     private void showIndicatorView(){
         indicatorText.setText(getIndicatorString());
         indicatorFrame.setVisibility(View.VISIBLE);
@@ -112,8 +137,7 @@ public class ImageDetailActivity extends BaseToolbarActivity implements View.OnC
     @Override
     protected void onStart() {
         super.onStart();
-        setToolbarTitle("Mhwan");
-        setToolbarSubTitle("2020/02/06");
+        initView();
     }
 
     @Override
@@ -132,6 +156,33 @@ public class ImageDetailActivity extends BaseToolbarActivity implements View.OnC
         }
     }
 
+    private void loadFavoriteAnimation(){
+        scaleAnim = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.scale_heart);
+        scaleAnim.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                int color;
+                isHearted = !isHearted;
+                if(!isHearted){
+                    color = android.R.color.white;
+                }else{
+                    color = android.R.color.holo_red_light;
+                }
+
+                changeFavoriteColor(color);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
 
     private class ScreenSlidePagerAdapter extends FragmentStatePagerAdapter {
         ScreenSlidePagerAdapter(FragmentManager fm) {

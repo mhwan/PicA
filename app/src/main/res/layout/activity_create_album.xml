@@ -104,6 +104,11 @@
                 android:paddingLeft="14dp"
                 android:background="@drawable/bg_rounded_bgcolor"/>
         </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/result"/>
         <!--
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/album_name"

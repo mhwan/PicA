@@ -2,29 +2,28 @@ package com.picaproject.pica.Activity;
 
 import android.content.Intent;
 import android.net.Uri;
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.picaproject.pica.CustomView.CustomBottomButton;
 import com.picaproject.pica.CustomView.InvitedFriendsRecyclerAdapter;
-import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.Item.ContactItem;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.NetworkItems.DefaultResultItem;
 import com.picaproject.pica.Util.NetworkUtility;
 
 import java.util.ArrayList;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -40,13 +39,17 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
     private CustomBottomButton customBottomButton;
     private boolean isManageMode = false;
     private Uri pictureUri;
-
+    private String initAlbumName, initAlbumDesc;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_album);
         isManageMode = getIntent().getBooleanExtra(IntentProtocol.INTENT_ALBUM_MODE, false);
 
+        if (isManageMode) {
+            initAlbumName = getIntent().getStringExtra(IntentProtocol.INTENT_INPUT_ALBUM_TITLE);
+            initAlbumDesc = getIntent().getStringExtra(IntentProtocol.INTENT_INPUT_ALBUM_DESC);
+        }
         initView();
     }
 
@@ -66,25 +69,45 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
 
     }
 
-    private void createAlbumTask(){
-        NetworkUtility.getInstance().createNewAlbum(pictureUri, editName.getText().toString(), editDesc.getText().toString(), 1,  new Callback<ResponseBody>(){
+    private void createAlbumTask() {
+        NetworkUtility.getInstance().createNewAlbum(pictureUri, editName.getText().toString(), editDesc.getText().toString(), 1, new Callback<DefaultResultItem>() {
 
             @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+            public void onResponse(Call<DefaultResultItem> call, Response<DefaultResultItem> response) {
+                DefaultResultItem defaultResultItem = response.body();
+
+                if (response.isSuccessful() && defaultResultItem != null) {
+                    switch (defaultResultItem.getCode()) {
+                        case NetworkUtility.APIRESULT.RESULT_SUCCESS:
+                            Toast.makeText(getApplicationContext(), "앨범이 생성되었습니다.", Toast.LENGTH_SHORT).show();
+
+                            break;
+                        case NetworkUtility.APIRESULT.RESULT_CREATEALBUM_SERVER_ERROR:
+                            Toast.makeText(getApplicationContext(), "서버오류로 앨범생성에 실패했습니다..", Toast.LENGTH_SHORT).show();
+
+                            break;
+                        case NetworkUtility.APIRESULT.RESULT_CREATEALBUM_DB_ERROR:
+                            Toast.makeText(getApplicationContext(), "DB오류로 앨범생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
+
+                            break;
+                    }
+                }
+                /*
                 if (response.isSuccessful()) {
                     Log.i("CREATE ALBUM", response.body().toString());
                 } else
-                    Log.i("CREATE ALBUM", "onresponse but failed");
+                    Log.i("CREATE ALBUM", "onresponse but failed");*/
             }
 
             @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
+            public void onFailure(Call<DefaultResultItem> call, Throwable t) {
                 Log.i("CREATE ALBUM", "FAILED");
+                t.printStackTrace();
             }
         });
     }
 
-    private void initView(){
+    private void initView() {
         editName = (EditText) findViewById(R.id.edit_albumname);
         editDesc = (EditText) findViewById(R.id.edit_albumdesc);
         noFriendsView = (TextView) findViewById(R.id.no_friends_text);
@@ -108,13 +131,18 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
             public void onClick(View v) {
                 Log.d("click", "ccc");
                 Intent intent = new Intent(CreateAlbumActivity.this, InviteMemberActivity.class);
-                if (recyclerAdapter.getInvitedList() != null &&recyclerAdapter.getItemCount() > 0)
+                if (recyclerAdapter.getInvitedList() != null && recyclerAdapter.getItemCount() > 0)
                     intent.putExtra(IntentProtocol.INTENT_CONTACT_LIST, recyclerAdapter.getInvitedList());
 
                 startActivityForResult(intent, IntentProtocol.REQUEST_INVITE_MEMBER);
             }
         });
         updateInviteMemberView(null);
+
+        if (isManageMode) {
+            editName.setText(initAlbumName);
+            editDesc.setText(initAlbumDesc);
+        }
     }
 
     public void pickImage() {
@@ -124,13 +152,13 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
         startActivityForResult(Intent.createChooser(intent, "Select Picture"), IntentProtocol.RESULT_LOAD_IMAGE);
     }
 
-    private void updateInviteMemberView(ArrayList<ContactItem> contactItems){
+    private void updateInviteMemberView(ArrayList<ContactItem> contactItems) {
         if (contactItems != null && contactItems.size() > 0) {
             customBottomButton.setButton_text("초대한 친구관리");
             recyclerView.setVisibility(View.VISIBLE);
             noFriendsView.setVisibility(View.GONE);
             countFriendsView.setVisibility(View.VISIBLE);
-            countFriendsView.setText("("+contactItems.size()+")");
+            countFriendsView.setText("(" + contactItems.size() + ")");
             recyclerAdapter.setInvitedList(contactItems);
             recyclerAdapter.notifyDataSetChanged();
             //recyclerAdapter.notifyAll();
@@ -155,8 +183,8 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
             pictureUri = selectedImage;
             //imageShow.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         } else if (requestCode == IntentProtocol.REQUEST_INVITE_MEMBER && resultCode == RESULT_OK) {
-            ArrayList<ContactItem> contactList = (ArrayList<ContactItem>)data.getSerializableExtra(IntentProtocol.INTENT_RESULT_SELECTED_ID);
-            if (contactList != null && contactList.size() >0) {
+            ArrayList<ContactItem> contactList = (ArrayList<ContactItem>) data.getSerializableExtra(IntentProtocol.INTENT_RESULT_SELECTED_ID);
+            if (contactList != null && contactList.size() > 0) {
                 updateInviteMemberView(contactList);
             }
         }

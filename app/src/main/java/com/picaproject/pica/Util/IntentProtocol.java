@@ -1,8 +1,9 @@
-package com.picaproject.pica;
+package com.picaproject.pica.Util;
 /*
 * 인텐트 주고받을때 사용되는 ID등을 static으로 보관
 *
-* */
+*
+*/
 public class IntentProtocol {
     // 외부 갤러리에서 이미지 가져오기
     public static final int GET_GALLERY_IMAGE = 9000;
@@ -22,21 +23,29 @@ public class IntentProtocol {
     public static final int SET_PIC_LOCATION = 9004;
 
 
+    public static final int REQUEST_IMAGE_FILTER = 9031;
     public static int RESULT_LOAD_IMAGE = 8001;
     public static int REQUEST_INVITE_MEMBER = 7001;
+    public static int REQUEST_EDIT_CONTENTS = 7003;
 
     public static final int GPS_SETTING = 1341;
 
+    public static final String INTENT_INPUT_CONTENT = "input_contents";
+    public static final String INTENT_OUTPUT_CONTENT = "output_contents";
+    public static final String INTENT_INPUT_TAGS = "input_Tagsarr";
+    public static final String INTENT_OUTPUT_TAGS = "output_Tagsarr";
+    public static final String INTENT_INPUT_ALBUM_TITLE = "input_album_title";
+    public static final String INTENT_INPUT_ALBUM_DESC = "input_album_desc";
     public static final String INTENT_FLAG_MODE = "mode";
     public static final String INTENT_START_POSITION = "startPosition";
     public static final String INTENT_ALBUM_IMAGE_LIST = "image_list";
     public static final String INTENT_ALBUM_MODE = "album_mode";
     public static final String INTENT_FLAG_DATA_INDEX = "DataIndex";
+    public static final String INTENT_FILTER_INPUT = "filtered_input_extra";
     public static final String PIC_DATA_CLASS_NAME = "UploadPicData";
     public static final String PIC_DATA_LIST_NAME = "ArrayList_UploadPicData";
     public static final String INTENT_CONTACT_LIST = "select_contactlist";
     public static final String INTENT_RESULT_SELECTED_ID = "selected_id_list";
+    public static final String INTENT_FILTER_OUTPUT = "filterd_new_image_output";
     public static final String KEY_PARCELABLE_PHOTO_DATA = "key_parcelabed_data_list";
-
-
 }

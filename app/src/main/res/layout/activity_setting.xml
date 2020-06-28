@@ -8,4 +8,10 @@
     tools:context=".Activity.SettingActivity">
 
     <include layout="@layout/header_base_toolbar"/>
+
+    <Button
+        android:id="@+id/goto_register"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="회원가입으로"/>
 </LinearLayout>

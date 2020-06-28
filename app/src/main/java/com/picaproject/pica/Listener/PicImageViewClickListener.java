@@ -5,7 +5,7 @@ import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
-import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Util.IntentProtocol;
 
 /*
 * 사진추가 화면에서 이미지 뷰

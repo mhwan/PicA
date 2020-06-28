@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
@@ -14,17 +15,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.target.CustomTarget;
+import com.bumptech.glide.request.transition.Transition;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.SupportMapFragment;
-import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -35,27 +36,37 @@ import com.google.maps.android.clustering.view.DefaultClusterRenderer;
 import com.google.maps.android.ui.IconGenerator;
 import com.picaproject.pica.Activity.ImageDetailActivity;
 import com.picaproject.pica.CustomView.ClusterMultiDrawable;
-import com.picaproject.pica.IntentProtocol;
-import com.picaproject.pica.Item.PicPlaceData;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Util.IntentProtocol;
+import com.picaproject.pica.Util.NetworkItems.ImageResultItem;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.AppContext;
 import com.picaproject.pica.Util.AppUtility;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * A simple {@link Fragment} subclass.
+ *
+ * How to solve?
+ * 로직을 바꿔야함
+ * 먼저 지도를 정의해 준 이후에
+ * item을 업데이트 해주고
+ * clustermanager.cluster()를 해줌
+ * onClusterItemRendered, onClusteredRendered구현해야함
  */
-public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<UploadPicData>, ClusterManager.OnClusterInfoWindowClickListener<UploadPicData>, ClusterManager.OnClusterItemClickListener<UploadPicData>, ClusterManager.OnClusterItemInfoWindowClickListener<UploadPicData>{
+public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallback, ClusterManager.OnClusterClickListener<ImageResultItem>, ClusterManager.OnClusterInfoWindowClickListener<ImageResultItem>, ClusterManager.OnClusterItemClickListener<ImageResultItem>, ClusterManager.OnClusterItemInfoWindowClickListener<ImageResultItem>{
     private GoogleMap googleMap;
     private MapView mapView;
-    private ClusterManager<UploadPicData> mClusterManager;
-    private ArrayList<UploadPicData> picDataArrayList;
+    private ClusterManager<ImageResultItem> mClusterManager;
+    private ArrayList<ImageResultItem> picDataArrayList;
     public MapPhotoClusterFragment() {
         // Required empty public constructor
+    }
+
+    public MapPhotoClusterFragment(ArrayList<ImageResultItem> list) {
+        this.picDataArrayList = new ArrayList<>();
+        picDataArrayList.addAll(list);
     }
     @Override
     public void onResume() {
@@ -66,9 +77,7 @@ public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallb
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            picDataArrayList = getArguments().getParcelableArrayList(IntentProtocol.KEY_PARCELABLE_PHOTO_DATA);
-        }
+
     }
 
     @Override
@@ -99,12 +108,14 @@ public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallb
 
         mapView.onResume(); // needed to get the map to display immediately
 
+
         try {
             MapsInitializer.initialize(getActivity().getApplicationContext());
         } catch (Exception e) {
             e.printStackTrace();
         }
-        mapView.getMapAsync(this);
+
+        mapView.getMapAsync(this::onMapReady);
         return view;
     }
 
@@ -113,11 +124,17 @@ public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallb
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
         Log.i("googleMap", "isReady!!");
+
+        //camera위치도 여러 위치들의 평균값을 구하던지해야한다
         googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom((AppUtility.getAppinstance().getDefaultLocation()), 10.0f));
+
+        //item update in here 먼저 map을 ready시켜야한다!
         startPhotoCluster();
     }
+
+
     private void startPhotoCluster(){
-        mClusterManager = new ClusterManager<UploadPicData>(AppContext.getContext(), googleMap);
+        mClusterManager = new ClusterManager<ImageResultItem>(AppContext.getContext(), googleMap);
         mClusterManager.setRenderer(new ClusterPhotoRenderer());
         googleMap.setOnCameraIdleListener(mClusterManager);
         googleMap.setOnMarkerClickListener(mClusterManager);
@@ -127,28 +144,35 @@ public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallb
         mClusterManager.setOnClusterItemClickListener(this);
         mClusterManager.setOnClusterItemInfoWindowClickListener(this);
 
-        addItems();
+        mClusterManager.clearItems();
+        //add All items here
+        addItemToClusterManager();
+        //Log.d("googlemap_cluster", picDataArrayList.toString());
         mClusterManager.cluster();
     }
 
 
-    private void addItems(){
+    private void addItemToClusterManager(){
+        if (picDataArrayList != null) {
+            for (ImageResultItem item : picDataArrayList) {
+                if (item.hasLocations()) {
+                    mClusterManager.addItem(item);
+                }
+            }
+        }
+    }
+    public void resetPhotoList(ArrayList<ImageResultItem> list){
+        if (picDataArrayList != null)
+            picDataArrayList.clear();
+        else
+            picDataArrayList = new ArrayList<>();
 
-        /*
-        ArrayList<UploadPicData> sampleDatas = new ArrayList<>();
-        for (int i = 0; i<58; i++) {
-            UploadPicData uploadPicData = new UploadPicData(R.drawable.img_sample);
-            uploadPicData.setLocation(new PicPlaceData(createRandomLocation()));
-            sampleDatas.add(uploadPicData);
-        }*/
+        picDataArrayList.addAll(list);
 
-        if (picDataArrayList == null)
-            Log.d("picdata", "is null");
-
-        mClusterManager.addItems(picDataArrayList);
+        mapView.getMapAsync(this);
     }
 
-    private class ClusterPhotoRenderer extends DefaultClusterRenderer<UploadPicData> {
+    private class ClusterPhotoRenderer extends DefaultClusterRenderer<ImageResultItem> {
         private final IconGenerator mIconGenerator = new IconGenerator(AppContext.getContext());
         private final IconGenerator mClusterIconGenerator = new IconGenerator(AppContext.getContext());
         private final ImageView mImageView;
@@ -174,75 +198,98 @@ public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallb
             mIconGenerator.setContentView(mImageView);
         }
 
+
         @Override
-        protected void onBeforeClusterItemRendered(UploadPicData uploadPicData, MarkerOptions markerOptions) {
+        protected void onBeforeClusterItemRendered(ImageResultItem imageResultItem, MarkerOptions markerOptions) {
             // Draw a single UploadPicData - show their profile photo and set the info window to show their name
+
             /**
              * 만일 사진을 눌렀을때 사진위의 마커를 띄우고 싶으면 title설정
+             * 임시로 뜨는 아이콘 set
              */
-            markerOptions.icon(getItemIcon(uploadPicData));
-        }
-
-        @Override
-        protected void onClusterItemUpdated(UploadPicData uploadPicData, Marker marker) {
-            /**
-             * 만일 사진을 눌렀을때 사진위의 마커를 띄우고 싶으면 setTitle설정
-             */
-            // Same implementation as onBeforeClusterItemRendered() (to update cached markers)
-            marker.setIcon(getItemIcon(uploadPicData));
-        }
-
-        /**
-         * Get a descriptor for a single UploadPicData (i.e., a marker outside a cluster) from their
-         * profile photo to be used for a marker icon
-         *
-         * @return the UploadPicData's profile photo as a BitmapDescriptor
-         */
-        private BitmapDescriptor getItemIcon(UploadPicData uploadPicData) {
-            mImageView.setImageResource(uploadPicData.getImgSampleId());
+            mImageView.setImageResource(R.drawable.img_sample);
             Bitmap icon = mIconGenerator.makeIcon();
-            return BitmapDescriptorFactory.fromBitmap(icon);
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
+            //markerOptions.icon(getItemIcon(imageResultItem));
         }
 
+
         @Override
-        protected void onBeforeClusterRendered(Cluster<UploadPicData> cluster, MarkerOptions markerOptions) {
+        protected void onClusterItemRendered(ImageResultItem clusterItem, Marker marker) {
+            /*
+            cluster item updated, onClusterItemUpdated대신 사용
+             */
+            Glide.with(getActivity())
+                    .load(clusterItem.getFile())
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .thumbnail(0.1f)
+                    .into(new CustomTarget<Drawable>() {
+                        @Override
+                        public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                            mImageView.setImageDrawable(resource);
+                            Bitmap icon = mIconGenerator.makeIcon();
+                            marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
+                        }
+
+                        @Override
+                        public void onLoadCleared(@Nullable Drawable placeholder) {
+
+                        }
+                    });
+        }
+
+
+        @Override
+        protected void onBeforeClusterRendered(Cluster<ImageResultItem> cluster, MarkerOptions markerOptions) {
             // Draw multiple people.
             // Note: this method runs on the UI thread. Don't spend too much time in here (like in this example).
-            markerOptions.icon(getClusterIcon(cluster));
-        }
+            //markerOptions.icon(getClusterIcon(cluster));
 
-        @Override
-        protected void onClusterUpdated(Cluster<UploadPicData> cluster, Marker marker) {
-            // Same implementation as onBeforeClusterRendered() (to update cached markers)
-            marker.setIcon(getClusterIcon(cluster));
+            Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
+            markerOptions.icon(BitmapDescriptorFactory.fromBitmap(icon));
         }
 
         /**
-         * Get a descriptor for multiple people (a cluster) to be used for a marker icon. Note: this
-         * method runs on the UI thread. Don't spend too much time in here (like in this example).
-         *
-         * @param cluster cluster to draw a BitmapDescriptor for
-         * @return a BitmapDescriptor representing a cluster
+         * 여기서 가끔 일부 cluster list의 사이즈가 0인경우가 발생한다. 이경우 multidrawable을 그리면 그냥 흰색이됨
+         * @param cluster
+         * @param marker
          */
-        private BitmapDescriptor getClusterIcon(Cluster<UploadPicData> cluster) {
+        @Override
+        protected void onClusterRendered(Cluster<ImageResultItem> cluster, Marker marker) {
             List<Drawable> profilePhotos = new ArrayList<Drawable>(Math.min(4, cluster.getSize()));
             int width = mDimension;
             int height = mDimension;
 
-            for (UploadPicData p : cluster.getItems()) {
+            for (ImageResultItem p : cluster.getItems()) {
                 // Draw 4 at most.
                 if (profilePhotos.size() == 4) break;
-                Drawable drawable = getResources().getDrawable(p.getImgSampleId());
-                drawable.setBounds(0, 0, width, height);
-                profilePhotos.add(drawable);
+
+                Glide.with(getActivity())
+                        .load(p.getFile())
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
+                        .thumbnail(0.1f)
+                        .into(new CustomTarget<Drawable>() {
+                            @Override
+                            public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                                resource.setBounds(0, 0, width, height);
+                                profilePhotos.add(resource);
+                            }
+
+                            @Override
+                            public void onLoadCleared(@Nullable Drawable placeholder) {
+                            }
+                        });
+
             }
+
             ClusterMultiDrawable multiDrawable = new ClusterMultiDrawable(profilePhotos);
             multiDrawable.setBounds(0, 0, width, height);
 
             mClusterImageView.setImageDrawable(multiDrawable);
             Bitmap icon = mClusterIconGenerator.makeIcon(String.valueOf(cluster.getSize()));
-            return BitmapDescriptorFactory.fromBitmap(icon);
+            marker.setIcon(BitmapDescriptorFactory.fromBitmap(icon));
         }
+
 
         @Override
         protected boolean shouldRenderAsCluster(Cluster cluster) {
@@ -251,7 +298,7 @@ public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallb
         }
     }
     @Override
-    public boolean onClusterClick(Cluster<UploadPicData> cluster) {
+    public boolean onClusterClick(Cluster<ImageResultItem> cluster) {
 
         // Zoom in the cluster. Need to create LatLngBounds and including all the cluster items
         // inside of bounds, then animate to center of the bounds.
@@ -275,30 +322,30 @@ public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallb
     }
 
     @Override
-    public void onClusterInfoWindowClick(Cluster<UploadPicData> cluster) {
+    public void onClusterInfoWindowClick(Cluster<ImageResultItem> cluster) {
         // Does nothing, but you could go to a list of the users.
         Log.d("infowindowClick!", cluster.getSize()+"");
     }
 
     @Override
-    public boolean onClusterItemClick(UploadPicData item) {
+    public boolean onClusterItemClick(ImageResultItem item) {
         // Does nothing, but you could go into the user's profile page, for example.
         /**
          * 확대되었을때 아이템 눌렀을때는 여기서..
          */
 
-        int id = (int)item.getClassId();
+        int id = (int)item.getArrayIndex();
         Intent intent = new Intent(getActivity(), ImageDetailActivity.class);
         intent.putExtra(IntentProtocol.INTENT_START_POSITION, id);
         intent.putExtra(IntentProtocol.INTENT_ALBUM_IMAGE_LIST, picDataArrayList);
         startActivity(intent);
-        Log.d("clusterItemClick!", item.getLocation().getLatitude()+", "+item.getLocation().getLongitude());
+        Log.d("clusterItemClick!", item.getLatitude()+", "+item.getLongitude());
         return false;
     }
 
     @Override
-    public void onClusterItemInfoWindowClick(UploadPicData item) {
+    public void onClusterItemInfoWindowClick(ImageResultItem item) {
         // Does nothing, but you could go into the user's profile page, for example.
-        Log.d("iteminfowindowClick!", item.getLocation().getLatitude()+", "+item.getLocation().getLongitude());
+        Log.d("iteminfowindowClick!", item.getLatitude()+", "+item.getLongitude());
     }
 }

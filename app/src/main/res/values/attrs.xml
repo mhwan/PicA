@@ -8,4 +8,15 @@
         <attr name="ripple_visible" format="boolean" />
         <attr name="button_ripple" format="reference" />
     </declare-styleable>
+
+    <declare-styleable name="ToggledTextView">
+        <attr name="toggled_text_color" format="color" />
+        <attr name="default_text_color" format="color" />
+        <attr name="toggled" format="boolean" />
+        <attr name="mode" format="enum">
+            <enum name="none" value="0"/>
+            <enum name="button" value="1"/>
+            <enum name="toggle" value="2"/>
+        </attr>
+    </declare-styleable>
 </resources>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="12dp"
+    android:paddingRight="12dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp"
+    android:id="@+id/bg"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.mhwan.profileiconview.ProfileIconView
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginRight="8dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:id="@+id/profile_icon"
+        app:bg_color="@color/colorPrimary"
+        app:icon_padding="9dp"/>
+
+    <ImageView
+        android:id="@+id/remove_comment"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_close_black_24dp"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:id="@+id/contets_window"
+        android:layout_toRightOf="@id/profile_icon"
+        android:layout_toLeftOf="@id/remove_comment">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryBlack"
+            android:id="@+id/commnet_nickname"
+            android:textSize="13sp"
+            android:text="mhwan"/>
+        <TextView
+            android:id="@+id/comment_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="mhwan님이 '앨범샘플1'에 당신을 초대했습니다. 이 알림을 클릭해서 다양한 사진을 친구들과 공유해보세요!"
+            android:textSize="12sp"
+            android:textColor="@color/colorPrimaryBlack"/>
+
+    </LinearLayout>
+
+
+    <TextView
+        android:id="@+id/comment_date"
+        android:layout_marginTop="4dp"
+        android:layout_alignLeft="@id/contets_window"
+        android:layout_below="@id/contets_window"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="2020.02.06 PM 11:30"
+        android:textSize="11sp"
+        android:textColor="@color/colorDarkGray"/>
+</RelativeLayout>

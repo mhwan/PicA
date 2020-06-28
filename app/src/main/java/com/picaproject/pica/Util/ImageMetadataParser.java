@@ -34,6 +34,6 @@ public class ImageMetadataParser {
             }
         }
 
-        return null;
+        return new PicPlaceData(AppUtility.IMAGE_HAS_NO_LOCATION, AppUtility.IMAGE_HAS_NO_LOCATION);
     }
 }

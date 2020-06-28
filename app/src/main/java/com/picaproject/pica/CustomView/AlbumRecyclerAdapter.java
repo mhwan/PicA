@@ -7,25 +7,33 @@ import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.picaproject.pica.Activity.AlbumMainActivity;
 import com.picaproject.pica.Item.AlbumItem;
 import com.picaproject.pica.R;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AlbumRecyclerAdapter extends RecyclerView.Adapter<AlbumRecyclerAdapter.ViewHolder> {
     private Context context;
     private List<AlbumItem> itemList;
-
+    public static final String KEY_EXTRA_ALBUM_ID = "Intents_from_ALBUM_ID_EXTRA";
     public AlbumRecyclerAdapter(Context context, List<AlbumItem> items) {
         this.context = context;
         this.itemList = items;
+
+        if (itemList == null) {
+            itemList = new ArrayList<>();
+        }
     }
 
     @NonNull
@@ -39,18 +47,29 @@ public class AlbumRecyclerAdapter extends RecyclerView.Adapter<AlbumRecyclerAdap
     @Override
     public void onBindViewHolder(@NonNull AlbumRecyclerAdapter.ViewHolder viewHolder, int i) {
         final AlbumItem item = itemList.get(i);
-        Drawable drawable = ContextCompat.getDrawable(context, item.getImage_id());
-        viewHolder.image.setImageDrawable(drawable);
-        viewHolder.title.setText(item.getAlbum_name());
-        viewHolder.author.setText("by."+item.getAlbum_author());
+
+        Glide.with(context).load(item.getDefaultPicture())
+                .error(R.drawable.img_sample)
+                .override(600)
+                .into(viewHolder.image);
+        viewHolder.title.setText(item.getName());
+        viewHolder.author.setText("by. "+item.getNickName());
         viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                context.startActivity(new Intent(context, AlbumMainActivity.class));
+                Intent intent = new Intent(context, AlbumMainActivity.class);
+                Log.d("passing_album_id", item.getAlbumId()+"");
+                intent.putExtra(KEY_EXTRA_ALBUM_ID, item.getAlbumId());
+                context.startActivity(intent);
             }
         });
     }
 
+    public void refreshAllItem(ArrayList<AlbumItem> items) {
+        itemList.clear();
+        itemList.addAll(items);
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
         return itemList.size();

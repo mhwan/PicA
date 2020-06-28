@@ -4,6 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.google.android.gms.maps.model.LatLng;
+import com.picaproject.pica.Util.AppUtility;
 
 import java.io.Serializable;
 
@@ -12,8 +13,8 @@ public class PicPlaceData implements Serializable, Parcelable {
     private static final long serialVersionUID = 1L;
 
     private String name;
-    private double latitude;
-    private double longitude;
+    private double latitude = AppUtility.IMAGE_HAS_NO_LOCATION;
+    private double longitude = AppUtility.IMAGE_HAS_NO_LOCATION;
 
     public PicPlaceData(String name) {
         this.name = name;

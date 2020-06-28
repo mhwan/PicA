@@ -29,7 +29,6 @@
                 android:id="@+id/tab_header_image"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/img_sample"
                 android:fitsSystemWindows="true"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"/>
@@ -60,16 +59,15 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@android:color/white"
-                    android:text="앨범 샘플1"
                     android:textSize="16sp"/>
                 <TextView
+                    android:id="@+id/tab_desc"
                     android:layout_alignParentStart="true"
                     android:layout_alignParentLeft="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tab_title"
                     android:layout_marginTop="4dp"
-                    android:text="앨범 샘플1입니다."
                     android:textSize="13sp"
                     android:textColor="@color/colorLightGray" />
 

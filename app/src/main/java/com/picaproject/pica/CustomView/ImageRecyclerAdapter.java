@@ -9,21 +9,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.bumptech.glide.Glide;
 import com.picaproject.pica.Activity.ImageDetailActivity;
-import com.picaproject.pica.IntentProtocol;
-import com.picaproject.pica.Item.ImageItem;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.NetworkItems.ImageResultItem;
 
 import java.util.ArrayList;
 
 public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdapter.Viewholder>{
 
     private Context context;
-    private ArrayList<UploadPicData> imgList;
+    private ArrayList<ImageResultItem> imgList;
 
 
-    public ImageRecyclerAdapter(Context context, ArrayList<UploadPicData> imgList) {
+    public ImageRecyclerAdapter(Context context, ArrayList<ImageResultItem> imgList) {
         this.context = context;
         this.imgList = imgList;
     }
@@ -36,15 +36,20 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
     }
 
 
-    public void resetImageList(ArrayList<UploadPicData> imageItems){
-        imgList.clear();
-        imgList.addAll(imageItems);
-        notifyAll();
+    public void resetImageList(ArrayList<ImageResultItem> imageItems){
+        notifyDataSetChanged();
     }
 
     @Override
     public void onBindViewHolder(Viewholder holder, int position) {
-        holder.imageView.setImageResource(imgList.get(position).getImgSampleId());
+        ImageResultItem item = imgList.get(position);
+        //Glide.with(context).load(item.getSampleImg()).override(400).into(holder.imageView);
+
+            Glide.with(context).load(item.getFile())
+                    .error(R.drawable.img_sample)
+                    .override(200)
+                    .into(holder.imageView);
+
     }
 
     @Override

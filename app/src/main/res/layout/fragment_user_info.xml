@@ -124,31 +124,35 @@
                             android:background="@drawable/bg_rounded_bgcolor"
                             android:layout_height="wrap_content">
 
-                            <TextView
+                            <com.picaproject.pica.CustomView.ToggledTextView
                                 android:id="@+id/btn_my_upload_pic"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="올린 사진"
+                                app:toggled_text_color="@android:color/white"
+                                app:default_text_color="@color/colorPrimaryDark"
+                                app:mode="button"
                                 android:textSize="13sp"
-                                android:textColor="@android:color/white"
                                 android:paddingTop="4dp"
                                 android:paddingBottom="4dp"
                                 android:paddingLeft="12dp"
                                 android:paddingRight="12dp"
-                                android:background="@drawable/bg_rounded_primary"/>
+                                android:background="@drawable/bg_toggled_box"/>
 
-                            <TextView
+                            <com.picaproject.pica.CustomView.ToggledTextView
                                 android:id="@+id/btn_my_favorite_pic"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="좋아요 한 사진"
+                                app:toggled_text_color="@android:color/white"
+                                app:default_text_color="@color/colorPrimaryDark"
+                                app:mode="button"
                                 android:textSize="13sp"
-                                android:textColor="@android:color/white"
                                 android:paddingTop="4dp"
                                 android:paddingBottom="4dp"
                                 android:paddingLeft="10dp"
                                 android:paddingRight="12dp"
-                                android:background="@android:color/transparent"/>
+                                android:background="@drawable/bg_toggled_box"/>
                         </LinearLayout>
 
                     </RelativeLayout>

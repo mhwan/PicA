@@ -19,47 +19,49 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.picaproject.pica.CustomView.NewAlbumUploadAdapter;
 import com.picaproject.pica.CustomView.NewAlbumUploadPicAdapter;
 import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.CustomView.UploadPicController;
-import com.picaproject.pica.Fragment.ImageDetailFragment;
+import com.picaproject.pica.Fragment.InputBottomSheetDialogFragment;
 import com.picaproject.pica.Fragment.NewAlbumUploadFragment;
-import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
-import com.picaproject.pica.Item.UploadPicData;
-import com.picaproject.pica.Listener.NewAlbumSetLocationClickListener;
+import com.picaproject.pica.Item.UploadImageItem;
 import com.picaproject.pica.Listener.NewUploadRecyclerAddImageBtnClickListener;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.ImageMetadataParser;
+import com.picaproject.pica.Util.NetworkItems.DefaultResultItem;
+import com.picaproject.pica.Util.NetworkUtility;
 import com.picaproject.pica.Util.PermissionChecker;
 import com.picaproject.pica.Util.PicDataParser;
+import com.yalantis.ucrop.UCrop;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class NewAlbumUploadActivity extends BaseToolbarActivity {
-    private Button backBtn;
-    private Button submitBtn;
     private ViewPager viewPager;
     private RecyclerView uploadPicListView;
     private NewAlbumUploadAdapter adapter;
     private PermissionChecker pc;
     private NewAlbumUploadPicAdapter recyclerAdapter;
     private UploadPicController controller;
+    private int cropIndex = -1;
     private RelativeLayout resize, photoFilter, locations, contents;
-    // 리사이클러용 데이터 리스트랑 Fragment용 데이터리스트는 따로 둠
-    // recyclerDataList에는 항상 첫번째에 ADD_BTN 데이터가 들어가고
-    // Fragment에는 이런 ADD_BTN 데이터가 영향을 미치지 않기 위함.
-    private ArrayList<UploadPicData> recyclerDataList;
-    private ArrayList<UploadPicData> dataList;
+
+    private ArrayList<UploadImageItem> dataList;
     String[] permission_list = {
             Manifest.permission.READ_EXTERNAL_STORAGE
     };
     private Handler handler;
-    private boolean isEditMode = false;
 
     // 마지막 위치 저장하면서 사용하기
     // 위치가 바뀌었을때만 visible 명령을 사용하여 오버헤딩을 방지하기위함.
@@ -69,13 +71,13 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_new_album_upload);
+
         findViewById(R.id.image_upload).setOnClickListener(new NewUploadRecyclerAddImageBtnClickListener(this));
         viewPager = (ViewPager) findViewById(R.id.view_pager);
         uploadPicListView = (RecyclerView) findViewById(R.id.upload_pic_list_view);
         adapter = new NewAlbumUploadAdapter(getSupportFragmentManager());
-        recyclerDataList = new ArrayList<>();
         Intent intent = getIntent();
-        dataList = (ArrayList<UploadPicData>)intent.getSerializableExtra(IntentProtocol.PIC_DATA_LIST_NAME);
+        dataList = (ArrayList<UploadImageItem>)intent.getSerializableExtra(IntentProtocol.PIC_DATA_LIST_NAME);
         viewPager.setOffscreenPageLimit(dataList.size());
         // 데이터를 가져와서 플래그먼트로 변환해 추가하기
         controller = new UploadPicController(uploadPicListView,viewPager,this);
@@ -88,11 +90,10 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
 
         uploadPicListView.setLayoutManager(mLinearLayoutManager);
 
-        recyclerDataList.addAll(dataList);
 
 
 
-        recyclerAdapter = new NewAlbumUploadPicAdapter(recyclerDataList,this,controller);
+        recyclerAdapter = new NewAlbumUploadPicAdapter(dataList,this,controller);
         uploadPicListView.setAdapter(recyclerAdapter);
 
         SpacesItemDecoration spacesItemDecoration = new SpacesItemDecoration(10,10,0,0);
@@ -132,50 +133,87 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         setToolbarButton("업로드", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //사진이 등록될때의 행동
-                if (isEditMode) {
-                    changeEditMdoe();
-                } else {
-
-                }
+                uploadImageWork();
             }
         });
     }
 
+    private void uploadImageWork(){
+        NetworkUtility.getInstance().uploadSinglePictureToAlbum(1, 1, dataList.get(0), new Callback<DefaultResultItem>() {
+            @Override
+            public void onResponse(Call<DefaultResultItem> call, Response<DefaultResultItem> response) {
+                DefaultResultItem defaultResultItem = response.body();
+
+                if (response.isSuccessful() && defaultResultItem != null) {
+                    Log.d("image upload", ""+defaultResultItem.getCode());
+                    switch (defaultResultItem.getCode()) {
+                        case NetworkUtility.APIRESULT.RESULT_SUCCESS:
+                            Toast.makeText(getApplicationContext(), "사진이 업로드 되었습니다.", Toast.LENGTH_SHORT).show();
+
+                            break;
+                        case NetworkUtility.APIRESULT.RESULT_CREATEALBUM_SERVER_ERROR:
+                            Toast.makeText(getApplicationContext(), "서버오류로 사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show();
+
+                            break;
+                        case NetworkUtility.APIRESULT.RESULT_CREATEALBUM_DB_ERROR:
+                            Toast.makeText(getApplicationContext(), "DB오류로 사진 업로드에 실패했습니다.", Toast.LENGTH_SHORT).show();
+
+                            break;
+                    }
+                } else
+                    Log.d("image upload", "failed");
+            }
+
+            @Override
+            public void onFailure(Call<DefaultResultItem> call, Throwable t) {
+
+            }
+        });
+    }
     private void initBottomManageView(){
         locations = findViewById(R.id.locations);
         contents = findViewById(R.id.contents);
         resize = findViewById(R.id.resize);
         photoFilter = findViewById(R.id.filter);
 
-        locations.setOnClickListener(new NewAlbumSetLocationClickListener(controller, dataList.get(viewPager.getCurrentItem())));
+        locations.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                controller.openLoactionView(dataList.get(viewPager.getCurrentItem()));
+            }
+        });
         contents.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //showContentsInput();
-                changeEditMdoe();
+                //changeEditMdoe();
+                cropIndex = viewPager.getCurrentItem();
+                controller.openInputContentsView(dataList.get(viewPager.getCurrentItem()));
+            }
+        });
+
+        resize.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cropIndex = viewPager.getCurrentItem();
+                controller.openCropImage(dataList.get(viewPager.getCurrentItem()), getCacheDir());
+            }
+        });
+
+        photoFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                cropIndex = viewPager.getCurrentItem();
+                controller.openFilterEffectImage(dataList.get(viewPager.getCurrentItem()));
             }
         });
     }
-
-    private void changeEditMdoe(){
-        if (isEditMode) {
-            isEditMode = !isEditMode;
-            setToolbarButtonText("업로드");
-
-        } else {
-            isEditMode = !isEditMode;
-            setToolbarButtonText("확인");
-        }
-
-        ((NewAlbumUploadFragment)viewPager.getAdapter().instantiateItem(viewPager, viewPager.getCurrentItem())).showContentsInput(isEditMode);
-    }
     // 데이터를 가져와서 플래그먼트로 변환해 추가하기
-    private void addFragment(ArrayList<UploadPicData> dataList){
+    private void addFragment(ArrayList<UploadImageItem> dataList){
         for(int i=0; i<dataList.size();i++){
-            UploadPicData d = dataList.get(i);
+            UploadImageItem d = dataList.get(i);
             NewAlbumUploadFragment f = new NewAlbumUploadFragment();
-            f.setUploadPicData(d);
+            f.setUploadImageItem(d);
             f.setActivity(this);
             f.setController(controller);
             adapter.addFragment(f);
@@ -198,7 +236,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         Log.i("test_hs","AlbumMainActivity  : ");
         if(requestCode == IntentProtocol.GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null){
             ClipData datas = data.getClipData();
-            ArrayList<UploadPicData> prasePicDatas;
+            ArrayList<UploadImageItem> prasePicDatas;
             // 사진 여러장 선택시
             if(datas!=null){
                 prasePicDatas = PicDataParser.parseDataFromClipData(getApplicationContext(), datas);
@@ -210,12 +248,12 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             else if(data.getData()!=null){
                 Uri uri = data.getData();
                 PicPlaceData placeData = ImageMetadataParser.getLocationMetaData(getApplicationContext(), uri);
-                UploadPicData uploadPicData = new UploadPicData(data.getData().toString());
+                UploadImageItem uploadImageItem = new UploadImageItem(data.getData().toString());
                 if (placeData != null)
-                    uploadPicData.setLocation(placeData);
+                    uploadImageItem.setLocation(placeData);
 
                 prasePicDatas = new ArrayList<>();
-                prasePicDatas.add(uploadPicData);
+                prasePicDatas.add(uploadImageItem);
                 Log.i("test_hs","NewAlbumUploadActivity onActivityResult 2 : "+prasePicDatas.toString());
             }
             // 사진 선택 안했을시 아무 동작 안함.
@@ -225,7 +263,6 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             // 가져온 이미지를 UploadPicData 데이터로 만드는건 했고
             // 이제 만든 UploadPicData의 처리를 밑에서 하면 됨.
             // --밑 --
-            recyclerDataList.addAll(prasePicDatas);
             dataList.addAll(prasePicDatas);
 
             addFragment(prasePicDatas);
@@ -239,26 +276,71 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
             */
         }
         //if(requestCode == IntentProtocol.UPDATE_PIC_MODE){
-        if(requestCode == IntentProtocol.SET_PIC_LOCATION && data != null){
+        if(resultCode == RESULT_OK && requestCode == IntentProtocol.SET_PIC_LOCATION && data != null){
             //TODO
-            UploadPicData picData = (UploadPicData)data.getParcelableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+            UploadImageItem picData = (UploadImageItem)data.getParcelableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
             int idx = serchItemIndex(picData.getClassId());
             if(idx!=-1){
-                dataList.set(idx,picData);
-                recyclerDataList.set(idx,picData);
-                adapter.setDataAtIndex(idx,picData);
-                adapter.notifyDataSetChanged();
-                recyclerAdapter.notifyDataSetChanged();
+                updateSpecificData(idx, picData);
             }
             Log.i("test_hs","NewAlbumUploadActivity SET_PIC_LOCATION : "+picData.getLocation().toString());
         }
+         else if (resultCode == RESULT_OK && requestCode == UCrop.REQUEST_CROP) {
+            Uri mResultUri = UCrop.getOutput(data);
+            if (mResultUri != null) {
+                // ResultActivity.startWithUri(MainActivity.this, resultUri);
+                if (cropIndex >= 0) {
+                    Log.d("crop Index", cropIndex+"");
+                    UploadImageItem picData = dataList.get(cropIndex);
+                    picData.setSrc(mResultUri.toString());
 
+                    updateSpecificData(serchItemIndex(picData.getClassId()), picData);
+                }
+
+            } else {
+                Toast.makeText(getApplicationContext(), "이미지 자르기에 실패했습니다.", Toast.LENGTH_SHORT).show();
+            }
+        } else if (resultCode == UCrop.RESULT_ERROR)
+            handleCropError(data);
+         else if (resultCode == RESULT_OK && requestCode == IntentProtocol.REQUEST_IMAGE_FILTER) {
+            String src = data.getStringExtra(IntentProtocol.INTENT_FILTER_OUTPUT);
+            UploadImageItem picData = dataList.get(cropIndex);
+            picData.setSrc(src);
+
+            updateSpecificData(serchItemIndex(picData.getClassId()), picData);
+        } else if (resultCode == RESULT_OK && requestCode == IntentProtocol.REQUEST_EDIT_CONTENTS) {
+             String newContents = data.getStringExtra(IntentProtocol.INTENT_OUTPUT_CONTENT);
+             ArrayList<String> newTags = data.getStringArrayListExtra(IntentProtocol.INTENT_OUTPUT_TAGS);
+
+             UploadImageItem picData = dataList.get(cropIndex);
+             picData.setContents(newContents);
+             picData.setTags(newTags);
+
+             updateSpecificData(serchItemIndex(picData.getClassId()), picData);
+        }
 
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    private void updateSpecificData(int idx, UploadImageItem picData) {
+        dataList.set(idx,picData);
+        adapter.setDataAtIndex(idx,picData);
+        adapter.notifyDataSetChanged();
+        recyclerAdapter.notifyDataSetChanged();
+    }
+
+    @SuppressWarnings("ThrowableResultOfMethodCallIgnored")
+    private void handleCropError(@NonNull Intent result) {
+        final Throwable cropError = UCrop.getError(result);
+        if (cropError != null) {
+            Log.e("Crop", "handleCropError: ", cropError);
+            Toast.makeText(getApplicationContext(), cropError.getMessage(), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getApplicationContext(), "예상하지 못한 에러가 발생했습니다.", Toast.LENGTH_SHORT).show();
+        }
+    }
+
     public void removeItem(int itemIdx){
-        recyclerDataList.remove(itemIdx);
         dataList.remove(itemIdx);
         removeFragment(itemIdx);
         adapter.notifyDataSetChanged();

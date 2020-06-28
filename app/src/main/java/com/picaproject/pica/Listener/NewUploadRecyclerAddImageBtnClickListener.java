@@ -4,7 +4,7 @@ import android.content.Intent;
 import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
-import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Util.IntentProtocol;
 
 // 사진추가 화면에서 + (사진추가) 버튼을 눌렀을때 동작
 public class NewUploadRecyclerAddImageBtnClickListener implements View.OnClickListener {

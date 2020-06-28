@@ -51,10 +51,10 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.picaproject.pica.CustomView.BottomSheetListView;
 import com.picaproject.pica.CustomView.PicLocationListAdapter;
-import com.picaproject.pica.IntentProtocol;
+import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.PicPlaceDataWrapper;
-import com.picaproject.pica.Item.UploadPicData;
+import com.picaproject.pica.Item.UploadImageItem;
 import com.picaproject.pica.R;
 import com.picaproject.pica.Util.LocationParser;
 
@@ -83,7 +83,7 @@ public class LocationListActivity extends AppCompatActivity
     private BottomSheetBehavior bottomSheetBehavior;
     private BottomSheetListView bottomSheetListView;
     // 사진 추가화면에서 전달된 사진 정보 1장 (여러장은 동시에 여기로 올수없음)
-    private UploadPicData picData;
+    private UploadImageItem picData;
 
     // 가져온 주변장소 마커를 보관하는 리스트
     List<Marker> previous_marker = null;
@@ -135,7 +135,7 @@ public class LocationListActivity extends AppCompatActivity
 
         Intent intent = getIntent();
 
-        picData = (UploadPicData)intent.getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
+        picData = (UploadImageItem)intent.getSerializableExtra(IntentProtocol.PIC_DATA_CLASS_NAME);
 
         mLayout = findViewById(R.id.layout_location_main);
 

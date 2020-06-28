@@ -15,8 +15,15 @@ public class ClusterMultiDrawable extends Drawable {
         mDrawables = drawables;
     }
 
+    /**
+     * 실제 사이즈가 0이 아님에도 일부 사이즈가 0이되는 현상이 발생하여 제대로 그려지지 않게 되는 경우가 발생한다
+     * @param canvas
+     */
     @Override
     public void draw(Canvas canvas) {
+        if (mDrawables.size() == 0)
+            return;
+
         if (mDrawables.size() == 1) {
             mDrawables.get(0).draw(canvas);
             return;
