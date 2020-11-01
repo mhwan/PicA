@@ -8,22 +8,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MyAlbumResultListItem {
+public class MyAlbumResultListItem extends DefaultResultItem {
 
-    @SerializedName("code")
-    @Expose
-    private Integer code;
     @SerializedName("result")
     @Expose
     private List<AlbumItem> result = null;
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
 
     public List<AlbumItem> getResult() {
         return result;

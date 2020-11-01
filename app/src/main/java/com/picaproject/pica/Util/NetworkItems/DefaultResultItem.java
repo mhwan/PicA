@@ -1,8 +1,13 @@
 package com.picaproject.pica.Util.NetworkItems;
 
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
 public class DefaultResultItem
 {
-    private int code;
+    @SerializedName("code")
+    @Expose
+    protected Integer code;
 
     public int getCode ()
     {

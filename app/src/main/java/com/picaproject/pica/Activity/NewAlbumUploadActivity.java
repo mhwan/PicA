@@ -39,6 +39,7 @@ import com.picaproject.pica.Util.NetworkItems.DefaultResultItem;
 import com.picaproject.pica.Util.NetworkUtility;
 import com.picaproject.pica.Util.PermissionChecker;
 import com.picaproject.pica.Util.PicDataParser;
+import com.picaproject.pica.Util.RetrofitRetryableCallback;
 import com.yalantis.ucrop.UCrop;
 
 import java.util.ArrayList;
@@ -133,13 +134,24 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         setToolbarButton("업로드", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                uploadImageWork();
+                if (dataList != null && dataList.size() > 0)
+                    uploadImageWork();
+                else
+                    Toast.makeText(getApplicationContext(), "업로드할 사진이 없습니다.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 
+    /**
+     * datalist에 있는 index를 차례대로 upload를 한다. 성공하면 다행이라지만 실패할 경우에 어떻게 할까
+     */
     private void uploadImageWork(){
-        NetworkUtility.getInstance().uploadSinglePictureToAlbum(1, 1, dataList.get(0), new Callback<DefaultResultItem>() {
+        for (int i = 0; i < dataList.size(); i++) {
+            uploadSingleImageWork(i);
+        }
+    }
+    private void uploadSingleImageWork(int index){
+        NetworkUtility.getInstance().uploadSinglePictureToAlbum(1, 1, dataList.get(index), new Callback<DefaultResultItem>() {
             @Override
             public void onResponse(Call<DefaultResultItem> call, Response<DefaultResultItem> response) {
                 DefaultResultItem defaultResultItem = response.body();

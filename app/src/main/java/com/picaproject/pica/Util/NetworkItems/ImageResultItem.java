@@ -176,9 +176,10 @@ public class ImageResultItem implements ClusterItem, Parcelable {
     public boolean hasLocations() {
         if (latitude == null && longitude == null)
             return false;
-        if (latitude == AppUtility.IMAGE_HAS_NO_LOCATION && longitude == AppUtility.IMAGE_HAS_NO_LOCATION)
+        if (latitude == AppUtility.IMAGE_HAS_NO_LOCATION || longitude == AppUtility.IMAGE_HAS_NO_LOCATION)
             return false;
-
+        if (latitude > 90.0 && latitude < -99.0 && longitude < -180.0 && longitude > 180.0)
+            return false;
         return true;
     }
     @Override

@@ -4,11 +4,11 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class AlbumResultItem {
+/**
+ * 앨범 보기를 할때의 결과 item
+ */
+public class AlbumResultItem extends DefaultResultItem {
 
-    @SerializedName("code")
-    @Expose
-    private Integer code;
     @SerializedName("name")
     @Expose
     private String name;
@@ -22,13 +22,6 @@ public class AlbumResultItem {
     @Expose
     private List<ImageResultItem> result = null;
 
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
 
     public String getName() {
         return name;

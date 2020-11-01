@@ -53,7 +53,7 @@ public class ImageDetailFragment extends Fragment {
         picInfoFrame = view.findViewById(R.id.pic_info_frame);
 
         if (pictureData != null){
-
+            Log.d("imageDetail", pictureData.toString());
             Glide.with(getActivity())
                     .asBitmap()
                     .load(pictureData.getFile())

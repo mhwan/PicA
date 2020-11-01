@@ -290,7 +290,8 @@ public class NewLocationActivity extends AppCompatActivity implements OnMapReady
     }
     private boolean isPictureHasLocation(){
         if (pictureData != null) {
-            if (pictureData.getLocation() != null) {
+            if (pictureData.getLocation()!= null) {
+                if (pictureData.getLocation().getLatitude() != AppUtility.IMAGE_HAS_NO_LOCATION && pictureData.getLocation().getLongitude() != AppUtility.IMAGE_HAS_NO_LOCATION )
                 return true;
             }
         }
