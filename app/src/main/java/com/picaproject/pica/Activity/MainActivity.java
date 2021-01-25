@@ -3,6 +3,7 @@ package com.picaproject.pica.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
@@ -12,8 +13,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.luseen.spacenavigation.SpaceItem;
 import com.luseen.spacenavigation.SpaceNavigationView;
@@ -21,6 +24,7 @@ import com.luseen.spacenavigation.SpaceOnClickListener;
 import com.picaproject.pica.Fragment.MyAlbumFragment;
 import com.picaproject.pica.Fragment.UserInfoFragment;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.IntentProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,8 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     private SpaceNavigationView navigationView;
     private ViewPager viewPager;
+    private MyAlbumFragment albumFragment;
+    private UserInfoFragment userInfoFragment;
     private TextView toolbarTitle;
     private String[] titles = {"내 앨범", "내 계정"};
 
@@ -43,6 +49,23 @@ public class MainActivity extends AppCompatActivity {
         searchView.setIconifiedByDefault(false);
         searchView.setQueryHint("search");
         searchView.setBackgroundResource(R.drawable.bg_rounded_white);
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if (query.length() >= 1){
+                    Intent intent = new Intent(MainActivity.this, PictureSearchActivity.class);
+                    intent.putExtra(IntentProtocol.INTENT_QUERY, query);
+                    startActivity(intent);
+                } else
+                    Toast.makeText(getApplicationContext(), "검색어를 입력해주세요.", Toast.LENGTH_SHORT).show();
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return false;
+            }
+        });
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbarCustom);
         setSupportActionBar(toolbar);
         toolbarTitle = (TextView) toolbar.findViewById(R.id.toolbarTextView);
@@ -77,11 +100,24 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupViewPager() {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        MyAlbumFragment albumFragment = new MyAlbumFragment();
-        UserInfoFragment userInfoFragment = new UserInfoFragment();
+        albumFragment = new MyAlbumFragment();
+        userInfoFragment = new UserInfoFragment();
         adapter.addFragment(albumFragment);
         adapter.addFragment(userInfoFragment);
         viewPager.setAdapter(adapter);
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        if (requestCode == IntentProtocol.CREATE_MANAGE_ALBUM) {
+
+            Log.d("refresh main view", "refresh");
+            albumFragment.updateMyAlbum();
+            userInfoFragment.refreshAllData();
+
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void changeToolbarName(int i) {
@@ -92,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         navigationView.setSpaceOnClickListener(new SpaceOnClickListener(){
             @Override
             public void onCentreButtonClick() {
-                startActivity(new Intent(getApplicationContext(), CreateAlbumActivity.class));
+                startActivityForResult(new Intent(getApplicationContext(), CreateAlbumActivity.class), IntentProtocol.CREATE_MANAGE_ALBUM);
             }
 
             @Override

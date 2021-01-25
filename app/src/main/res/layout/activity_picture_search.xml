@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Activity.PictureSearchActivity">
+
+    <include layout="@layout/header_base_toolbar"/>
+
+    <androidx.appcompat.widget.SearchView
+        android:id="@+id/searchview"
+        android:layout_marginLeft="12dp"
+        android:layout_marginRight="12dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="4dp"
+        android:layout_width="match_parent"
+        app:iconifiedByDefault="false"
+        android:theme="@style/EditTextStyle"
+        android:queryBackground="@android:color/transparent"
+        app:queryBackground="@android:color/transparent"
+        app:queryHint="검색할 사진 카테고리를 입력하세요."
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_rounded_bgcolor"/>
+
+
+    <TextView
+        android:id="@+id/result_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" android:text="검색결과 : "
+        android:textSize="13sp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:textColor="@color/colorPrimaryDark" />
+    <RelativeLayout
+        android:id="@+id/frag_image_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </RelativeLayout>
+</LinearLayout>

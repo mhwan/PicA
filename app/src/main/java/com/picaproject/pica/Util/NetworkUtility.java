@@ -3,11 +3,15 @@ package com.picaproject.pica.Util;
 import android.net.Uri;
 import android.util.Log;
 
+import com.picaproject.pica.Item.LoginResultItem;
+import com.picaproject.pica.Item.PictuerDetailItem;
 import com.picaproject.pica.Item.UploadImageItem;
 import com.picaproject.pica.Util.NetworkItems.AlbumResultItem;
 import com.picaproject.pica.Util.NetworkItems.DefaultResultItem;
 import com.picaproject.pica.Util.NetworkItems.MemberRegisterItem;
 import com.picaproject.pica.Util.NetworkItems.MyAlbumResultListItem;
+import com.picaproject.pica.Util.NetworkItems.ProfileResultItem;
+import com.picaproject.pica.Util.NetworkItems.ReplyResultItem;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -53,6 +57,25 @@ public class NetworkUtility {
         return retrofit;
     }
 
+    public void uploadProfile(Uri fileUri, int memberID, Callback<DefaultResultItem> callback) {
+        String filePath = AppUtility.getAppinstance().getRealPathFromUri(fileUri);
+        if (filePath != null && !filePath.isEmpty()) {
+            File file = new File(filePath);
+            if (file.exists()) {
+                Retrofit retrofit = getRetrofitClient();
+                NetworkUtility.ApiService apiService = retrofit.create(NetworkUtility.ApiService.class);
+                // creates RequestBody instance from file
+                RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
+                // MultipartBody.Part is used to send also the actual filename
+                MultipartBody.Part body = MultipartBody.Part.createFormData("file", file.getName(), requestFile);
+
+                RequestBody ids = RequestBody.create(MediaType.parse("text/plain"), Integer.toString(memberID));
+
+                Call<DefaultResultItem> call = apiService.uploadProfileService(body, ids);
+                call.enqueue(callback);
+            }
+        }
+    }
     public void createNewAlbum(Uri fileUri, String name, String description, int cretor_id, Callback<DefaultResultItem> callback){
         String filePath = AppUtility.getAppinstance().getRealPathFromUri(fileUri);
         if (filePath != null && !filePath.isEmpty()) {
@@ -89,6 +112,13 @@ public class NetworkUtility {
         call.enqueue(callback);
     }
 
+    public void loginMember(String email, String pw, Callback<LoginResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<LoginResultItem> call = apiService.loginService(email, pw);
+        call.enqueue(callback);
+    }
+
     public void getMyAlbumList(int memberId, Callback<MyAlbumResultListItem> callback) {
         Retrofit retrofit = getRetrofitClient();
         ApiService apiService = retrofit.create(ApiService.class);
@@ -105,6 +135,74 @@ public class NetworkUtility {
         call.enqueue(callback);
     }
 
+    public void getPictureReplyList(int pictureid, int memberid, Callback<ReplyResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<ReplyResultItem> call = apiService.getPictureReplyService(pictureid, memberid);
+
+        call.enqueue(callback);
+    }
+
+    public void addPictureReply(int picureid, int memberid, String reply, Callback<DefaultResultItem> callback){
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<DefaultResultItem> call = apiService.addReplyService(picureid, memberid, reply);
+
+        call.enqueue(callback);
+    }
+
+    public void myfavoritePictureList(int memberId, Callback<AlbumResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<AlbumResultItem> call = apiService.getMyFavoritePictureListService(memberId);
+        call.enqueue(callback);
+    }
+
+    public void myUploadPictureList(int memberId, Callback<AlbumResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<AlbumResultItem> call = apiService.getMyUploadPictureListService(memberId);
+        call.enqueue(callback);
+    }
+
+    public void getPictureSearchList(int memberId, String word, Callback<AlbumResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<AlbumResultItem> call = apiService.getSearchListService(memberId, word);
+        call.enqueue(callback);
+    }
+
+    public void deletePictureReply(int replyId, int memberID, Callback<DefaultResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+        Call<DefaultResultItem> call = apiService.deleteReplyService(memberID, replyId);
+
+        call.enqueue(callback);
+    }
+
+    public void getProfilePhoto(int memberId, Callback<ProfileResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<ProfileResultItem> call = apiService.getProfileService(memberId);
+        call.enqueue(callback);
+    }
+
+
+    public void doFavortePhoto(int memberId, int pictureId, Callback<DefaultResultItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<DefaultResultItem> call = apiService.doFavoriteService(memberId, pictureId);
+        call.enqueue(callback);
+    }
+    public void getPictureDetail(int pictureId, int memberid, Callback<PictuerDetailItem> callback) {
+        Retrofit retrofit = getRetrofitClient();
+        ApiService apiService = retrofit.create(ApiService.class);
+
+        Call<PictuerDetailItem> call = apiService.getPhotoDetailService(pictureId, memberid);
+        call.enqueue(callback);
+    }
     /**
      * 업로드 해야할것
      * file, contents, tags 합친것, latitude, longitude,
@@ -194,11 +292,50 @@ public class NetworkUtility {
         @POST(UrlList.REGISTER_MEMBER_URL)
         Call<DefaultResultItem> registerMemberService(@Field("email") String email, @Field("password") String pw, @Field("nickname") String nickname, @Field("phonenumber") String phonenumber);
 
+        @FormUrlEncoded
+        @POST(UrlList.LOGIN_URL)
+        Call<LoginResultItem> loginService(@Field("email") String email, @Field("password") String pw);
+
+        @Multipart
+        @POST(UrlList.UPLOAD_PROFILE_URL)
+        Call<DefaultResultItem> uploadProfileService(@Part MultipartBody.Part file, @Part("member_id") RequestBody id);
+
+        @GET(UrlList.GET_PROFILE_URL)
+        Call<ProfileResultItem> getProfileService(@Query("member_id") int memberId);
+
+        @GET(UrlList.GET_SEARCH_PICTURE_URL)
+        Call<AlbumResultItem> getSearchListService(@Query("member_id") int memberId, @Query("word") String word);
+
         @GET(UrlList.GET_MY_ALBUM_LIST_URL)
         Call<MyAlbumResultListItem> getMyAlbumListService(@Query("member_id") int memberID);
 
+        @GET(UrlList.MY_FAVORITE_PICTURE_URL)
+        Call<AlbumResultItem> getMyFavoritePictureListService(@Query("member_id") int memberID);
+
+        @GET(UrlList.MY_UPLOAD_PICTURE_URL)
+        Call<AlbumResultItem> getMyUploadPictureListService(@Query("member_id") int memberID);
+
         @GET(UrlList.SHOW_MY_ALBUM_URL)
         Call<AlbumResultItem> getMyAlbumPhotoService(@Query("album_id") int albumId, @Query("member_id") int memberId);
+
+
+        @GET(UrlList.SHOW_REPLY_URL)
+        Call<ReplyResultItem> getPictureReplyService(@Query("picture_id") int pictureId, @Query("member_id") int member_id);
+
+        @POST(UrlList.FAVORITE_URL)
+        Call<DefaultResultItem> doFavoriteService(@Query("member_id") int memberId, @Query("picture_id") int pictureId);
+
+        @FormUrlEncoded
+        @POST(UrlList.ADD_REPLY_URL)
+        Call<DefaultResultItem> addReplyService(@Field("picture_id") int pictureid, @Field("member_id") int memberid, @Field("reply_text") String reply);
+
+        @FormUrlEncoded
+        @POST(UrlList.DELETE_REPLY_URL)
+        Call<DefaultResultItem> deleteReplyService( @Field("member_id") int memberid, @Field("reply_id") int replyId);
+
+        @FormUrlEncoded
+        @GET(UrlList.SHOW_PICTURE_DETAIL_URL)
+        Call<PictuerDetailItem> getPhotoDetailService(@Field("picture_id") int pictureId, @Field("member_id") int memberId);
 
         @Multipart
         @POST(UrlList.UPLOAD_PICTURE_URL)
@@ -212,6 +349,8 @@ public class NetworkUtility {
         public static final int RESULT_SUCCESS = 0;
         public static final int RESULT_FAIL = -1;
 
+        public static final int RESULT_WRONG_PW = -2;
+        public static final int RESULT_NO_EMAIL = -3;
         //회원가입
         public static final int RESULT_REGISTER_ALREADY_EXIST = 1;
 

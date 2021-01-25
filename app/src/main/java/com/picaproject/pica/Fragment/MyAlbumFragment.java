@@ -16,6 +16,8 @@ import com.picaproject.pica.CustomView.AlbumRecyclerAdapter;
 import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.Item.AlbumItem;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.AcountPreference;
+import com.picaproject.pica.Util.AppUtility;
 import com.picaproject.pica.Util.NetworkItems.MyAlbumResultListItem;
 import com.picaproject.pica.Util.NetworkUtility;
 
@@ -57,7 +59,7 @@ public class MyAlbumFragment extends Fragment implements SwipeRefreshLayout.OnRe
         swipeRefreshLayout.setOnRefreshListener(this);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(layoutManager);
-        recyclerAdapter = new AlbumRecyclerAdapter(getContext(), new ArrayList<>());
+        recyclerAdapter = new AlbumRecyclerAdapter(getActivity(), new ArrayList<>());
         recyclerView.setAdapter(recyclerAdapter);
         recyclerView.addItemDecoration(new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.LINEAR_VERTICAL, 6));
     }
@@ -71,7 +73,7 @@ public class MyAlbumFragment extends Fragment implements SwipeRefreshLayout.OnRe
     }*/
 
     private void getMyAlbumTask(){
-        NetworkUtility.getInstance().getMyAlbumList(1, new Callback<MyAlbumResultListItem>() {
+        NetworkUtility.getInstance().getMyAlbumList(AppUtility.memberId, new Callback<MyAlbumResultListItem>() {
             @Override
             public void onResponse(Call<MyAlbumResultListItem> call, Response<MyAlbumResultListItem> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -107,6 +109,10 @@ public class MyAlbumFragment extends Fragment implements SwipeRefreshLayout.OnRe
                 t.printStackTrace();
             }
         });
+    }
+
+    public void updateMyAlbum(){
+        getMyAlbumTask();
     }
     @Override
     public void onRefresh() {

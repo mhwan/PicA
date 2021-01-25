@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
@@ -19,16 +20,17 @@ import com.bumptech.glide.Glide;
 import com.picaproject.pica.Activity.AlbumMainActivity;
 import com.picaproject.pica.Item.AlbumItem;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.IntentProtocol;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AlbumRecyclerAdapter extends RecyclerView.Adapter<AlbumRecyclerAdapter.ViewHolder> {
-    private Context context;
+    private FragmentActivity activity;
     private List<AlbumItem> itemList;
     public static final String KEY_EXTRA_ALBUM_ID = "Intents_from_ALBUM_ID_EXTRA";
-    public AlbumRecyclerAdapter(Context context, List<AlbumItem> items) {
-        this.context = context;
+    public AlbumRecyclerAdapter(FragmentActivity activity, List<AlbumItem> items) {
+        this.activity = activity;
         this.itemList = items;
 
         if (itemList == null) {
@@ -48,7 +50,7 @@ public class AlbumRecyclerAdapter extends RecyclerView.Adapter<AlbumRecyclerAdap
     public void onBindViewHolder(@NonNull AlbumRecyclerAdapter.ViewHolder viewHolder, int i) {
         final AlbumItem item = itemList.get(i);
 
-        Glide.with(context).load(item.getDefaultPicture())
+        Glide.with(activity).load(item.getDefaultPicture())
                 .error(R.drawable.img_sample)
                 .override(600)
                 .into(viewHolder.image);
@@ -57,10 +59,10 @@ public class AlbumRecyclerAdapter extends RecyclerView.Adapter<AlbumRecyclerAdap
         viewHolder.cardview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(context, AlbumMainActivity.class);
+                Intent intent = new Intent(activity, AlbumMainActivity.class);
                 Log.d("passing_album_id", item.getAlbumId()+"");
                 intent.putExtra(KEY_EXTRA_ALBUM_ID, item.getAlbumId());
-                context.startActivity(intent);
+                activity.startActivityForResult(intent, IntentProtocol.CREATE_MANAGE_ALBUM);
             }
         });
     }

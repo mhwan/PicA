@@ -22,19 +22,24 @@ public class IntentProtocol {
     // 사진 추가화면 -> 사진에 위치정보 추가/수정
     public static final int SET_PIC_LOCATION = 9004;
 
+    public static final int CREATE_MANAGE_ALBUM = 9006;
 
     public static final int REQUEST_IMAGE_FILTER = 9031;
     public static int RESULT_LOAD_IMAGE = 8001;
     public static int REQUEST_INVITE_MEMBER = 7001;
     public static int REQUEST_EDIT_CONTENTS = 7003;
-
+    public static int REQUEST_PIC_DETAIL = 7005;
     public static final int GPS_SETTING = 1341;
 
+    public static final String INTENT_PICTURE_ID = "picture_id";
+    public static final String INTENT_QUERY = "querys";
     public static final String INTENT_INPUT_CONTENT = "input_contents";
+    public static final String INTENT_INPUT_ALBUM_ID = "input_albumid";
     public static final String INTENT_OUTPUT_CONTENT = "output_contents";
     public static final String INTENT_INPUT_TAGS = "input_Tagsarr";
     public static final String INTENT_OUTPUT_TAGS = "output_Tagsarr";
     public static final String INTENT_INPUT_ALBUM_TITLE = "input_album_title";
+    public static final String INTENT_INPUT_ALBUM_PICTURE = "input_album_pic";
     public static final String INTENT_INPUT_ALBUM_DESC = "input_album_desc";
     public static final String INTENT_FLAG_MODE = "mode";
     public static final String INTENT_START_POSITION = "startPosition";

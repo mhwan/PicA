@@ -7,23 +7,32 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.picaproject.pica.Item.CommentItem;
+import com.picaproject.pica.Item.ReplyItem;
 import com.picaproject.pica.R;
+import com.picaproject.pica.Util.AppUtility;
+import com.picaproject.pica.Util.NetworkItems.DefaultResultItem;
+import com.picaproject.pica.Util.NetworkUtility;
 
 import java.util.ArrayList;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
 public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecyclerAdapter.ViewHolder> {
-    private ArrayList<CommentItem> commentList;
-    private Context context;
+    private ArrayList<ReplyItem> commentList;
+    private FragmentActivity activity;
     private int authorId;
 
-    public CommentRecyclerAdapter(Context context, ArrayList<CommentItem> commentItems, int Author) {
+    public CommentRecyclerAdapter(FragmentActivity activity, ArrayList<ReplyItem> commentItems, int Author) {
         this.commentList = commentItems;
-        this.context = context;
+        this.activity = activity;
         this.authorId = Author;
     }
 
@@ -36,23 +45,47 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        CommentItem item = commentList.get(position);
+        ReplyItem item = commentList.get(position);
+
 
         StringBuilder sb = new StringBuilder();
+        /*
         if (item.getTagId() != null)
-            sb.append("<font color='#6fcfce'><i> @" + item.getTagId() + "</i></font> ");
-        sb.append(item.getContents());
+            sb.append("<font color='#6fcfce'><i> @" + item.getTagId() + "</i></font> ");*/
+        sb.append(item.getReplyText());
 
         holder.content.setText(Html.fromHtml(sb.toString()));
-        holder.date.setText(item.getDate());
-        holder.nickname.setText(item.getNickname());
-        if (authorId == item.getAuthorId()) {
+        holder.date.setText(item.getUploadDate());
+        holder.nickname.setText(item.getNickName());
+        if ("y".equals(item.getIsMyReply())) {
             holder.deleteIcon.setVisibility(View.VISIBLE);
         } else
             holder.deleteIcon.setVisibility(View.GONE);
     }
 
-    public void resetCommentData(ArrayList<CommentItem> list) {
+    private void removeCommentTask(int replyId, int listId) {
+        NetworkUtility.getInstance().deletePictureReply(replyId, AppUtility.memberId, new Callback<DefaultResultItem>() {
+            @Override
+            public void onResponse(Call<DefaultResultItem> call, Response<DefaultResultItem> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    DefaultResultItem item = response.body();
+
+                    if (item.getCode() == NetworkUtility.APIRESULT.RESULT_SUCCESS) {
+                        commentList.remove(listId);
+                        notifyDataSetChanged();
+                    } else {
+                        Toast.makeText(activity, "댓글 삭제에 실패했습니다.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(Call<DefaultResultItem> call, Throwable t) {
+
+            }
+        });
+    }
+    public void resetCommentData(ArrayList<ReplyItem> list) {
         commentList.clear();
         commentList.addAll(list);
         notifyDataSetChanged();
@@ -79,8 +112,7 @@ public class CommentRecyclerAdapter extends RecyclerView.Adapter<CommentRecycler
         @Override
         public void onClick(View v) {
             int id = getAdapterPosition();
-            commentList.remove(id);
-            notifyItemRemoved(id);
+            removeCommentTask(commentList.get(id).getReplyId(), id);
         }
     }
 }

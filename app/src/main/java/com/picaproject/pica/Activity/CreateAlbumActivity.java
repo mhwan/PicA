@@ -14,8 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.picaproject.pica.CustomView.CustomBottomButton;
 import com.picaproject.pica.CustomView.InvitedFriendsRecyclerAdapter;
+import com.picaproject.pica.Util.AppUtility;
 import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.Item.ContactItem;
 import com.picaproject.pica.R;
@@ -39,7 +41,7 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
     private CustomBottomButton customBottomButton;
     private boolean isManageMode = false;
     private Uri pictureUri;
-    private String initAlbumName, initAlbumDesc;
+    private String initAlbumName, initAlbumDesc, initAlbumPic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,6 +51,7 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
         if (isManageMode) {
             initAlbumName = getIntent().getStringExtra(IntentProtocol.INTENT_INPUT_ALBUM_TITLE);
             initAlbumDesc = getIntent().getStringExtra(IntentProtocol.INTENT_INPUT_ALBUM_DESC);
+            initAlbumPic = getIntent().getStringExtra(IntentProtocol.INTENT_INPUT_ALBUM_PICTURE);
         }
         initView();
     }
@@ -63,6 +66,7 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
             @Override
             public void onClick(View v) {
                 //startActivity(new Intent(CreateAlbumActivity.this, AlbumMainActivity.class));
+                Log.d("make album", "on click");
                 createAlbumTask();
             }
         });
@@ -70,20 +74,22 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
     }
 
     private void createAlbumTask() {
-        NetworkUtility.getInstance().createNewAlbum(pictureUri, editName.getText().toString(), editDesc.getText().toString(), 1, new Callback<DefaultResultItem>() {
+        NetworkUtility.getInstance().createNewAlbum(pictureUri, editName.getText().toString(), editDesc.getText().toString(), AppUtility.memberId, new Callback<DefaultResultItem>() {
 
             @Override
             public void onResponse(Call<DefaultResultItem> call, Response<DefaultResultItem> response) {
                 DefaultResultItem defaultResultItem = response.body();
 
+                System.out.println();
                 if (response.isSuccessful() && defaultResultItem != null) {
                     switch (defaultResultItem.getCode()) {
                         case NetworkUtility.APIRESULT.RESULT_SUCCESS:
                             Toast.makeText(getApplicationContext(), "앨범이 생성되었습니다.", Toast.LENGTH_SHORT).show();
 
+                            finish();
                             break;
                         case NetworkUtility.APIRESULT.RESULT_CREATEALBUM_SERVER_ERROR:
-                            Toast.makeText(getApplicationContext(), "서버오류로 앨범생성에 실패했습니다..", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getApplicationContext(), "서버오류로 앨범생성에 실패했습니다.", Toast.LENGTH_SHORT).show();
 
                             break;
                         case NetworkUtility.APIRESULT.RESULT_CREATEALBUM_DB_ERROR:
@@ -142,6 +148,7 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
         if (isManageMode) {
             editName.setText(initAlbumName);
             editDesc.setText(initAlbumDesc);
+            setImage(initAlbumPic);
         }
     }
 
@@ -170,17 +177,22 @@ public class CreateAlbumActivity extends BaseToolbarActivity {
         }
     }
 
+    private void setImage(String uriData){
+        imageShow.setVisibility(View.VISIBLE);
+        imageUpload.setVisibility(View.GONE);
+        //imageShow.setImageURI(selectedImage);
+        Glide.with(getApplicationContext()).load(uriData).error(R.drawable.img_sample).into(imageShow);
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == IntentProtocol.RESULT_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImage = data.getData();
 
-            imageShow.setVisibility(View.VISIBLE);
-            imageUpload.setVisibility(View.GONE);
-            imageShow.setImageURI(selectedImage);
-
+            setImage(selectedImage.toString());
             pictureUri = selectedImage;
+
             //imageShow.setImageBitmap(BitmapFactory.decodeFile(picturePath));
         } else if (requestCode == IntentProtocol.REQUEST_INVITE_MEMBER && resultCode == RESULT_OK) {
             ArrayList<ContactItem> contactList = (ArrayList<ContactItem>) data.getSerializableExtra(IntentProtocol.INTENT_RESULT_SELECTED_ID);

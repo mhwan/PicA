@@ -39,6 +39,8 @@ import static android.content.Context.LOCATION_SERVICE;
 public class AppUtility {
     private static AppUtility instance;
     public static final int IMAGE_HAS_NO_LOCATION = -999;
+    public static int memberId;
+
 
     private AppUtility() {
     }
@@ -49,6 +51,14 @@ public class AppUtility {
         return instance;
     }
 
+
+    public void setMemberId(int id) {
+        memberId = id;
+    }
+
+    public int getMemberId() {
+        return memberId;
+    }
     public ArrayList<ContactItem> getContactList(Context context) {
         Uri uri = ContactsContract.CommonDataKinds.Phone.CONTENT_URI;
 

@@ -69,8 +69,11 @@ public class ImageDetailFragment extends Fragment {
                         }
                     });
 
+            /*
+            System.out.println(pictureData.getPosition() == null);
+            System.out.println("".equals(pictureData.getContents()));*/
             //이미지에 내용, 태그, 위치가 모두 없다면 안보이게 처리한다 (현재는 태그가 없으므로 위치와 내ㅐ용만있음)
-            if (pictureData.getContents() == null && pictureData.getLatitude() == AppUtility.IMAGE_HAS_NO_LOCATION && pictureData.getLongitude() == AppUtility.IMAGE_HAS_NO_LOCATION)
+            if ("".equals(pictureData.getContents()) && pictureData.getPosition() == null)
                 picInfoFrame.setVisibility(View.GONE);
             else {
                 if (isShow)
@@ -94,11 +97,12 @@ public class ImageDetailFragment extends Fragment {
                         location.setText("위치 : " + AppUtility.getAppinstance().getAddress(placeData.getLatitude(), placeData.getLongitude()));
                     }*/
                     }
-                /*
+
                 if (pictureData.getTags() != null) {
                     tag.setVisibility(View.VISIBLE);
-                    tag.setText("태그 : "+tagDataToString());
-                }*/
+                    tag.setText("태그 : "+pictureData.getParsed_tags());
+
+                }
                 }
             }
 
@@ -121,12 +125,4 @@ public class ImageDetailFragment extends Fragment {
         }
     }
 
-    /*
-    private String tagDataToString(){
-        String str = "";
-        for (String s : pictureData.getTags()){
-            str+=("#"+s+" ");
-        }
-        return str;
-    }*/
 }

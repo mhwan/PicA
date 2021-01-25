@@ -20,7 +20,7 @@ public class AlbumResultItem extends DefaultResultItem {
     private String defaultPicture;
     @SerializedName("result")
     @Expose
-    private List<ImageResultItem> result = null;
+    private List<ImageTempResult> result = null;
 
 
     public String getName() {
@@ -47,11 +47,11 @@ public class AlbumResultItem extends DefaultResultItem {
         this.defaultPicture = defaultPicture;
     }
 
-    public List<ImageResultItem> getResult() {
+    public List<ImageTempResult> getResult() {
         return result;
     }
 
-    public void setResult(List<ImageResultItem> result) {
+    public void setResult(List<ImageTempResult> result) {
         this.result = result;
     }
 

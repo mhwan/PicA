@@ -26,6 +26,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -126,7 +127,7 @@ public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallb
         Log.i("googleMap", "isReady!!");
 
         //camera위치도 여러 위치들의 평균값을 구하던지해야한다
-        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom((AppUtility.getAppinstance().getDefaultLocation()), 10.0f));
+        googleMap.moveCamera(CameraUpdateFactory.newLatLngZoom(getAveragePosition(), 3.0f));
 
         //item update in here 먼저 map을 ready시켜야한다!
         startPhotoCluster();
@@ -151,6 +152,26 @@ public class MapPhotoClusterFragment extends Fragment implements OnMapReadyCallb
         mClusterManager.cluster();
     }
 
+    private LatLng getAveragePosition(){
+        double[] sums = new double[2];
+        int size = 0;
+
+        if (picDataArrayList != null) {
+            for (ImageResultItem item : picDataArrayList) {
+                if (item.hasLocations()) {
+                    sums[0] += item.getLatitude();
+                    sums[1] += item.getLongitude();
+                    size++;
+                }
+            }
+        }
+
+        sums[0] /= size;
+        sums[1] /= size;
+
+
+        return new LatLng(sums[0], sums[1]);
+    }
 
     private void addItemToClusterManager(){
         if (picDataArrayList != null) {

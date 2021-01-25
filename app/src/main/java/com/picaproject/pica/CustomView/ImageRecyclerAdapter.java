@@ -1,6 +1,9 @@
 package com.picaproject.pica.CustomView;
 
+import android.app.Activity;
 import android.content.Context;
+
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
@@ -10,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.picaproject.pica.Activity.AlbumMainActivity;
 import com.picaproject.pica.Activity.ImageDetailActivity;
 import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.R;
@@ -19,12 +23,12 @@ import java.util.ArrayList;
 
 public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdapter.Viewholder>{
 
-    private Context context;
+    private FragmentActivity activity;
     private ArrayList<ImageResultItem> imgList;
 
 
-    public ImageRecyclerAdapter(Context context, ArrayList<ImageResultItem> imgList) {
-        this.context = context;
+    public ImageRecyclerAdapter(FragmentActivity activity, ArrayList<ImageResultItem> imgList) {
+        this.activity = activity;
         this.imgList = imgList;
     }
 
@@ -37,6 +41,8 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
 
 
     public void resetImageList(ArrayList<ImageResultItem> imageItems){
+        imgList.clear();
+        imgList.addAll(imageItems);
         notifyDataSetChanged();
     }
 
@@ -45,7 +51,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         ImageResultItem item = imgList.get(position);
         //Glide.with(context).load(item.getSampleImg()).override(400).into(holder.imageView);
 
-            Glide.with(context).load(item.getFile())
+            Glide.with(activity).load(item.getFile())
                     .error(R.drawable.img_sample)
                     .override(200)
                     .into(holder.imageView);
@@ -68,10 +74,10 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ImageRecyclerAdap
         @Override
         public void onClick(View v) {
             int i = getAdapterPosition();
-            Intent intent = new Intent(context, ImageDetailActivity.class);
+            Intent intent = new Intent(activity, ImageDetailActivity.class);
             intent.putExtra(IntentProtocol.INTENT_START_POSITION, i);
             intent.putExtra(IntentProtocol.INTENT_ALBUM_IMAGE_LIST, imgList);
-            context.startActivity(intent);
+            activity.startActivityForResult(intent, IntentProtocol.REQUEST_PIC_DETAIL);
         }
     }
 }

@@ -1,5 +1,6 @@
 package com.picaproject.pica.Util.NetworkItems;
 
+import android.icu.text.StringPrepParseException;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -9,31 +10,47 @@ import com.google.gson.annotations.SerializedName;
 import com.google.maps.android.clustering.ClusterItem;
 import com.picaproject.pica.Util.AppUtility;
 
+import java.util.ArrayList;
+
 public class ImageResultItem implements ClusterItem, Parcelable {
     @SerializedName("picture_id")
     @Expose
-    protected Integer pictureId;
+    private Integer pictureId;
     @SerializedName("file")
     @Expose
-    protected String file;
+    private String file;
     @SerializedName("upload_date")
     @Expose
-    protected String uploadDate;
+    private String uploadDate;
     @SerializedName("p_member_id")
     @Expose
-    protected Integer pMemberId;
+    private Integer pMemberId;
     @SerializedName("p_album_id")
     @Expose
-    protected Integer pAlbumId;
+    private Integer pAlbumId;
     @SerializedName("latitude")
     @Expose
-    protected Double latitude;
+    private Double latitude;
     @SerializedName("longitude")
     @Expose
-    protected Double longitude;
+    private Double longitude;
     @SerializedName("contents")
     @Expose
-    protected String contents;
+    private String contents;
+    @SerializedName("nickName")
+    @Expose
+    private String nickName;
+    @SerializedName("isMyUpload")
+    @Expose
+    private String isMyUpload;
+    @SerializedName("isLikePicture")
+    @Expose
+    private String isLikePicture;
+    @SerializedName("tags")
+    @Expose
+    private String tags;
+
+    private String parsed_tags;
 
     private int arrayIndex;
     private int sampleImg;
@@ -70,8 +87,65 @@ public class ImageResultItem implements ClusterItem, Parcelable {
             longitude = in.readDouble();
         }
         contents = in.readString();
+        nickName = in.readString();
+        isMyUpload = in.readString();
+        isLikePicture = in.readString();
+        tags = in.readString();
     }
 
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+
+    }
+
+    public String getParsed_tags() {
+        if (parsed_tags == null) {
+            StringBuffer sb = new StringBuffer("");
+
+            if (tags != null && tags.length() > 0) {
+                String[] array = tags.split("/");
+                for (String a : array) {
+                    sb.append("#");
+                    sb.append(a);
+                    sb.append(" ");
+                }
+
+            }
+            parsed_tags = sb.toString();
+
+        }
+
+        return parsed_tags;
+    }
+
+
+    public boolean getIsMyUpload() {
+        return ("y".equals(isMyUpload));
+    }
+
+    public void setIsMyUpload(String isMyUpload) {
+        this.isMyUpload = isMyUpload;
+    }
+
+    public boolean getIsLikePicture() {
+        return ("y".equals(isLikePicture));
+    }
+
+    public void setIsLikePicture(String isLikePicture) {
+        this.isLikePicture = isLikePicture;
+    }
+
+    public String getNickname() {
+        return nickName;
+    }
+
+    public void setNickname(String nickname) {
+        this.nickName = nickname;
+    }
 
     public int getSampleImg() {
         return sampleImg;
@@ -234,6 +308,10 @@ public class ImageResultItem implements ClusterItem, Parcelable {
             dest.writeDouble(longitude);
         }
         dest.writeString(contents);
+        dest.writeString(nickName);
+        dest.writeString(isMyUpload);
+        dest.writeString(isLikePicture);
+        dest.writeString(tags);
     }
 
     @Override
@@ -247,6 +325,10 @@ public class ImageResultItem implements ClusterItem, Parcelable {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 ", contents='" + contents + '\'' +
+                ", nickName='" + nickName + '\'' +
+                ", isMyUpload='" + isMyUpload + '\'' +
+                ", isLikePicture='" + isLikePicture + '\''+
+                ", tags=" + tags+
                 '}';
     }
 }

@@ -29,6 +29,7 @@ import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.CustomView.UploadPicController;
 import com.picaproject.pica.Fragment.InputBottomSheetDialogFragment;
 import com.picaproject.pica.Fragment.NewAlbumUploadFragment;
+import com.picaproject.pica.Util.AppUtility;
 import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadImageItem;
@@ -56,6 +57,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
     private NewAlbumUploadPicAdapter recyclerAdapter;
     private UploadPicController controller;
     private int cropIndex = -1;
+    private int albumID;
     private RelativeLayout resize, photoFilter, locations, contents;
 
     private ArrayList<UploadImageItem> dataList;
@@ -78,6 +80,7 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         uploadPicListView = (RecyclerView) findViewById(R.id.upload_pic_list_view);
         adapter = new NewAlbumUploadAdapter(getSupportFragmentManager());
         Intent intent = getIntent();
+        albumID = intent.getIntExtra(IntentProtocol.INTENT_INPUT_ALBUM_ID, 0);
         dataList = (ArrayList<UploadImageItem>)intent.getSerializableExtra(IntentProtocol.PIC_DATA_LIST_NAME);
         viewPager.setOffscreenPageLimit(dataList.size());
         // 데이터를 가져와서 플래그먼트로 변환해 추가하기
@@ -149,9 +152,11 @@ public class NewAlbumUploadActivity extends BaseToolbarActivity {
         for (int i = 0; i < dataList.size(); i++) {
             uploadSingleImageWork(i);
         }
+
+        finish();
     }
     private void uploadSingleImageWork(int index){
-        NetworkUtility.getInstance().uploadSinglePictureToAlbum(1, 1, dataList.get(index), new Callback<DefaultResultItem>() {
+        NetworkUtility.getInstance().uploadSinglePictureToAlbum(albumID, AppUtility.memberId, dataList.get(index), new Callback<DefaultResultItem>() {
             @Override
             public void onResponse(Call<DefaultResultItem> call, Response<DefaultResultItem> response) {
                 DefaultResultItem defaultResultItem = response.body();

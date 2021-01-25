@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.picaproject.pica.Activity.AlbumMainActivity;
 import com.picaproject.pica.CustomView.ImageRecyclerAdapter;
 import com.picaproject.pica.CustomView.SpacesItemDecoration;
 import com.picaproject.pica.Util.IntentProtocol;
@@ -82,7 +83,7 @@ public class ImageGridFragment extends Fragment {
 
         if (picDataArrayList == null)
             picDataArrayList = new ArrayList<>();
-        adapter = new ImageRecyclerAdapter(getContext(), picDataArrayList);
+        adapter = new ImageRecyclerAdapter(getActivity(), picDataArrayList);
         mRecyclerView.setAdapter(adapter);
         SpacesItemDecoration decoration = new SpacesItemDecoration(SpacesItemDecoration.RecyclerViewOrientation.GRID, 1, 5);
         mRecyclerView.addItemDecoration(decoration);
@@ -94,6 +95,8 @@ public class ImageGridFragment extends Fragment {
             picDataArrayList = new ArrayList<>();
         picDataArrayList.clear();
         picDataArrayList.addAll(list);
-        adapter.resetImageList(picDataArrayList);
+
+        Log.d("resetImage", list.toString());
+        adapter.notifyDataSetChanged();
     }
 }

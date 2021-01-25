@@ -29,6 +29,7 @@ import android.widget.Toast;
 import com.picaproject.pica.CustomView.AlbumRecyclerAdapter;
 import com.picaproject.pica.Fragment.ImageGridFragment;
 import com.picaproject.pica.Fragment.MapPhotoClusterFragment;
+import com.picaproject.pica.Util.AppUtility;
 import com.picaproject.pica.Util.IntentProtocol;
 import com.picaproject.pica.Item.PicPlaceData;
 import com.picaproject.pica.Item.UploadImageItem;
@@ -36,6 +37,7 @@ import com.picaproject.pica.R;
 import com.picaproject.pica.Util.ImageMetadataParser;
 import com.picaproject.pica.Util.NetworkItems.AlbumResultItem;
 import com.picaproject.pica.Util.NetworkItems.ImageResultItem;
+import com.picaproject.pica.Util.NetworkItems.ImageTempResult;
 import com.picaproject.pica.Util.NetworkUtility;
 import com.picaproject.pica.Util.PicDataParser;
 
@@ -116,7 +118,7 @@ public class AlbumMainActivity extends AppCompatActivity {
             @Override
             public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
                 if (Math.abs(verticalOffset)-appBarLayout.getTotalScrollRange() == 0) {
-                    getSupportActionBar().setTitle("앨범 샘플 1");
+                    getSupportActionBar().setTitle(albumItem.getName());
                     guideView.animate().alpha(0.0f);
                     guideView.setVisibility(View.GONE);
                     fab.hide();
@@ -155,6 +157,7 @@ public class AlbumMainActivity extends AppCompatActivity {
                 intent.putExtra(IntentProtocol.INTENT_ALBUM_MODE, true);
                 intent.putExtra(IntentProtocol.INTENT_INPUT_ALBUM_TITLE, albumItem.getName());
                 intent.putExtra(IntentProtocol.INTENT_INPUT_ALBUM_DESC, albumItem.getDescription());
+                intent.putExtra(IntentProtocol.INTENT_INPUT_ALBUM_PICTURE, albumItem.getDefaultPicture());
                 startActivity(intent);
             }
         });
@@ -219,7 +222,7 @@ public class AlbumMainActivity extends AppCompatActivity {
     }
     private void getLoadPictureTask(){
         Log.d("album_id", albumId+"");
-        NetworkUtility.getInstance().getAlbumPhotoList(albumId, 1,  new Callback<AlbumResultItem>() {
+        NetworkUtility.getInstance().getAlbumPhotoList(albumId, AppUtility.memberId,  new Callback<AlbumResultItem>() {
             @Override
             public void onResponse(Call<AlbumResultItem> call, Response<AlbumResultItem> response) {
                 if (response.isSuccessful() && response.body() != null) {
@@ -234,16 +237,17 @@ public class AlbumMainActivity extends AppCompatActivity {
                             albumItem.setDescription(albumResultItem.getDescription());
                             albumItem.setDefaultPicture(albumResultItem.getDefaultPicture());
 
-                            if (albumResultItem.getResult() != null && albumResultItem.getResult().size() > 0)
-                                result = (ArrayList) albumResultItem.getResult();
-                            else
-                                result = new ArrayList<>();
+                            result = new ArrayList<>();
+                            if (albumResultItem.getResult() != null && albumResultItem.getResult().size() > 0) {
+                                for (int i = 0; i < albumResultItem.getResult().size(); i++) {
+                                    result.add(albumResultItem.getResult().get(i).getResult());
+                                    result.get(i).setArrayIndex(i);
+                                }
+                            }
 
                             setAlbumInfo();
 
-                            for (int i = 0; i < result.size(); i++) {
-                                result.get(i).setArrayIndex(i);
-                            }
+
 
                             imageGridFragment.resetImageList(result);
                             mapPhotoClusterFragment.resetPhotoList(result);
@@ -363,6 +367,10 @@ public class AlbumMainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         Log.i("test_hs","AlbumMainActivity  : ");
+        if (requestCode == IntentProtocol.ADD_PIC_MULTI_MODE || requestCode == IntentProtocol.REQUEST_PIC_DETAIL) {
+            Log.i("pictureDetail","AlbumMainActivity  : finished");
+            getLoadPictureTask();
+        }
         if(requestCode == IntentProtocol.GET_GALLERY_IMAGE && resultCode == RESULT_OK && data != null){
             ClipData datas = data.getClipData();
             ArrayList<UploadImageItem> prasePicDatas;
@@ -390,13 +398,15 @@ public class AlbumMainActivity extends AppCompatActivity {
                 Toast.makeText(this,"사진을 선택해주세요.",Toast.LENGTH_LONG).show();
                 return;
             }
+
             Intent intent = new Intent(this, NewAlbumUploadActivity.class);
+            intent.putExtra(IntentProtocol.INTENT_INPUT_ALBUM_ID, albumId);
             intent.putExtra(IntentProtocol.PIC_DATA_LIST_NAME,prasePicDatas);
             startActivityForResult(intent, IntentProtocol.ADD_PIC_MULTI_MODE);
-
-
 
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+
 }
